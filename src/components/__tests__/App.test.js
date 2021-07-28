@@ -43,4 +43,12 @@ describe('Views', ()=>{
     expect(goalsView).toBeInTheDocument();
   });
 
+  it('should display Profile view when URL is at /profile', () => {
+    // render App with history
+    renderWithRouter(<App />, {route: '/profile'});
+    // get test-id
+    // const goalsView = screen.getByTestId('goalsView');
+    const goalsView = screen.getByRole('heading', {name: /Profile/i});
+    expect(goalsView).toBeInTheDocument();
+  });
 });
