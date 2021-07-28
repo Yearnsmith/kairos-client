@@ -3,6 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Nav from './Nav';
 import Goals from './Goals';
+import Calendar from './Calendar'
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
     <Router>
       <Switch>
         <Route exact path="/goals" component={Goals} />
+        <Route exact path="/calendar" component={Calendar} />
       </Switch>
     </Router>
 
