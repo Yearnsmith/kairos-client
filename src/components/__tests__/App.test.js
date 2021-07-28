@@ -34,7 +34,7 @@ describe('Views', ()=>{
     expect(goalsView).toBeInTheDocument();
   });
 
-  it('should display Goals view when URL is at /goals', () => {
+  it('should display Calendar view when URL is at /calendar', () => {
     // render App with history
     renderWithRouter(<App />, {route: '/calendar'});
     // get test-id
