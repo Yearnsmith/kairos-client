@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function Goals() {
+export default function Goal() {
     return (
-        <div>
-            
-        </div>
+        <main data-testid="goalsView">
+            <h2>Goals</h2>
+        </main>
     )
 }
