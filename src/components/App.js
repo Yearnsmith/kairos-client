@@ -8,9 +8,10 @@ import UserProfile from './UserProfile'
 
 const data = {
   termGoals: [
-      {title: "First Goal"},
-      {title: "Second Goal"},
-      {title: "Third Goal"}
+      {title: "First Goal", color: 'orange'},
+      {title: "Second Goal", color: 'violet'},
+      {title: "Third Goal", color: 'yellow'},
+      {title: "Fourth Goal", color: 'teal'}
   ]
 }
 

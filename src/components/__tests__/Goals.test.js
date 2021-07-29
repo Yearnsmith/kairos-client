@@ -1,5 +1,5 @@
 //import libraries
-import { render, screen, RenderResult, cleanup } from "@testing-library/react";
+import { render, screen, cleanup } from "@testing-library/react";
 const {debug} = screen;
 
 // import Goals component
@@ -7,10 +7,10 @@ import Goals from '../Goals';
 
 // create Goals data
 const termGoals = [
-    {title: "First Goal"},
-    {title: "Second Goal"},
-    {title:"Third Goal"},
-    {title: "Fourth Goal"}
+    {title: "First Goal", color: 'orange'},
+    {title: "Second Goal", color: 'violet'},
+    {title:"Third Goal", color: 'yellow'},
+    {title: "Fourth Goal", color: 'teal'}
 ];
 
 // render Goals component
@@ -27,7 +27,7 @@ describe("Goals component has all sub-components", () => {
         cleanup();
     });
     
-    it("should render all user's Term Goals with Goal info", () => {
+    it("should render all user's Term Goals as Semantic UI Segments with Goal data as h3 headers", () => {
         
         // first test inspired by https://kentcdodds.com/blog/write-fewer-longer-tests
         
@@ -36,11 +36,24 @@ describe("Goals component has all sub-components", () => {
 
         // create array of title properties
         const termGoalsText = termGoals.map( goal => goal.title);
+        const termGoalsColor = termGoals.map( goal => goal.color);
         
+        // get all goal list items
+        const goalEls = screen.getAllByRole('listitem')
+        const goalElsListItems = goalEls.map(el => el.firstChild)
+
         // get all title elements and create array of textContent.
-        const goalElsText = screen.getAllByRole('heading', {level:3}).map(el => el.textContent);
-        // match with 
+        const goalElsText = goalEls.map(el => el.textContent)
+        // get the className and separate out color
+        const goalElsColor = goalElsListItems.map(el => el.className.split(' ')[3])
+        
+        // should match text 
         expect(goalElsText).toEqual(termGoalsText);
+        // should match color
+        expect(goalElsColor).toEqual(termGoalsColor);
+        // className should include 'segment'
+        goalElsListItems.forEach( el => expect(el).toHaveClass('segment') )
+        
 
     });
 
