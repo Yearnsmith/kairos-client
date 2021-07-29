@@ -26,10 +26,13 @@ describe("Goals component has all sub-components", () => {
         cleanup();
     });
     
-    it("should render all user's Term Goals with title showing", () => {
+    it("should render all user's Term Goals with Goal info", () => {
         
         // first test inspired by https://kentcdodds.com/blog/write-fewer-longer-tests
         
+        // Goal instances should load //
+        /*---------------------------*/
+
         // create array of title properties
         const termGoalsText = termGoals.map( goal => goal.title)
         
