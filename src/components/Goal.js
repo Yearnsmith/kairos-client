@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Header, List, Card } from 'semantic-ui-react'
+import { Header, List, Card, Label } from 'semantic-ui-react'
 
 export default function Goal({termGoal}) {
     
-    const {title} = termGoal;
-
-    console.log(termGoal)
+    const {title, description, longTermGoal, timeframe} = termGoal;
 
     return (
         <>
@@ -14,9 +12,11 @@ export default function Goal({termGoal}) {
             <Card data-testid='info-card'>
                 <Card.Content>
                     <Card.Header as='h3'>Description</Card.Header>
-                    <Card.Description>
-                        
+                    <Card.Description data-testid='info-card-description'>
+                        {description}
                     </Card.Description>
+                    <Label>{longTermGoal}</Label>
+                    <Label>{timeframe}</Label>
                 </Card.Content>
             </Card>
         </>

@@ -8,10 +8,9 @@ import Goal from "../Goal";
 // create Goals data
 const termGoal ={
     title: "My First Goal",
-    description: '',
-    timeframe: '',
-    longTermGoal: '',
-    category: '',
+    description: 'The first goal I ever did make.',
+    timeframe: '1 week',
+    longTermGoal: 'Lifestyle',
     events: [],
     createdOn: '',
     endDate: '',
@@ -19,23 +18,25 @@ const termGoal ={
 };
 // destructure for testing:
 const { title, description, timeframe,
-    LTermGoal, category, events,
+    longTermGoal, events,
     createdOn, endDate } = termGoal;
 
 // render Goal component
 beforeEach( () => render(<Goal termGoal={termGoal} />) );
+console.log(termGoal)
 // debug();
 afterEach( () => cleanup() );
 
-describe("Single Goal component", () => {
-    it("should render cards that display term goal properties", () => {
+describe("Single Goal renders cards that display term goal properties", () => {
+    it("should render heading", () => {
         // Get h2 element
         const heading = screen.getByRole('heading', {name: title, level: 2});
         // h2 should be in the document
         expect(heading).toBeInTheDocument();
-
+    });
+    it("should render goal info", ()=>{
         //get info card
-        const goalInfo = screen.getByTestId(/info-card/i);
+        const goalInfo = screen.getByTestId('info-card');
         // goalInfo should be card
         expect(goalInfo).toHaveClass('card');
 
@@ -44,7 +45,25 @@ describe("Single Goal component", () => {
         // description header should be rendered
         expect(descriptionHeader).toBeInTheDocument();
 
-        //get 
+        //get Card.Description component
+        const goalDescription = screen.getByTestId('info-card-description').textContent;
+        // description should be rendered
+        expect(goalDescription).toEqual(description);
+
+        //get LT Goal label
+        const longTermGoalEl = screen.getByText(longTermGoal);
+
+        // long term label reference should be a label
+        expect(longTermGoalEl).toHaveClass('label');
+        // Goal should display correct long term goal
+        expect(longTermGoalEl.textContent).toMatch(/lifestyle/i);
+
+        // get timeframe label
+        const timeframeEl = screen.getByText(timeframe)
+        //timeframe should be a label
+        expect(timeframeEl).toHaveClass('label');
+        // timeframe should display crrect timeframe
+        expect(timeframeEl.textContent).toMatch(/1 week/i);
     });
 });
 

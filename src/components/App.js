@@ -9,7 +9,11 @@ import UserProfile from './UserProfile'
 
 const data = {
   termGoals: [
-      {title: "Goal Number 1", color: 'orange'},
+      {title:"Goal Number 1",
+      description: 'My very first goal',
+      longTermGoal: 'lifestyle',
+      timeframe: '1 week',
+      color: 'orange'},
       {title: "Goal Number 2", color: 'violet'},
       {title: "Goal Number 3", color: 'yellow'},
       {title: "Goal Number 4", color: 'teal'}
