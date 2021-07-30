@@ -3,15 +3,16 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Nav from './Nav';
 import Goals from './Goals';
+import Goal from './Goal';
 import Calendar from './Calendar'
 import UserProfile from './UserProfile'
 
 const data = {
   termGoals: [
-      {title: "First Goal", color: 'orange'},
-      {title: "Second Goal", color: 'violet'},
-      {title: "Third Goal", color: 'yellow'},
-      {title: "Fourth Goal", color: 'teal'}
+      {title: "Goal Number 1", color: 'orange'},
+      {title: "Goal Number 2", color: 'violet'},
+      {title: "Goal Number 3", color: 'yellow'},
+      {title: "Goal Number 4", color: 'teal'}
   ]
 }
 
@@ -26,6 +27,9 @@ function App() {
         {/* <Route exact path="/goals" component={Goals} /> */}
         <Route exact path="/goals">
           <Goals termGoals={termGoals} />
+        </Route>
+        <Route exact path="/goal">
+          <Goal termGoal={termGoals[0]} />
         </Route>
         <Route exact path="/calendar" component={Calendar} />
         <Route exact path="/profile" component={UserProfile} />
