@@ -11,20 +11,25 @@ const termGoal ={
     description: 'The first goal I ever did make.',
     timeframe: '1 week',
     longTermGoal: 'Lifestyle',
-    events: [],
+    events: [
+        {title: 'My first event'},
+        {title: 'my second event'},
+        {title: 'another event'}
+    ],
+    comletedAt: '',
     createdOn: '',
     endDate: '',
     // color: 'orange'
 };
 // destructure for testing:
 const { title, description, timeframe,
-    longTermGoal, events,
+    longTermGoal, completedAt, events,
     createdOn, endDate } = termGoal;
 
 // render Goal component
 beforeEach( () => render(<Goal termGoal={termGoal} />) );
-console.log(termGoal)
 // debug();
+// console.log(termGoal)
 afterEach( () => cleanup() );
 
 describe("Single Goal renders cards that display term goal properties", () => {
@@ -64,6 +69,27 @@ describe("Single Goal renders cards that display term goal properties", () => {
         expect(timeframeEl).toHaveClass('label');
         // timeframe should display crrect timeframe
         expect(timeframeEl.textContent).toMatch(/1 week/i);
+    });
+
+    it('should display a list of events that link to event components', ()=>{
+        debug();
+        // card should exist
+        const eventsCardEl = screen.getByTestId('events-card');
+        expect(eventsCardEl).toBeInTheDocument();
+
+        //card should display a list
+        const eventListEl = screen.getByRole('list');
+        expect(eventListEl).toBeInTheDocument();
+
+        //event card should display all event items
+        const eventListItemEls = screen.getAllByRole('listitem');
+        // get the text of these list items and cast to an array
+        const eventListItemElsText = eventListItemEls.map(el => el.textContent);
+        // create an array from the events data at top of this file
+        const eventsTitles = events.map( event => event.title);
+        
+        // elements rendered should match data.
+        expect(eventListItemElsText).toEqual(eventsTitles)
     });
 });
 
