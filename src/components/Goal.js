@@ -10,9 +10,14 @@ export default function Goal({termGoal}) {
     return (
         <>
             {/*https://react.semantic-ui.com/elements/header/#variations-block */}
-            <Header as='h3' block content={title} />
+            <Header as='h2' block content={title} />
             <Card data-testid='info-card'>
-
+                <Card.Content>
+                    <Card.Header as='h3'>Description</Card.Header>
+                    <Card.Description>
+                        
+                    </Card.Description>
+                </Card.Content>
             </Card>
         </>
     )

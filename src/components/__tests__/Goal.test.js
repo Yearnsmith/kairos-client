@@ -30,7 +30,7 @@ afterEach( () => cleanup() );
 describe("Single Goal component", () => {
     it("should render cards that display term goal properties", () => {
         // Get h2 element
-        const heading = screen.getByRole('heading', {name: title, level: 3});
+        const heading = screen.getByRole('heading', {name: title, level: 2});
         // h2 should be in the document
         expect(heading).toBeInTheDocument();
 
@@ -39,6 +39,12 @@ describe("Single Goal component", () => {
         // goalInfo should be card
         expect(goalInfo).toHaveClass('card');
 
+        //get description header (which is inside card)
+        const descriptionHeader = screen.getByRole('heading', {name: /description/i, level: 3});
+        // description header should be rendered
+        expect(descriptionHeader).toBeInTheDocument();
+
+        //get 
     });
 });
 
