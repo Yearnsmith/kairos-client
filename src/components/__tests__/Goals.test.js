@@ -1,25 +1,20 @@
 //import libraries
-import { render, screen, cleanup } from "@testing-library/react";
-import { data } from "../../services/data";
+import { render, screen, renderWithRouter, cleanup } from './test-utils/test-utils';
 const {debug} = screen;
+import userEvent from "@testing-library/user-event";
+import { BrowserRouter } from "react-router-dom";
+import { data } from "../../services/data";
 
 // import Goals component
 import Goals from '../Goals';
-
+import App from '../App';
 // create Goals data
-// const termGoals = [
-//     {title: "First Goal", color: 'orange'},
-//     {title: "Second Goal", color: 'violet'},
-//     {title:"Third Goal", color: 'yellow'},
-//     {title: "Fourth Goal", color: 'teal'}
-// ];
 const termGoals = data.termGoals
 
-// render Goals component
-beforeEach( () => render(<Goals termGoals={termGoals} />) );
-afterEach( () => cleanup() );
-
 describe("Goals component has all sub-components", () => {
+    // render Goals component
+    beforeEach( () => render(<BrowserRouter><Goals termGoals={termGoals} /></BrowserRouter>) );
+    afterEach( () => cleanup() );
     
     it("should render h2 element that has 'Goals' as text", () => {
         // Set h2 element
@@ -67,8 +62,23 @@ describe("Goals component has all sub-components", () => {
         // define items that should be in filtering menu:
         const goalsMenuItems = ['Filter','Sort','All'];
         // get all button elements and create array of text content
-        const buttonElsText = screen.getAllByRole('button').map( el => el.textContent)
+        const buttonElsText = screen.getAllByRole('button').filter( el => el.textContent !== 'Add Goal').map(el => el.textContent)
         // compare text content of buttons to goalsMenuItems array
         expect(buttonElsText).toEqual(goalsMenuItems);
+    });
+});
+
+describe("CRUD operations", ()=>{
+
+    beforeEach( () => renderWithRouter(<App />, {route: '/goals'}) );
+    afterEach( () => cleanup() );
+
+    it("should render a new goal list item when 'Add Goal' button is clicked", ()=>{
+
+        const newGoalButton = screen.getByRole('button', {name: 'Add Goal'});
+        userEvent.click(newGoalButton)
+        const newGoalEl = screen.getByRole('heading', {name: 'New Goal', level: 3});
+    
+        expect(newGoalEl).toBeInTheDocument();
     });
 });

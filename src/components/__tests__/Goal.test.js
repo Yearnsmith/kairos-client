@@ -75,7 +75,7 @@ describe("Single Goal renders cards that display term goal properties", () => {
     });
 
     it('should display a list of events that link to event components', ()=>{
-        debug();
+        // debug();
         // card should exist
         const eventsCardEl = screen.getByTestId('events-card');
         expect(eventsCardEl).toBeInTheDocument();
