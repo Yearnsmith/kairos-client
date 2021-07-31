@@ -1,6 +1,6 @@
 // import './App.css';
-import React, { useReducer } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import React, { useReducer, useEffect } from 'react';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import Nav from './Nav';
 import Goals from './Goals';
 import Goal from './Goal';
@@ -14,25 +14,30 @@ import { data } from '../services/data'
 
 function App() {
 
-  const { termGoals } = data
+  // const { termGoals } = data
 
   // set initial, empty, state for first render.
   // right now I'm unconcerned about users, auth, and events. I just want to get
   // goals rendering properly, and get the goals route rendering id.
   const initialState = {
-    termGoals: [],
+    termGoals: [
+      // include just enough properties to avoid error,
+      // {title:'',events:[]},
+    ]
   };
 
   // instantiate reducer
   const [store, dispatch] = useReducer(reducer, initialState);
+  const {termGoals} = store;
 
   // Run dispatch as a side-effect of loading the page,
   // effectively updating the data in store.
   useEffect( () => {
     dispatch({
       type: "setTermGoals",
-      data: termGoals
+      data: data.termGoals
     });
+    console.log(data.termGoals[0])
   },[]);
 
   return (
@@ -42,6 +47,9 @@ function App() {
     <Router>
       <Switch>
         {/* <Route exact path="/goals" component={Goals} /> */}
+        <Route exact path="/">
+          <Redirect to="goals" />
+        </Route>
         <Route exact path="/goals">
           <Goals termGoals={termGoals} />
         </Route>
