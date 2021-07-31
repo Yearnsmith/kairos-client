@@ -6,6 +6,7 @@ import Goals from './Goals';
 import Goal from './Goal';
 import Calendar from './Calendar'
 import UserProfile from './UserProfile'
+import { findGoalById } from '../utils/goalUtils'
 
 //import reducer and state
 import reducer from '../utils/reducer'
@@ -22,7 +23,7 @@ function App() {
   const initialState = {
     termGoals: [
       // include just enough properties to avoid error,
-      // {title:'',events:[]},
+      {title:'',events:[]},
     ]
   };
 
@@ -53,9 +54,10 @@ function App() {
         <Route exact path="/goals">
           <Goals termGoals={termGoals} />
         </Route>
-        <Route exact path="/goal">
-          <Goal termGoal={termGoals[0]} />
-        </Route>
+        <Route exact path="/goals/:id"
+          render={ (props) => <Goal {...props}
+            termGoal={findGoalById(termGoals, props.match.params.id)}/>}
+        />
         <Route exact path="/calendar" component={Calendar} />
         <Route exact path="/profile" component={UserProfile} />
       </Switch>

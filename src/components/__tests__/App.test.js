@@ -57,6 +57,19 @@ describe('Views', ()=>{
 
   });
 
+  it('should display specific goal when url is at "/goals/:id"', ()=>{
+    // set goal and title to test against
+    const goalToDisplay = data.termGoals[3]
+    const heading = goalToDisplay.title;
+    // render the goal
+    renderWithRouter(<App />, {route: `/goals/${goalToDisplay.id}`});
+    // select element to test
+    const headingEl = screen.getByRole('heading', {name: heading, level: 2});
+    // see if element is in the document
+    expect(headingEl).toBeInTheDocument();
+
+  })
+
   it('should display Calendar view when URL is at /calendar', () => {
     // render App with history
     renderWithRouter(<App />, {route: '/calendar'});
@@ -82,18 +95,19 @@ describe('integration with goals', () => {
   it('should route to specific goal component when user clicks on goal', () => {
     
     // select first goal item.
-    const goalEl = screen.getAllByRole('listitem')[0];
-    // user clicks button
-    userEvent.click(goalEl)
-    // set heading to test against
-    const heading = testData.termGoals[0].title
-    console.log(heading)
-    // select heading from new screen
-    const headingEl = screen.getByRole('heading', {name: testData.termGoals[0].title, level: 2});
-    expect(headingEl).toBeInTheDocument();
+    const goalEls = screen.getAllByRole('listitem');
 
+    // set random number between 0 and length of goals item -1
+    const goalItemToSelect = Math.floor(Math.random() * goalEls.length);
+    // select goal item
+    const goalEl = goalEls[goalItemToSelect];
+    // get matching heading from data
+    const heading = testData.termGoals[goalItemToSelect].title;
+
+    userEvent.click(goalEl)
+    const headingEl = screen.getByRole('heading', {name: heading, level: 2});
+    expect(headingEl).toBeInTheDocument();
   });
 
-  
 
 });

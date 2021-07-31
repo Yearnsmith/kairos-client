@@ -23,7 +23,7 @@ export default function Goal({termGoals}) {
                 <Goal /> component once it's built out.*/}
                 {termGoals.map( goal =>
                     // Semantic UI list item
-                    <List.Item as={ Link } to='./goal'  key={goal.title}>
+                    <List.Item as={ Link } to={`./goals/${goal.id}`}  key={goal.title}>
                         {/* Semantic UI Segment allows for a coloured card-like component.
                         We could possibly modify List.Item to take a background colour if
                         we want to edit the Less styles. But this works for now.*/}
