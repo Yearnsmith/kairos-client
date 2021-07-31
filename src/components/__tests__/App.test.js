@@ -77,8 +77,23 @@ describe('Views', ()=>{
 });
 
 describe('integration with goals', () => {
+  beforeEach( () => renderWithRouter(<App />, {route: '/goals'}) );
+  // test routing to specific goals.
+  it('should route to specific goal component when user clicks on goal', () => {
+    
+    // select first goal item.
+    const goalEl = screen.getAllByRole('listitem')[0];
+    // user clicks button
+    userEvent.click(goalEl)
+    // set heading to test against
+    const heading = testData.termGoals[0].title
+    console.log(heading)
+    // select heading from new screen
+    const headingEl = screen.getByRole('heading', {name: testData.termGoals[0].title, level: 2});
+    expect(headingEl).toBeInTheDocument();
 
-        // const termGoalsText = termGoals.map( goal => goal.title);
+  });
+
   
 
 });

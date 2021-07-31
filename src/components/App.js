@@ -37,7 +37,7 @@ function App() {
       type: "setTermGoals",
       data: data.termGoals
     });
-    console.log(data.termGoals[0])
+    // console.log(data.termGoals[0])
   },[]);
 
   return (
