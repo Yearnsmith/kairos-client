@@ -1,17 +1,19 @@
 //import libraries
 import { render, screen, cleanup } from "@testing-library/react";
+import { data } from "../../services/data";
 const {debug} = screen;
 
 // import Goals component
 import Goals from '../Goals';
 
 // create Goals data
-const termGoals = [
-    {title: "First Goal", color: 'orange'},
-    {title: "Second Goal", color: 'violet'},
-    {title:"Third Goal", color: 'yellow'},
-    {title: "Fourth Goal", color: 'teal'}
-];
+// const termGoals = [
+//     {title: "First Goal", color: 'orange'},
+//     {title: "Second Goal", color: 'violet'},
+//     {title:"Third Goal", color: 'yellow'},
+//     {title: "Fourth Goal", color: 'teal'}
+// ];
+const termGoals = data.termGoals
 
 // render Goals component
 beforeEach( () => render(<Goals termGoals={termGoals} />) );

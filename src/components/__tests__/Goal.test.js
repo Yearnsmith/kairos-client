@@ -1,26 +1,28 @@
 //import library
 import { render, screen, cleanup } from "@testing-library/react";
+import { data } from "../../services/data";
 const {debug} = screen;
 
 //import Goal.js
 import Goal from "../Goal";
 // import Goals from "../Goals";
 // create Goals data
-const termGoal ={
-    title: "My First Goal",
-    description: 'The first goal I ever did make.',
-    timeframe: '1 week',
-    longTermGoal: 'Lifestyle',
-    events: [
-        {title: 'My first event'},
-        {title: 'my second event'},
-        {title: 'another event'}
-    ],
-    comletedAt: '',
-    createdOn: '',
-    endDate: '',
-    // color: 'orange'
-};
+// const termGoal ={
+//     title: "My First Goal",
+//     description: 'The first goal I ever did make.',
+//     timeframe: '1 week',
+//     longTermGoal: 'Lifestyle',
+//     events: [
+//         {title: 'My first event'},
+//         {title: 'my second event'},
+//         {title: 'another event'}
+//     ],
+//     comletedAt: '',
+//     createdOn: '',
+//     endDate: '',
+//     // color: 'orange'
+// };
+const termGoal = data.termGoals[0]
 // destructure for testing:
 const { title, description, timeframe,
     longTermGoal, completedAt, events,
@@ -33,6 +35,7 @@ beforeEach( () => render(<Goal termGoal={termGoal} />) );
 afterEach( () => cleanup() );
 
 describe("Single Goal renders cards that display term goal properties", () => {
+    // debug();
     it("should render heading", () => {
         // Get h2 element
         const heading = screen.getByRole('heading', {name: title, level: 2});
@@ -72,7 +75,7 @@ describe("Single Goal renders cards that display term goal properties", () => {
     });
 
     it('should display a list of events that link to event components', ()=>{
-        // debug();
+        debug();
         // card should exist
         const eventsCardEl = screen.getByTestId('events-card');
         expect(eventsCardEl).toBeInTheDocument();
