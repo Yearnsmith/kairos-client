@@ -13,7 +13,6 @@ import App from '../App';
 import {data} from '../../services/data'
 const testData = data;
 
-
 //Testing navbar displaying
 // describe('navbar', () => {
 //   // testing navbar render
@@ -39,10 +38,23 @@ describe('Views', ()=>{
   it('should display Goals view when URL is at "/goals"', () => {
     // render App with history
     renderWithRouter(<App />, {route: '/goals'});
-    // get test-id
-    // const goalsView = screen.getByTestId('goalsView');
-    const goalsView = screen.getByRole('heading', {name: /Goals/i});
-    expect(goalsView).toBeInTheDocument();
+
+    const {termGoals} = testData;
+    
+    // create list of term goal titles from testing data
+    const termGoalsText = termGoals.map( goal => goal.title);
+    // select each goal item from list of goals
+    const goalEls = screen.getAllByRole('listitem');
+    // extract the html
+    const goalElsListItems = goalEls.map(el => el.firstChild)
+    // extract the text content
+    const goalElsText = goalEls.map(el => el.textContent)
+    
+    // text content of list item headers should match list of titles from data
+    expect(goalElsText).toEqual(termGoalsText);
+    // each goal should have the instance class
+    goalElsListItems.forEach( el => expect(el).toHaveClass('segment') )
+
   });
 
   it('should display Calendar view when URL is at /calendar', () => {
@@ -66,6 +78,7 @@ describe('Views', ()=>{
 
 describe('integration with goals', () => {
 
-  // 
+        // const termGoalsText = termGoals.map( goal => goal.title);
+  
 
 });
