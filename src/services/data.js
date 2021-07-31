@@ -2,6 +2,7 @@
 export const data = {
     termGoals: [
         {
+            id: 123,
             title:"My first goal",
             description: 'My very first goal',
             longTermGoal: 'lifestyle',
@@ -14,6 +15,7 @@ export const data = {
             ],
             color: 'teal'},
         {
+            id: 231,
             title: "Get a junior dev job",
             description: 'get a foot in the door as a junior developer.',
             longTermGoal: 'career',
@@ -26,6 +28,7 @@ export const data = {
             color: 'yellow'
         },
         {
+            id: 321,
             title: "Make yoga a weekly habit",
             description: 'practice yoga once a week for 1 month',
             longTermGoal: 'health',
@@ -35,6 +38,7 @@ export const data = {
             ],
             color: 'red'},
         {
+            id: 1234,
             title: "Read 3 Seminal texts on Theatre",
             description: 'read the following books:\n- The Empty Space\n- The Theatre and it\'s double\n- Culture is the body',
             longTermGoal: 'intellectual/education',
