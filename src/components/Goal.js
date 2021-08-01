@@ -1,11 +1,11 @@
 import React from 'react'
-import { Header, List, Card, Label, Icon } from 'semantic-ui-react'
+import { Header, List, Card, Label, Icon, Container } from 'semantic-ui-react'
 
 export default function Goal({termGoal}) {
     if(termGoal){
 
         const {title, description, longTermGoal, timeframe, events} = termGoal;
-        
+
         return (
             <main style={{padding:'1rem 1rem'}}>
                     {/*https://react.semantic-ui.com/elements/header/#variations-block */}
@@ -22,18 +22,25 @@ export default function Goal({termGoal}) {
                             </Label.Group>
                         </Card.Content>
                     </Card>
-                    <Card fluid style={{padding:'1rem',background:'#f2711c'}} color='orange' data-testid='events-card'>
+                    {/* Fix hard coded colour background to be based on category. This could mean adding colour variables
+                        for categories and aligning them with utility function or `Styled Components`? */}
+                    <Card fluid style={{padding:'1rem',background:'#f2711c'}} data-testid='events-card'>
                         <Header as='h3' style={{display:'flex',justifyContent:'space-between',color:'#fff'}} >
                             <Header.Content>Events</Header.Content>
-                            <Icon name='add' link size='large' className='ui right floated'/>
+                            <Icon name='add' link size='large' />
                         </Header>
-                        <List selection>
-                            {events.map( event =>
-                                <Card as={List.Item} fluid key={event.title} style={{background:'#fff', margin: '1rem 0'}}>
-                                    <Card.Header as='h4' content={event.title} textAlign='left' />
-                                </Card>
-                            )}
-                        </List>
+                            {events.length < 1 ? 
+                                <Container style={{color:'#fff'}}>You have no events. Add a new task to start kicking this goal!</Container>
+                            :
+                                <List selection>
+                                    {events.map( event =>
+                                        // TODO: abstract this key to a helper function.
+                                        <Card as={List.Item} fluid key={ Math.random().toString(36).substr(2, 9) } style={{background:'#fff', margin: '1rem 0'}}>
+                                            <Card.Header as='h4' content={event.title} textAlign='left' />
+                                        </Card>
+                                        )}
+                                </List>
+                            }
                     </Card>
                 </main>
         );
