@@ -7,7 +7,14 @@ export default function reducer(state, action) {
             return {
                 ...state, // spread current state
                 termGoals: action.data
-            };
+            }
+        };
+        case "addGoal": {
+            return{
+                ...state,
+                termGoals: [... state.termGoals, action.data]
+
+            }
         };
 
     };
