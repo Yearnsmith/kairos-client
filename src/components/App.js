@@ -21,10 +21,7 @@ function App() {
   // right now I'm unconcerned about users, auth, and events. I just want to get
   // goals rendering properly, and get the goals route rendering id.
   const initialState = {
-    termGoals: [
-      // include just enough properties to avoid error,
-      {title:'',events:[]},
-    ]
+    termGoals: []
   };
 
   // instantiate reducer
@@ -40,7 +37,26 @@ function App() {
     });
     // console.log(data.termGoals[0])
   },[]);
-
+  
+   function addGoal(){
+    function nextId(){
+      const ids = termGoals.map(m=>m.id)
+      console.log(ids)
+      return Math.max(...ids) + 1
+      
+    }
+    const newGoal = {
+      id: nextId(),
+      title: 'New Goal',
+      description: 'Click here to add a description',
+      events: []
+    }
+    dispatch({
+      type: "addGoal",
+      data: newGoal
+    })
+  }
+  
   return (
     <div className="App">
       <Nav />
@@ -52,7 +68,7 @@ function App() {
           <Redirect to="goals" />
         </Route>
         <Route exact path="/goals">
-          <Goals termGoals={termGoals} />
+          <Goals addGoal={addGoal} termGoals={termGoals} />
         </Route>
         <Route exact path="/goals/:id"
           render={ (props) => <Goal {...props}
