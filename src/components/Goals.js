@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Button, List, Segment } from 'semantic-ui-react'
-
+import { List, Segment } from 'semantic-ui-react'
+import FilterModal from './FilterModal'
 export default function Goal({termGoals}) {
 
     return (
@@ -11,9 +11,10 @@ export default function Goal({termGoals}) {
             <h2>Goals</h2>
             {/* this could be abstracted into a component */}
             <div role='menu'>
-                <Button content='Filter' size='huge' compact primary />
+                <FilterModal />
+                {/* <Button content='Filter' size='huge' compact primary />
                 <Button content='Sort' size='huge' compact primary />
-                <Button content='All' size='huge' compact primary />
+                <Button content='All' size='huge' compact primary /> */}
             </div>
             {/*id subject to change. This wraps all goal elements, and gives it an accessible
             role of `list` for screen readers. selection prop gives each list item a pointer
