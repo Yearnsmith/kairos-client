@@ -2,6 +2,7 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import Nav from './Nav';
+import LoginForm from './LoginForm';
 import Goals from './Goals';
 import Goal from './Goal';
 import Calendar from './Calendar'
@@ -67,6 +68,7 @@ function App() {
           <Route exact path="/">
             <Redirect to="goals" />
           </Route>
+          <Route exact path="/login" component={LoginForm} />
           <Route exact path="/goals" component={Goals} />
           <Route exact path="/goals/:id"
             render={ (props) => <Goal {...props}
