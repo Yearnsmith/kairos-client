@@ -1,21 +1,22 @@
 import React, { useState } from 'react'
-import { Button, Container, Dropdown, Form, Input, Modal, Segment } from 'semantic-ui-react'
+import { Button, Dropdown, Form, Modal, Segment } from 'semantic-ui-react'
 
 function FilterModal() {
   const [open, setOpen] = React.useState(false)
-
+  
   const [formData, setFormData] = useState({
     filteredLongTermGoals: [],
     showCompleted: false,
-    showIncomplete: true
+    showActive: true
   })
   const {filteredLongTermGoals, showCompleted, showIncomplete} = formData
 console.log(formData)
   // replace with db query for LTGoals id.
   const dropdownOptions =[
-    {key: 'career', text:'career', value:'career', name:'filteredLongTermGoals' },
+    {key: 'career', text:'Career', value:'career'},
     {key: 'lifestyle', text:'Lifestyle', value:'lifestyle'},
-    {key: 'artistic', text:'Artistic', value:'artistic'}
+    {key: 'artistic', text:'Artistic', value:'artistic'},
+    {key: 'physical', text:'Physical', value:'physical'}
   ]
     
   function handleSelectBox(e){
@@ -48,6 +49,7 @@ console.log(formData)
       open={open}
       trigger={<Button content='Filter' size='huge' compact primary />}
       dimmer='inverted'
+      data-testid='modalComponent'
     >
       <Modal.Header as='h3'>Filter Goals</Modal.Header>
       <Modal.Content>
@@ -63,29 +65,21 @@ console.log(formData)
               value={filteredLongTermGoals}
               id='filteredLongTermGoals'
               onChange={handleSelectBox}
+              name='selectLongTermGoals'
             />
-          {/* <Dropdown fluid multiple search text="select goals" value={filteredLongTermGoals}>
-            <Dropdown.Menu>
-              <Dropdown.Header content='select lifetime goals to view'/>
-              <Dropdown.SearchInput />
-              {dropdownOptions.map( o => 
-                <Dropdown.Item text={o.text} name='filteredLongTermGoals' key={o.text}/>
-              )}
-            </Dropdown.Menu>
-          </Dropdown> */}
             <Form.Checkbox toggle checked={showCompleted} id="showCompleted" name='showCompleted' label='Show Completed' onChange={handleCheckBoxes} />
-            <Form.Checkbox toggle checked={showIncomplete} id="showIncomplete" name='showIncomplete' label='Show Incomplete' onChange={handleCheckBoxes} />
+            <Form.Checkbox toggle checked={showActive} id="showActive" name='showActive' label='Show Active' onChange={handleCheckBoxes} />
           </Form>
         </Modal.Description>
       </Modal.Content>
       <Modal.Actions as={Segment} clearing attached='bottom'>
         <Button 
+        floated='left'
         content='cancel'
         labelPosition='right'
         icon='delete'
-        color='red'
         onClick={() => setOpen(false)}
-        floated='left'
+        negative
       />
         <Button
           floated='right'
