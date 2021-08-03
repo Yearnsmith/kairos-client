@@ -1,12 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { List, Segment, Button } from 'semantic-ui-react'
+import { List, Segment, Button, Menu } from 'semantic-ui-react'
 import FilterModal from './FilterModal'
 import { UseGlobalState } from '../utils/stateContext'
 
 export default function Goals() {
 
-    const { store } = UseGlobalState();
+    const { store, dispatch } = UseGlobalState();
     const { filteredGoals } = store
 
     return (
@@ -15,12 +15,21 @@ export default function Goals() {
         <main data-testid="goalsView">
             <h2>Goals</h2>
             {/* this could be abstracted into a component */}
-            <div role='menu'>
+            <Menu borderless secondary widths={2}>
                 <FilterModal />
                 {/* <Button content='Filter' size='huge' compact primary /> */}
                 <Button content='Sort' size='huge' compact primary />
-                <Button content='All' size='huge' compact primary />
-            </div>
+                <Button
+                content='All'
+                size='huge'
+                compact
+                primary
+                onClick={()=> dispatch({
+                    type: 'setFilter',
+                    data: {filteredLongTermGoals: [], showCompleted: true, showActive: true}
+                    })}
+                />
+            </Menu>
             {/*id subject to change. This wraps all goal elements, and gives it an accessible
             role of `list` for screen readers. selection prop gives each list item a pointer
             on hover, and visual feedback when clicked*/}

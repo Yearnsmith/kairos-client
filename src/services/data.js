@@ -13,6 +13,7 @@ export const data = {
             {title: '...'},
             {title: 'Profit'}
             ],
+            completedAt: 12345901972,
             color: 'teal'},
         {
             id: 231,
@@ -25,13 +26,14 @@ export const data = {
                 {title: 'apply for 15 jobs'},
                 {title: 'make website'}
             ],
+            completedAt: null,
             color: 'yellow'
         },
         {
             id: 321,
             title: "Make yoga a weekly habit",
             description: 'practice yoga once a week for 1 month',
-            longTermGoal: 'health',
+            longTermGoal: 'physical',
             timeframe: '1 month',
             events: [
                 {title: 'yoga day'},
