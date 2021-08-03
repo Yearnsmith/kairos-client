@@ -9,7 +9,7 @@ function FilterModal() {
     showCompleted: false,
     showActive: true
   })
-  const {filteredLongTermGoals, showCompleted, showIncomplete} = formData
+  const {filteredLongTermGoals, showCompleted, showActive} = formData
 console.log(formData)
   // replace with db query for LTGoals id.
   const dropdownOptions =[

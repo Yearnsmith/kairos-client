@@ -6,7 +6,7 @@ import { UseGlobalState } from '../utils/stateContext'
 
 export default function Goal() {
     const { store, dispatch } = UseGlobalState();
-    const { termGoals}
+    const { termGoals} = store
     return (
         //replace div with semantic main element. We could move the element to wrap
         // the Router in App.js, and wrap JSX in a fragment. But this is nice for testing.
