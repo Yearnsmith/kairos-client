@@ -13,7 +13,9 @@ export const data = {
             {title: '...'},
             {title: 'Profit'}
             ],
-            completedAt: 12345901972,
+            createdAt:   123451972,
+            editedAt:    1238901972,
+            completedAt: 1238901972,
             color: 'teal'},
         {
             id: 231,
@@ -26,6 +28,8 @@ export const data = {
                 {title: 'apply for 15 jobs'},
                 {title: 'make website'}
             ],
+            createdAt:   134651972,
+            editedAt:    1349832972,
             completedAt: null,
             color: 'yellow'
         },
@@ -38,6 +42,8 @@ export const data = {
             events: [
                 {title: 'yoga day'},
             ],
+            createdAt:   675231972,
+            editedAt:    675238252,
             color: 'red'},
         {
             id: 1234,
@@ -50,6 +56,8 @@ export const data = {
                 {title: 'read 1 chapter of \'The Theatre and it\'s double\''},
                 {title: 'read 1 chapter of \'Culture is the body\''}
             ],
+            createdAt:   982739972,
+            editedAt:    9830923902,
             color: 'blue'}
     ]
   }
