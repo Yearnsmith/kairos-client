@@ -25,6 +25,9 @@ function FilterModal() {
   // destructure values from formData
   const {filteredLongTermGoals, showCompleted, showActive} = formData
 
+  const [undoFilter, setUndoFilter] = useState(filter)
+
+
   // on page render:
   // - set formData to match filter
   useEffect(() => {
@@ -102,7 +105,11 @@ function FilterModal() {
         content='cancel'
         labelPosition='right'
         icon='delete'
-        onClick={() => {setOpen(false)}}
+        onClick={() => {
+          setFormData(undoFilter);
+          console.log('formData reset to:\n>', undoFilter )
+          setOpen(false)
+        }}
         negative
       />
         <Button
@@ -111,6 +118,8 @@ function FilterModal() {
           labelPosition='right'
           icon='checkmark'
           onClick={() => {
+            setUndoFilter(formData);
+            console.log('set undoFilter to:\n>', formData)
             updateFilter(formData);
             console.log('set filter state to:\n>', formData)
             setOpen(false)
