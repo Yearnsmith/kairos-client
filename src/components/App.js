@@ -44,24 +44,25 @@ function App() {
   return (
     <div className="App">
       <Nav />
-
-    <Router>
-      <Switch>
-        {/* <Route exact path="/goals" component={Goals} /> */}
-        <Route exact path="/">
-          <Redirect to="goals" />
-        </Route>
-        <Route exact path="/goals">
-          <Goals termGoals={termGoals} />
-        </Route>
-        <Route exact path="/goals/:id"
-          render={ (props) => <Goal {...props}
-            termGoal={findGoalById(termGoals, props.match.params.id)}/>}
-        />
-        <Route exact path="/calendar" component={Calendar} />
-        <Route exact path="/profile" component={UserProfile} />
-      </Switch>
-    </Router>
+    <StateContext.Provider value={{store,dispatch}}>
+      <Router>
+        <Switch>
+          {/* <Route exact path="/goals" component={Goals} /> */}
+          <Route exact path="/">
+            <Redirect to="goals" />
+          </Route>
+          <Route exact path="/goals">
+            <Goals termGoals={termGoals} />
+          </Route>
+          <Route exact path="/goals/:id"
+            render={ (props) => <Goal {...props}
+              termGoal={findGoalById(termGoals, props.match.params.id)}/>}
+          />
+          <Route exact path="/calendar" component={Calendar} />
+          <Route exact path="/profile" component={UserProfile} />
+        </Switch>
+      </Router>
+    </StateContext.Provider>
 
     </div>
   );
