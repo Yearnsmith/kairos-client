@@ -1,9 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { List, Segment } from 'semantic-ui-react'
+import { List, Segment, Button } from 'semantic-ui-react'
 import FilterModal from './FilterModal'
-export default function Goal({termGoals}) {
+import { UseGlobalState } from '../utils/stateContext'
 
+export default function Goal() {
+    const { store, dispatch } = UseGlobalState();
+    const { termGoals}
     return (
         //replace div with semantic main element. We could move the element to wrap
         // the Router in App.js, and wrap JSX in a fragment. But this is nice for testing.
@@ -12,9 +15,9 @@ export default function Goal({termGoals}) {
             {/* this could be abstracted into a component */}
             <div role='menu'>
                 <FilterModal />
-                {/* <Button content='Filter' size='huge' compact primary />
+                {/* <Button content='Filter' size='huge' compact primary /> */}
                 <Button content='Sort' size='huge' compact primary />
-                <Button content='All' size='huge' compact primary /> */}
+                <Button content='All' size='huge' compact primary />
             </div>
             {/*id subject to change. This wraps all goal elements, and gives it an accessible
             role of `list` for screen readers. selection prop gives each list item a pointer
