@@ -1,26 +1,50 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Dropdown, Form, Modal, Segment } from 'semantic-ui-react'
+import { UseGlobalState } from '../utils/stateContext'
 
-function FilterModal() {
-  const [open, setOpen] = React.useState(false)
-  
-  const [formData, setFormData] = useState({
-    filteredLongTermGoals: [],
-    showCompleted: false,
-    showActive: true
-  })
-  const {filteredLongTermGoals, showCompleted, showActive} = formData
-console.log(formData)
-  // replace with db query for LTGoals id.
+  //* Set Data for Dropdown
+  //* replace with db query for LTGoalsId.
   const dropdownOptions =[
     {key: 'career', text:'Career', value:'career'},
     {key: 'lifestyle', text:'Lifestyle', value:'lifestyle'},
     {key: 'artistic', text:'Artistic', value:'artistic'},
     {key: 'physical', text:'Physical', value:'physical'}
   ]
-    
+
+
+function FilterModal() {
+  // set modal status
+  const [open, setOpen] = React.useState(false)
+  
+  //Bring in state
+  const {store, dispatch} = UseGlobalState();
+  const { filter } = store
+  
+  // set initial form data
+  const [formData, setFormData] = useState({})
+  // destructure values from formData
+  const {filteredLongTermGoals, showCompleted, showActive} = formData
+
+  // on page render:
+  // - set formData to match filter
+  useEffect(() => {
+    setFormData(filter)
+  }, [])
+  
+  // create function for updating filter
+  function updateFilter(filterOptions){
+    console.log(filterOptions.filteredLongTermGoals)
+    dispatch({
+      type: "setFilter",
+      data: {
+        filteredLongTermGoals: filterOptions.filteredLongTermGoals,
+        showCompleted: filterOptions.showCompleted,
+        showActive: filterOptions.showActive
+      }
+    })
+  }
+      
   function handleSelectBox(e){
-    console.log('target value:',e.target.value)
     if(e.target.className === 'delete icon'){
       setFormData({
         ...formData,
@@ -78,7 +102,7 @@ console.log(formData)
         content='cancel'
         labelPosition='right'
         icon='delete'
-        onClick={() => setOpen(false)}
+        onClick={() => {setOpen(false)}}
         negative
       />
         <Button
@@ -86,7 +110,11 @@ console.log(formData)
           content="Filter"
           labelPosition='right'
           icon='checkmark'
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            updateFilter(formData);
+            console.log('set filter state to:\n>', formData)
+            setOpen(false)
+          }}
           positive
         />
       </Modal.Actions>

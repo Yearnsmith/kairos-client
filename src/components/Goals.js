@@ -4,9 +4,11 @@ import { List, Segment, Button } from 'semantic-ui-react'
 import FilterModal from './FilterModal'
 import { UseGlobalState } from '../utils/stateContext'
 
-export default function Goal() {
-    const { store, dispatch } = UseGlobalState();
-    const { termGoals} = store
+export default function Goals() {
+
+    const { store } = UseGlobalState();
+    const { filteredGoals } = store
+
     return (
         //replace div with semantic main element. We could move the element to wrap
         // the Router in App.js, and wrap JSX in a fragment. But this is nice for testing.
@@ -25,7 +27,7 @@ export default function Goal() {
             <List selection inverted id="goalPane">
                 {/* map over termGoals prop and extract data. Replace <List.Item> with
                 <Goal /> component once it's built out.*/}
-                {termGoals.map( goal =>
+                {filteredGoals.map( goal =>
                     // Semantic UI list item
                     <List.Item as={ Link } to={`./goals/${goal.id}`}  key={goal.title}>
                         {/* Semantic UI Segment allows for a coloured card-like component.

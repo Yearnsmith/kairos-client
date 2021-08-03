@@ -24,7 +24,16 @@ function App() {
     termGoals: [
       // include just enough properties to avoid error,
       {title:'',events:[]},
-    ]
+    ],
+    // set defaults for filter form on app load.
+    // work out how to move this out of here to
+    // clean up the file...
+    filter:{
+      filteredLongTermGoals: [],
+      showCompleted: false,
+      showActive: true,
+    },
+    filteredGoals: []
   };
 
   // instantiate reducer
@@ -38,7 +47,15 @@ function App() {
       type: "setTermGoals",
       data: data.termGoals
     });
-    // console.log(data.termGoals[0])
+
+    // (this prefills filter Dropdown with all the LongTermGoals
+    // without having to hardcode the long term goals. We could abstract it,
+    // but the reducer action already fills an empty filteredLongTermGoals
+    // array into a full one).
+    dispatch({
+      type: "setFilter",
+      data: store.filter
+    })
   },[]);
 
   return (
@@ -47,13 +64,10 @@ function App() {
     <StateContext.Provider value={{store,dispatch}}>
       <Router>
         <Switch>
-          {/* <Route exact path="/goals" component={Goals} /> */}
           <Route exact path="/">
             <Redirect to="goals" />
           </Route>
-          <Route exact path="/goals">
-            <Goals termGoals={termGoals} />
-          </Route>
+          <Route exact path="/goals" component={Goals} />
           <Route exact path="/goals/:id"
             render={ (props) => <Goal {...props}
               termGoal={findGoalById(termGoals, props.match.params.id)}/>}
