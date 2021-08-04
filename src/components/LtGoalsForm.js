@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Form, Header,Icon,Input, Segment, TextArea } from 'semantic-ui-react';
+import { createLTGoal } from '../services/lifetimeGoalServices';
 // import { UseGlobalState } from '../utils/stateContext'
 
 //we will eventually pull this list dynamically from state, or from an API call
@@ -12,10 +13,11 @@ goalList.forEach( el => {
     initialState[el] = "" 
 })
 
+
 // This enables us to autonomously generate the text boxes
 const textAreaValues = goalList.map( goal =>
     {return {
-        name: goal,
+        type: goal,
         labelText: goal.charAt(0).toUpperCase() + goal.slice(1)
     }});
 
@@ -27,8 +29,7 @@ export default function SignUpForm() {
     
     // we use local state for form inputs
     const [formData, setFormData] = useState(initialState);
-    // const { career, artistic, educational, physical, lifestyle } = formData;
-    
+    // console.log(formData)
     // This tracks which field has a save button attached.
     // it simply stores the name of the field.
     const [activeField, setActiveField] = useState();
@@ -65,23 +66,23 @@ export default function SignUpForm() {
                 {/*//TODO: Add a ternary to display no text area by default, and a text area on label focus/click/touch */}
                 {textAreaValues.map( goal => {
                     return(
-                        <Segment clearing key={goal.name}>
+                        <Segment clearing key={goal.type}>
                             <Form.Field>
-                                <label htmlFor={goal.name}><Header as='h3'>{goal.labelText}</Header></label>
+                                <label htmlFor={goal.type}><Header as='h3'>{goal.labelText}</Header></label>
                                 <TextArea
-                                    id={goal.name}
-                                    name={goal.name}
-                                    placeholder={goal.name}
-                                    value={formData[goal.name]}
+                                    id={goal.type}
+                                    name={goal.type}
+                                    placeholder={goal.type}
+                                    value={formData[goal.type]}
                                     onChange={handleChange}
                                     // change field to 'active'. I don't want a toggle here,
                                     // because if I switch focus back from the save button,
                                     // it will dissapear the save button.
-                                    onFocus={() => setActiveField(goal.name)}
+                                    onFocus={() => setActiveField(goal.type)}
                                 />
                             </Form.Field>
                             {/* if `activeField` is equal to the current itteration, display a save button, otherwise, nothing */}
-                            {activeField === goal.name ?
+                            {activeField === goal.type ?
                                 <Form.Button
                                     compact
                                     content='save'
@@ -91,8 +92,16 @@ export default function SignUpForm() {
                                     // perhaps include an 'undoField' like in the goal filter component
                                     // (for when segment loses focus without a save.)
                                     onClick={() => {
-                                        console.log(`Jeeves, file "${formData[goal.name]}" under "${goal.name}".`)
-                                        toggleActiveField(goal.name)
+                                        console.log({type: goal.type, description: formData[goal.type]})
+                                        createLTGoal({type: goal.type, description: formData[goal.type]}).then(response =>{
+                                            if(response.error){
+                                                console.log(response.error);
+                                            }else{
+                                                console.log('Goal created response:', response)
+                                            }
+                                        })
+                                        console.log(`Jeeves, file "${formData[goal.type]}" under "${goal.type}".`)
+                                        toggleActiveField(goal.type)
                                     }}
                                 />
                             : null

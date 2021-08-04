@@ -8,7 +8,7 @@ const kairosAPI = axios.create({
 
 kairosAPI.interceptors.request.use(req => {
     // change to cookie storage
-    const token = sessionStorage.getItem("token")
+    const token = localStorage.getItem("jwt")
     if (token) {
         req.headers["Authorization"] = `Bearer ${token}`
     }

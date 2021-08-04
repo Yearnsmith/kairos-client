@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import { Button, Form, Header,Input, Segment } from 'semantic-ui-react';
-// import { UseGlobalState } from '../utils/stateContext'
+import { signUp, signIn } from '../services/authServices';
 
 
-export default function LoginForm() {
-    // const {dispatch} = UseGlobalState();
+export default function LoginForm({history}) {
 
     const [formData, setFormData] = useState({email:"", password:""});
     const { email, password } = formData;
@@ -17,16 +16,35 @@ export default function LoginForm() {
          });
      }
      function handleSubmit(event){
+        //  console.log(event)
          event.preventDefault();
-         let submitter = event.nativeEvent.submitter.id;
+        //  let submitter = event.nativeEvent.submitter.id;
+        //  console.log(submitter);
+        console.log(subButton)
          if(email.length > 0 && password.length > 0){
-             if( submitter === 'signIn' ){
-                 console.log('Jeeves, send this user in! ')
+             if( subButton === 'signUp' ){
+                 
+                 signUp({email: email, password: password}).then((response)=> {
+                     if (response.error){
+                         console.log(response.error.message)
+                     }else {
+                         console.log(response)
+                         console.log('Jeeves, send this user in! ')
+                         return history.push("/sign_up")
+                     }
+                 });
              } else {
+                 signIn({email: email, password: password}).then( response =>{
+                    console.log(response)
+                 })
                  console.log('Take this person to the cloak room, Jeeves')
              }
          }
      }
+
+     const [subButton, setSubButton] = useState("")
+     console.log(subButton)
+     
 
     return (
         <Segment>
@@ -63,8 +81,8 @@ export default function LoginForm() {
                     </Form.Field>
                     <Form.Group style={{justifyContent: 'center'}}>
                         <Button.Group>
-                            <Button content='Sign In' id='signIn' />
-                            <Button content='Sign Up' id='signUp' />
+                            <Button content='Sign In' id='signIn' onClick={()=> setSubButton('signIn')} />
+                            <Button content='Sign Up' id='signUp' onClick={()=> setSubButton('signUp')}/>
                         </Button.Group>
 
                     </Form.Group>

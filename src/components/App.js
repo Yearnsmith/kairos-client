@@ -3,6 +3,7 @@ import React, { useReducer, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import Nav from './Nav';
 import LoginForm from './LoginForm';
+import LtGoalsForm from './LtGoalsForm';
 import Goals from './Goals';
 import Goal from './Goal';
 import Calendar from './Calendar'
@@ -13,7 +14,6 @@ import { findGoalById } from '../utils/goalUtils'
 import reducer from '../utils/reducer'
 import { StateContext } from '../utils/stateContext'
 import { data } from '../services/data'
-import SignUpForm from './SignUpForm';
 import { getGoals } from '../services/goalServices';
 
 function App() {
@@ -84,7 +84,7 @@ function App() {
           </Route>
           {/*embed in home component */}
           <Route exact path="/login" component={LoginForm} />
-          <Route exact path="/sign_up" component={SignUpForm} />
+          <Route exact path="/sign_up" component={LtGoalsForm} />
           <Route exact path="/goals" component={Goals} />
           <Route exact path="/goals/:id"
             render={ (props) => <Goal {...props}

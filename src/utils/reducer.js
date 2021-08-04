@@ -48,36 +48,7 @@ export default function reducer(state, action) {
                 filteredGoals: goalsToShow
             }
         }
-        // case "setFilteredGoals": {
-//             // destructure current filterState
-            // const {filteredLongTermGoals, showCompleted, showActive} = state.filter;
-// 
-//             // create goalsToShow array by mapping through all termGoals in state
-//             const goalsToShow = state.termGoals.filter( goal => {
-// 
-//                 // include if goal's longTermGoal is included in action.data
-//                 // if it isn't it won't be checked against completed and active tests.
-//                 if( !filteredLongTermGoals.includes(goal.longTermGoal) ){
-//                     // include if showCompleted is true, and goal has been completed
-//                     // if showCompleted is false it won't bother checking goal.completedAt
-//                     if(!showCompleted && !goal.completedAt){
-//                         return goal
-//                     // include if goal hasn't been completed, and showActive is true
-//                     // if goal.completedAt is true, it won't bother checking against showActive
-//                     } else if(goal.completedAt && !showActive){
-//                         return goal
-//                     }
-//                 }
-//             });
-//             // update state to contain goalsToShow :)
-//             return {
-//                 ...state,
-//                 filter: {
-//                     ...state.filter,
-//                     filteredGoals: goalsToShow
-//                 }
-//             }
-        // }//setFilteredGoals
+
         default:
             return console.log('no such action')
     };
