@@ -13,6 +13,7 @@ import { findGoalById } from '../utils/goalUtils'
 import reducer from '../utils/reducer'
 import { StateContext } from '../utils/stateContext'
 import { data } from '../services/data'
+import SignUpForm from './SignUpForm';
 
 function App() {
 
@@ -69,6 +70,7 @@ function App() {
             <Redirect to="goals" />
           </Route>
           <Route exact path="/login" component={LoginForm} />
+          <Route exact path="/sign_up" component={SignUpForm} />
           <Route exact path="/goals" component={Goals} />
           <Route exact path="/goals/:id"
             render={ (props) => <Goal {...props}
