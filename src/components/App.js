@@ -1,5 +1,5 @@
 // import './App.css';
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import Nav from './Nav';
 import LoginForm from './LoginForm';
@@ -14,6 +14,7 @@ import reducer from '../utils/reducer'
 import { StateContext } from '../utils/stateContext'
 import { data } from '../services/data'
 import SignUpForm from './SignUpForm';
+import { getGoals } from '../services/goalServices';
 
 function App() {
 
@@ -42,13 +43,25 @@ function App() {
   const [store, dispatch] = useReducer(reducer, initialState);
   const {termGoals} = store;
 
+  //instantiate error messages
+  const [errors, setErrors] = useState({});
+
   // Run dispatch as a side-effect of loading the page,
   // effectively updating the data in store.
   useEffect( () => {
-    dispatch({
-      type: "setTermGoals",
-      data: data.termGoals
-    });
+
+    // getGoals()
+    //   .then( goals =>{
+        dispatch({
+          type: "setTermGoals",
+          // data: goals
+          data: data.termGoals
+        });
+      // })
+      // .catch( error => {
+      //   console.log(error);
+      //   setErrors({status: error.status, message: error.message})
+      // });
 
     // (this prefills filter Dropdown with all the LongTermGoals
     // without having to hardcode the long term goals. We could abstract it,
@@ -62,13 +75,14 @@ function App() {
 
   return (
     <div className="App">
-      <Nav />
+      {/* <Nav /> */}
     <StateContext.Provider value={{store,dispatch}}>
       <Router>
         <Switch>
           <Route exact path="/">
             <Redirect to="goals" />
           </Route>
+          {/*embed in home component */}
           <Route exact path="/login" component={LoginForm} />
           <Route exact path="/sign_up" component={SignUpForm} />
           <Route exact path="/goals" component={Goals} />

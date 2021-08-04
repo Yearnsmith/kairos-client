@@ -66,7 +66,7 @@ export default function SignUpForm() {
                 {textAreaValues.map( goal => {
                     return(
                         <Segment clearing key={goal.name}>
-                            <Form.Field onBlur={() => toggleActiveField(goal.name) }>
+                            <Form.Field>
                                 <label htmlFor={goal.name}><Header as='h3'>{goal.labelText}</Header></label>
                                 <TextArea
                                     id={goal.name}
@@ -79,6 +79,7 @@ export default function SignUpForm() {
                                     // it will dissapear the save button.
                                     onFocus={() => setActiveField(goal.name)}
                                 />
+                            </Form.Field>
                             {/* if `activeField` is equal to the current itteration, display a save button, otherwise, nothing */}
                             {activeField === goal.name ?
                                 <Form.Button
@@ -93,10 +94,9 @@ export default function SignUpForm() {
                                         console.log(`Jeeves, file "${formData[goal.name]}" under "${goal.name}".`)
                                         toggleActiveField(goal.name)
                                     }}
-                                    />
-                                    : null
-                                }
-                            </Form.Field>
+                                />
+                            : null
+                            }
                         </Segment>);
                 })}
                 {/* get us out of here! Work out how to centre this thing. */}
