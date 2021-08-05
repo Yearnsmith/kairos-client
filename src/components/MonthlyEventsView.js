@@ -1,10 +1,23 @@
-import React, {useState} from 'react'
-import {Header, Segment, Button, Container} from 'semantic-ui-react'
+import React from 'react'
+import {Header, Button, Container} from 'semantic-ui-react'
 import Calendar from 'react-calendar'
+import ExpandableEvents from './ExpandableEvents'
 import '../css/Calendar.css';
+import {UseGlobalState} from '../utils/stateContext'
+
 
 export default function MonthlyEventsView() {
-    const [selectedDate, setSelectedDate] = useState("")
+
+    const { store, dispatch } = UseGlobalState()
+
+    const storeDate = function (value) {
+        dispatch({
+            type: 'setDate',
+            data: value
+        })
+    
+    }
+
 
     return (
         <main>
@@ -18,11 +31,11 @@ export default function MonthlyEventsView() {
             </Container>
             <Container style={{display: 'flex', justifyContent: 'center',
                             'padding-top': '10px', 'padding-left': '5%', 'padding-right': '5%'}}>
-            <Calendar onChange={(value, event) => setSelectedDate(`${value}`)}/>
+            <Calendar onChange={(value) => storeDate(`${value}`)}/>
             </Container>
             <Container style={{display: 'flex', justifyContent: 'center', 'border-top': '1px solid rgba(0, 0, 0, 0.226)',
                             'margin-top': '10px', 'padding-left': '5%', 'padding-right': '5%'}}>
-            {selectedDate}
+            <ExpandableEvents />
             </Container>
             
 

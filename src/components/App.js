@@ -36,7 +36,8 @@ function App() {
       showCompleted: false,
       showActive: true,
     },
-    filteredGoals: []
+    filteredGoals: [], 
+    selectedDate: ""
   };
 
   // instantiate reducer

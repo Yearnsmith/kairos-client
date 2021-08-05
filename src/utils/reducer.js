@@ -47,7 +47,19 @@ export default function reducer(state, action) {
                 },
                 filteredGoals: goalsToShow
             }
+
+        
+
         }
+
+        case "setDate": {
+            return {
+                ...state,
+                selectedDate: action.data
+            }
+        }
+
+        
 
         default:
             return console.log('no such action')
