@@ -23,6 +23,8 @@ function App() {
   // set initial, empty, state for first render.
   // right now I'm unconcerned about users, auth, and events. I just want to get
   // goals rendering properly, and get the goals route rendering id.
+
+
   const initialState = {
     termGoals: [
       // include just enough properties to avoid error,
@@ -37,12 +39,14 @@ function App() {
       showActive: true,
     },
     filteredGoals: [], 
-    selectedDate: ""
+    selectedDate: `${new Date(new Date().toDateString())}`
   };
 
   // instantiate reducer
   const [store, dispatch] = useReducer(reducer, initialState);
   const {termGoals} = store;
+
+  
 
   //instantiate error messages
   const [errors, setErrors] = useState({});
@@ -91,7 +95,7 @@ function App() {
             render={ (props) => <Goal {...props}
               termGoal={findGoalById(termGoals, props.match.params.id)}/>}
           />
-          <Route exact path="/calendar" component={MonthlyEventsView} />
+          <Route exact path="/monthly_events" component={MonthlyEventsView} />
           <Route exact path="/profile" component={UserProfile} />
         </Switch>
       </Router>
