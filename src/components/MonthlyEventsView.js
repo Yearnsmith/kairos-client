@@ -1,9 +1,11 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {Header, Segment, Button, Container} from 'semantic-ui-react'
 import Calendar from 'react-calendar'
 import '../css/Calendar.css';
 
 export default function MonthlyEventsView() {
+    const [selectedDate, setSelectedDate] = useState("")
+
     return (
         <main>
             
@@ -16,11 +18,11 @@ export default function MonthlyEventsView() {
             </Container>
             <Container style={{display: 'flex', justifyContent: 'center',
                             'padding-top': '10px', 'padding-left': '5%', 'padding-right': '5%'}}>
-            <Calendar onChange={(value, event) => console.log(value)}/>
+            <Calendar onChange={(value, event) => setSelectedDate(`${value}`)}/>
             </Container>
-            <Container style={{display: 'flex', justifyContent: 'center',
-                            'padding-top': '10px', 'padding-left': '5%', 'padding-right': '5%'}}>
-            content
+            <Container style={{display: 'flex', justifyContent: 'center', 'border-top': '1px solid rgba(0, 0, 0, 0.226)',
+                            'margin-top': '10px', 'padding-left': '5%', 'padding-right': '5%'}}>
+            {selectedDate}
             </Container>
             
 
