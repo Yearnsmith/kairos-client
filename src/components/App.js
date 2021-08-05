@@ -6,7 +6,7 @@ import LoginForm from './LoginForm';
 import LtGoalsForm from './LtGoalsForm';
 import Goals from './Goals';
 import Goal from './Goal';
-import Calendar from './Calendar'
+import MonthlyEventsView from './MonthlyEventsView'
 import UserProfile from './UserProfile'
 import { findGoalById } from '../utils/goalUtils'
 
@@ -90,7 +90,7 @@ function App() {
             render={ (props) => <Goal {...props}
               termGoal={findGoalById(termGoals, props.match.params.id)}/>}
           />
-          <Route exact path="/calendar" component={Calendar} />
+          <Route exact path="/calendar" component={MonthlyEventsView} />
           <Route exact path="/profile" component={UserProfile} />
         </Switch>
       </Router>
