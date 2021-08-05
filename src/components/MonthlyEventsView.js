@@ -36,7 +36,7 @@ export default function MonthlyEventsView({history}) {
             <Calendar value={new Date(selectedDate)} onChange={(value) => storeDate(`${value}`)}/>
             </Container>
             <Container style={{display: 'flex', justifyContent: 'center', 'border-top': '.5px solid rgba(0, 0, 0, 0.226)',
-                            'margin-top': '10px', 'padding-left': '5%', 'padding-right': '5%'}}>
+                            'margin-top': '10px'}}>
             <ExpandableEvents />
             </Container>
             

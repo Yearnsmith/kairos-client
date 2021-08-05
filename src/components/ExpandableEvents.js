@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {Container, Accordion, Icon, Checkbox, Divider} from 'semantic-ui-react'
 import {UseGlobalState} from '../utils/stateContext'
 import { getEventsByDate } from '../services/eventServices'
-import {response} from '../sampledata/events'
+import {response} from '../sampledata/events' // to be deleted
 
 
 
@@ -16,6 +16,7 @@ export default function ExpandableEvents () {
 
     console.log(selectedDate)
 
+    // FOLLOWING CODE FOR API INTEGRATION
     // getEventsByDate({date: `${Date.parse({selectedDate})}`}).then((response)=> {
     //     if (response.error){
     //         console.log(response.error.message)
@@ -31,7 +32,7 @@ export default function ExpandableEvents () {
         setActiveIndex(titleProps.index)
     }
 
-    const events = response.sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
+    const events = response.sort((a, b) => new Date(a.startDate) - new Date(b.startDate)) // to be deleted
 
 
     return (
