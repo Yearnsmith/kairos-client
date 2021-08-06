@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {Container, Accordion, Icon, Checkbox, Divider} from 'semantic-ui-react'
 import {UseGlobalState} from '../utils/stateContext'
+import moment from 'moment'
 import { getEventsByDate } from '../services/eventServices'
 import {response} from '../sampledata/events' // to be deleted
 
@@ -36,7 +37,7 @@ export default function ExpandableEvents () {
 
 
     return (
-        <Container style={{'margin-top':'17px', 'margin-bottom':'20px'}}>
+        <Container style={{display: 'flex', justifyContent: 'center', 'margin-top':'17px', 'margin-bottom':'20px'}}>
         {/* {selectedDate} */}
         <Accordion styled defaultActiveIndex={activeIndex}>
             {events.map( (event,index) => 
@@ -50,8 +51,8 @@ export default function ExpandableEvents () {
                             <div style={{'color': 'black'}}>{event.title}</div>
                             <Icon name='dropdown' />
                             </div>
-                            {new Date(event.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - 
-                            {new Date(event.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            {moment(event.startDate).format('h:mm a')} - 
+                            {' '}{moment(event.endDate).format('h:mm a')}
                     </Accordion.Title>
                     <Accordion.Content active={activeIndex === index}>
                         {event.description && <p>{event.description}</p>}

@@ -7,6 +7,7 @@ import LtGoalsForm from './LtGoalsForm';
 import Goals from './Goals';
 import Goal from './Goal';
 import MonthlyEventsView from './MonthlyEventsView'
+import WeeklyEventsView from './WeeklyEventsView'
 import UserProfile from './UserProfile'
 import { findGoalById } from '../utils/goalUtils'
 
@@ -96,6 +97,7 @@ function App() {
               termGoal={findGoalById(termGoals, props.match.params.id)}/>}
           />
           <Route exact path="/monthly_events" component={MonthlyEventsView} />
+          <Route exact path="/weekly_events" component={WeeklyEventsView} />
           <Route exact path="/profile" component={UserProfile} />
         </Switch>
       </Router>
