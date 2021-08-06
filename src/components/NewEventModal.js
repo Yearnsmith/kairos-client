@@ -41,25 +41,33 @@ export default function NewEventModal() {
                     <Dropdown   fluid multiple search selection 
                                 placeholder="Related Goals" options={goalsArray}/>
                 </Form.Field>
-                <Grid columns={2} divided>
+                <Grid columns={3} divided>
                     <Grid.Row>
                         <Grid.Column>
                             <Form.Field>
                                 <label>Date</label>
-                                <input  type="date" id="meeting-time"
-                                        name="meeting-time" defaultValue="2018-06-12" />
+                                <input  type="date" id="eventDate"
+                                        name="eventDate" defaultValue="2018-06-12" />
                             </Form.Field>
                         </Grid.Column>
                         <Grid.Column>
                             <Form.Field>
-                                <label>Date</label>
-                                <input  type="date" id="meeting-time"
-                                        name="meeting-time" defaultValue="2018-06-12" />
+                                <label>From</label>
+                                <input  label="start"
+                                        type="time" id="eventStartTime"
+                                        name="eventStartTime" defaultValue="07:30" />  
+                            </Form.Field>
+                        </Grid.Column>
+                        <Grid.Column>
+                            <Form.Field>
+                                <label>Until</label>
+                                <input  type="time" id="eventEndTime"
+                                        name="eventEndTime" defaultValue="08:30" />
                             </Form.Field>
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
-                <Form.Field>
+                <Form.Field style={{'margin-top': '10px'}}>
                     <label>Description</label>
                     <TextArea rows={4} placeholder='Describe the event' />
                 </Form.Field>
