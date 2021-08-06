@@ -26,18 +26,18 @@ export default function MonthlyEventsView({history}) {
             
             <Header as='h1' style={{'padding-top': '20px', 'padding-left': '20px', 'padding-bottom': '5px'}}>kairos.</Header>
             <Container style={{display: 'flex', justifyContent: 'center', 'padding-bottom': '8px'}}>
-            <Button.Group compact>
-            <Button active>Monthly</Button>
-            <Button onClick={() => history.push("/weekly_events")}>Weekly</Button>
-            </Button.Group>
+                <Button.Group compact>
+                    <Button active>Monthly</Button>
+                    <Button onClick={() => history.push("/weekly_events")}>Weekly</Button>
+                </Button.Group>
             </Container>
             <Container style={{display: 'flex', justifyContent: 'center',
                             'padding-top': '10px', 'padding-left': '5%', 'padding-right': '5%'}}>
-            <Calendar value={new Date(selectedDate)} onChange={(value) => storeDate(`${value}`)}/>
+                <Calendar value={new Date(selectedDate)} onChange={(value) => storeDate(`${value}`)}/>
             </Container>
             <Container style={{display: 'flex', justifyContent: 'center', 'border-top': '.5px solid rgba(0, 0, 0, 0.226)',
                             'margin-top': '10px'}}>
-            <ExpandableEvents />
+                <ExpandableEvents />
             </Container>
             
 

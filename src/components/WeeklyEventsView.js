@@ -2,8 +2,8 @@ import React from 'react'
 import {Header, Button, Container} from 'semantic-ui-react'
 import moment from 'moment'
 import ExpandableEvents from './ExpandableEvents'
-import '../css/Calendar.css';
 import {UseGlobalState} from '../utils/stateContext'
+import NewEventModal from './NewEventModal'
 
 
 export default function MonthlyEventsView({history}) {
@@ -48,6 +48,9 @@ export default function MonthlyEventsView({history}) {
             </Container>
             <div style={{display: 'flex', justifyContent: 'center', 'font-size': '1.3em'}}>
                 {moment(selectedDate).format('dddd Do MMMM YYYY')}
+            </div>
+            <div style={{display: 'flex', justifyContent: 'center', 'margin-top': '5px'}}>
+                <NewEventModal />
             </div>
             <Container style={{display: 'flex', justifyContent: 'center', 'border-top': '.5px solid rgba(0, 0, 0, 0.226)',
                             'margin-top': '5px'}}>
