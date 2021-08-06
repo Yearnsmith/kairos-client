@@ -38,10 +38,13 @@ export default function Goal({termGoal}) {
                             <Icon name='add' link size='large' className='ui right floated'/>
                         </Header>
                         <List selection>
-                            {events.map( event =>
-                                <Card as={List.Item} fluid key={event.title} style={{background:'#fff', margin: '1rem 0'}}>
-                                    <Card.Header as='h4' content={event.title} textAlign='left' />
-                                </Card>
+                            {events.length === 0 ? 
+                                <Container style={{color:'#fff'}}>You have no events. Add a new task to start kicking this goal!</Container>
+                            :
+                                events.map( event =>
+                                    <Card as={List.Item} fluid key={event.title} style={{background:'#fff', margin: '1rem 0'}}>
+                                        <Card.Header as='h4' content={event.title} textAlign='left' />
+                                    </Card>
                             )}
                         </List>
                     </Segment>
