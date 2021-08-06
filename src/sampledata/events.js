@@ -4,7 +4,7 @@ export const response = [
         "description": "Sample description 3 Sample description Sample description Sample description Sample description",
         "startDate": "2021-08-05T15:30:00.00",
         "endDate": "2021-08-05T16:00:00.00",
-        "checklist": ["Item One", "Item Two", "Item Three"],
+        "checklist": [{name: "Item One", done: true}, {name: "Item Two", done: false}, {name: "Item Three", done: false}],
         "location": "Another location",
         "url": "http://testurl.com.au",
         "completed at": "false"
@@ -14,7 +14,7 @@ export const response = [
         "description": "",
         "startDate": "2021-08-05T08:30:00.00",
         "endDate": "2021-08-05T10:30:00.00",
-        "checklist": ["Item One", "Item Two", "Item Three"],
+        "checklist": [{name: "Item One", done: true}, {name: "Item Two", done: false}, {name: "Item Three", done: false}],
         "location": "Somewhere else",
         "url": "http://testurl.com.au",
         "completed at": "false"
@@ -24,7 +24,7 @@ export const response = [
         "description": "Sample description Sample description Sample description Sample description Sample description",
         "startDate": "2021-08-05T07:00:00.00",
         "endDate": "2021-08-05T08:30:00.00",
-        "checklist": ["Item One", "Item Two", "Item Three"],
+        "checklist": [{name: "Item One", done: true}, {name: "Item Two", done: false}, {name: "Item Three", done: false}],
         "location": "Queensland State Library",
         "url": "https://www.slq.qld.gov.au",
         "completed at": "false"
@@ -34,7 +34,7 @@ export const response = [
         "description": "Sample description 3 Sample description Sample description Sample description Sample description",
         "startDate": "2021-08-05T13:00:00.00",
         "endDate": "2021-08-05T15:30:00.00",
-        "checklist": ["Item One", "Item Two", "Item Three"],
+        "checklist": "",
         "location": "Another location",
         "url": "http://testurl.com.au",
         "completed at": "false"
@@ -44,7 +44,7 @@ export const response = [
         "description": "Sample description 3 Sample description Sample description Sample description Sample description",
         "startDate": "2021-08-05T16:00:00.00",
         "endDate": "2021-08-05T23:30:00.00",
-        "checklist": ["Item One", "Item Two", "Item Three"],
+        "checklist": [{name: "Item One", done: true}, {name: "Item Two", done: false}, {name: "Item Three", done: false}],
         "location": "Another location",
         "url": "http://testurl.com.au",
         "completed at": "false"

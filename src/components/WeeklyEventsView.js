@@ -28,14 +28,14 @@ export default function MonthlyEventsView({history}) {
     return (
         <main>
             
-            <Header as='h1' style={{'padding-top': '20px', 'padding-left': '20px', 'padding-bottom': '7px'}}>kairos.</Header>
+            <Header as='h1' style={{'padding-top': '20px', 'padding-left': '20px', 'padding-bottom': '5px'}}>kairos.</Header>
             <Container style={{display: 'flex', justifyContent: 'center', 'padding-bottom': '20px'}}>
             <Button.Group compact>
             <Button onClick={() => history.push("/monthly_events")}>Monthly</Button>
             <Button active>Weekly</Button>
             </Button.Group>
             </Container>
-            <Container style={{display: 'flex', justifyContent: 'center', 'padding-bottom': '18px'}}>
+            <Container style={{display: 'flex', justifyContent: 'center', 'padding-bottom': '20px'}}>
             <Button.Group compact size="small">
             <Button active={slicedWeekday === 'Mon'} onClick={() => storeDate(moment().isoWeekday(1))}>Mon</Button>
             <Button active={slicedWeekday === 'Tue'} onClick={() => storeDate(moment().isoWeekday(2))}>Tue</Button>

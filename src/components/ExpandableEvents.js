@@ -33,6 +33,8 @@ export default function ExpandableEvents () {
         setActiveIndex(titleProps.index)
     }
 
+    let eventid
+
     const events = response.sort((a, b) => new Date(a.startDate) - new Date(b.startDate)) // to be deleted
 
 
@@ -42,6 +44,7 @@ export default function ExpandableEvents () {
         <Accordion styled defaultActiveIndex={activeIndex}>
             {events.map( (event,index) => 
                     <>
+                    {/*{eventid = 'events.id'}*/}
                     <Accordion.Title 
                         index={index}
                         active={activeIndex === index}
@@ -56,7 +59,7 @@ export default function ExpandableEvents () {
                     </Accordion.Title>
                     <Accordion.Content active={activeIndex === index}>
                         {event.description && <p>{event.description}</p>}
-                        {event.checklist && event.checklist.map(item => <p><Checkbox label={item}/></p>)}
+                        {event.checklist && event.checklist.map((item, index) => <p> <Checkbox checked={item.done} label={item.name}/></p>)}
                         <Divider/>
                         {event.location && <p>{'\u00A0'}<Icon name="map marker alternate" />{'\u00A0'}{event.location}</p>}
                         {event.location && <p>{'\u00A0'}<Icon name="linkify" />{'\u00A0'}<a href={event.url}>{event.url}</a></p>}
