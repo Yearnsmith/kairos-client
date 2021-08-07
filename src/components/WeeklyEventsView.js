@@ -54,7 +54,7 @@ export default function MonthlyEventsView({history}) {
             </div>
             <Container style={{display: 'flex', justifyContent: 'center', 'border-top': '.5px solid rgba(0, 0, 0, 0.226)',
                             'margin-top': '5px'}}>
-            <ExpandableEvents />
+            <ExpandableEvents props={selectedDate}/>
             </Container>
             
 

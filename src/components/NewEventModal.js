@@ -3,6 +3,7 @@ import { Button, Dropdown, Form, Modal, Checkbox, Input, Icon, TextArea, Grid } 
 import {data} from '../services/data'
 import moment from 'moment'
 import {UseGlobalState} from '../utils/stateContext'
+import {createEvent} from '../services/eventServices'
 
 let goalsArray = []
 for (const goal of data.termGoals) {
@@ -16,26 +17,32 @@ const repeatOptions = [
     { key: 3, text: 'Monthly', value: 3 },
   ]
 
+const defaultEvents = {
+    eventTitle: "",
+    eventGoals: [],
+    eventDescription: "",
+    eventLocation: "",
+    eventURL: "",
+    repeatEvent: ""
+}
+
+const defaultChecklist = {items: [], newItem: false, tempItem: ""}
+
 export default function NewEventModal() {
 
     const { store } = UseGlobalState()
     const { selectedDate } = store
 
-    const [open, setOpen] = useState(false)
-    const [checklistItems, setAddChecklistItems] = useState({items: [], newItem: false, tempItem: ""})
-    const [eventDateTime, setEventDateTime] = useState({
+    const defaultDate = {
         eventDate: moment(selectedDate).format("YYYY[-]MM[-]DD"),
         startTime: moment().format("HH[:]mm"),
         endTime: moment().add(30, 'minutes').format("HH[:]mm")
-        })
-    const [eventItems, setEventItems] = useState({
-        eventTitle: "",
-        eventGoals: [],
-        eventDescription: "",
-        eventLocation: "",
-        eventURL: "",
-        repeatEvent: ""
-    })
+        }
+
+    const [open, setOpen] = useState(false)
+    const [checklistItems, setAddChecklistItems] = useState(defaultChecklist)
+    const [eventDateTime, setEventDateTime] = useState(defaultDate)
+    const [eventItems, setEventItems] = useState(defaultEvents)
 
     function getGoalIds (eventGoals, goalsArray){
         let idArray = []
@@ -86,16 +93,31 @@ export default function NewEventModal() {
         let data = {
             title: eventItems.eventTitle,
             description: eventItems.eventDescription,
-            eventStart: moment(`${eventDateTime.eventDate}T${eventDateTime.startTime}`).format(),
-            eventEnd: moment(`${eventDateTime.eventDate}T${eventDateTime.endTime}`).format(),
+            eventStart: `${new Date(moment(`${eventDateTime.eventDate}T${eventDateTime.startTime}`).format())}`,
+            eventEnd: `${new Date(moment(`${eventDateTime.eventDate}T${eventDateTime.endTime}`).format())}`,
             checklist: checklistItems.items,
             location: eventItems.eventLocation,
-            url: eventItems.eventUrl,
-            goalsId: getGoalIds(eventItems.eventGoals, goalsArray)
+            url: eventItems.eventUrl
+            // goalsId: getGoalIds(eventItems.eventGoals, goalsArray)
         }
+        // console.log(data)
+        // setAddChecklistItems(defaultChecklist)
+        // setEventDateTime(defaultDate)
+        // setEventItems(defaultEvents)
+        // setOpen(false)
         if (data.title && data.description && data.eventStart && data.eventEnd) {
-            console.log(data)
-            setOpen(false)
+            createEvent(data).then((response)=> {
+                if (response.error){
+                    console.log(response.error.message)
+                }else{
+                    console.log(response)
+                    setAddChecklistItems(defaultChecklist)
+                    setEventDateTime(defaultDate)
+                    setEventItems(defaultEvents)
+                    setOpen(false)
+                }
+            })
+            
         } else {
             alert("Please fill out all required fields")
         }
@@ -129,8 +151,8 @@ export default function NewEventModal() {
                             <Form.Field>
                                 <label>Date</label>
                                 <Input  type="date" id="eventDate" name="eventDate" 
-                                        defaultValue={moment(eventDateTime.eventDate).format("YYYY[-]MM[-]DD")} 
-                                        onChange={(e)=> setEventDateTime(oldValues => {return {...oldValues, eventDate:e.value}})}/>
+                                        defaultValue={moment(selectedDate).format("YYYY[-]MM[-]DD")} 
+                                        onChange={(e)=> setEventDateTime(oldValues => {return {...oldValues, eventDate:e.target.value}})}/>
                             </Form.Field>
                         </Grid.Column>
                         <Grid.Column>
@@ -154,9 +176,12 @@ export default function NewEventModal() {
                 </Grid>
                 <Form.Field style={{'margin-top': '10px'}}>
                     <label>Description</label>
-                    <TextArea rows={4} placeholder='Describe the event' onChange={(e) => setEventItems(oldValues => {return {...oldValues, eventDescription: e.target.value}})}/>
+                    <TextArea   rows={4} placeholder='Describe the event' 
+                                onChange={(e) => setEventItems(oldValues => 
+                                {return {...oldValues, eventDescription: e.target.value}})}/>
                 </Form.Field>
-                {!checklistItems.newItem && <Button compact onClick={() => setAddChecklistItems(oldValues => {return {...oldValues, newItem: true}})}>
+                {!checklistItems.newItem && <Button compact onClick={() => setAddChecklistItems(oldValues => 
+                                                                        {return {...oldValues, newItem: true}})}>
                     <Icon name="plus square outline"/> Add Checklist Item
                 </Button> }
                 

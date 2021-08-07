@@ -59,6 +59,13 @@ export default function reducer(state, action) {
             }
         }
 
+        case "storeEvents": {
+            return {
+                ...state,
+                storedEvent: action.data
+            }
+        }
+
         
 
         default:

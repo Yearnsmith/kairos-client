@@ -3,6 +3,8 @@ import {Header, Button, Container} from 'semantic-ui-react'
 import Calendar from 'react-calendar'
 import ExpandableEvents from './ExpandableEvents'
 import '../css/Calendar.css';
+import moment from 'moment'
+import { getEventsByDate } from '../services/eventServices'
 import {UseGlobalState} from '../utils/stateContext'
 
 
@@ -17,9 +19,13 @@ export default function MonthlyEventsView({history}) {
             type: 'setDate',
             data: value
         })
-    
     }
 
+    const getEventsPls = (value) => getEventsByDate(`${value}`)
+        .then((response)=> dispatch({
+            type: 'storeEvents',
+            data: response})
+        )
 
     return (
         <main>
@@ -33,7 +39,8 @@ export default function MonthlyEventsView({history}) {
             </Container>
             <Container style={{display: 'flex', justifyContent: 'center',
                             'padding-top': '10px', 'padding-left': '5%', 'padding-right': '5%'}}>
-                <Calendar value={new Date(selectedDate)} onChange={(value) => storeDate(`${value}`)}/>
+                <Calendar value={new Date(selectedDate)} onChange={(value) => {storeDate(`${value}`)
+            getEventsPls(moment(value).format())}}/>
             </Container>
             <Container style={{display: 'flex', justifyContent: 'center', 'border-top': '.5px solid rgba(0, 0, 0, 0.226)',
                             'margin-top': '10px'}}>

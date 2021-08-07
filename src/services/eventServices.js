@@ -11,8 +11,8 @@ export async function getEventsById(id){
     return response.data;
 };
 
-export async function getEventsByDate(date){
-    const response = await kairosAPI.post(`/events/`, date);
+export async function getEventsByDate(data){
+    const response = await kairosAPI.get(`/events/getday/${data}`);
     return response.data;
 };
 
