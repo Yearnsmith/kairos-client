@@ -48,10 +48,14 @@ export default function NewEventModal() {
     }
 
     function handleNewChecklistItem() {
+        if (!checklistItems.items.includes(checklistItems.tempItem)) {
         setAddChecklistItems(oldValues => 
             {return {...oldValues, items: [...checklistItems.items, checklistItems.tempItem]}})
         setAddChecklistItems(oldValues => {return {...oldValues, newItem: false, tempItem: ''}})
-        console.log(checklistItems.items)
+        } else {
+            alert("Checklist items must be unique")
+        }
+       
     }
 
     function handleRemoveChecklistItem(item) {
