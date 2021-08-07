@@ -2,7 +2,7 @@
 export const data = {
     termGoals: [
         {
-            id: 123,
+            id: 'pkes8et0a',
             title:"My first goal",
             description: 'My very first goal',
             longTermGoal: 'lifestyle',
@@ -18,7 +18,7 @@ export const data = {
             completedAt: 1634896926000,
             color: 'teal'},
         {
-            id: 231,
+            id: 'ytzgxwaim',
             title: "Get a junior dev job",
             description: 'get a foot in the door as a junior developer.',
             longTermGoal: 'career',
@@ -34,7 +34,7 @@ export const data = {
             color: 'yellow'
         },
         {
-            id: 321,
+            id: "52njqz9gv",
             title: "Make yoga a weekly habit",
             description: 'practice yoga once a week for 1 month',
             longTermGoal: 'physical',

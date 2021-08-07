@@ -1,3 +1,6 @@
+import pluralize from 'pluralize'
+import { StateContext } from './stateContext';
+
 export default function reducer(state, action) {
     // a switch to test which action to update
     switch(action.type){
@@ -48,6 +51,29 @@ export default function reducer(state, action) {
                 filteredGoals: goalsToShow
             }
         }
+
+        case "addGoal": {
+
+            console.log(action.data)
+            const {title, description, lifetimeGoal, timeframeDigit, timeframePeriod} = action.data
+
+            const timeframe = `${pluralize(timeframePeriod, Number(timeframeDigit), true)}`
+            // const createdAt = Date.now()
+            const newGoal = {
+                title: title,
+                description: description,
+                longTermGoal: lifetimeGoal,
+                timeframe: timeframe,
+                events: [],
+                id: Math.random().toString(36).substr(2, 9),
+                color:'teal',
+                createdAt: Date.now()
+            }
+            return{
+                ...state,
+                termGoals: [... state.termGoals, newGoal]
+            }
+        };
 
         default:
             return console.log('no such action')
