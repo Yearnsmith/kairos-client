@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { List, Segment, Button, Menu, Container } from 'semantic-ui-react'
 import FilterModal from './FilterModal'
 import { UseGlobalState } from '../utils/stateContext'
+import NewGoalModal from './NewGoalModal'
 
 export default function Goals() {
 
@@ -17,8 +18,9 @@ export default function Goals() {
             {/* this could be abstracted into a component */}
             <Menu borderless secondary widths={2}>
                 <FilterModal />
+                <NewGoalModal/>
                 {/* <Button content='Filter' size='huge' compact primary /> */}
-                <Button content='Sort' size='huge' compact primary />
+                {/* <Button content='Sort' size='huge' compact primary /> */}
                 <Button
                 content='All'
                 size='huge'
