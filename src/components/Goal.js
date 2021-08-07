@@ -1,5 +1,5 @@
 import React from 'react'
-import { Header, List, Card, Label, Icon, Segment, Container, Grid, CardMeta } from 'semantic-ui-react'
+import { Header, List, Label, Icon, Segment, Container } from 'semantic-ui-react'
 import moment from 'moment'
 
 

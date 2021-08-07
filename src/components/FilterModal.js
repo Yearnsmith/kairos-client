@@ -14,7 +14,7 @@ import { UseGlobalState } from '../utils/stateContext'
 
 function FilterModal() {
   // set modal status
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
   
   //Bring in state
   const {store, dispatch} = UseGlobalState();
