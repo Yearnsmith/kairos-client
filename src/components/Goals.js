@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { List, Segment, Button, Menu } from 'semantic-ui-react'
+import { List, Segment, Button, Menu, Container } from 'semantic-ui-react'
 import FilterModal from './FilterModal'
 import { UseGlobalState } from '../utils/stateContext'
 
@@ -32,23 +32,26 @@ export default function Goals() {
             </Menu>
             {/*id subject to change. This wraps all goal elements, and gives it an accessible
             role of `list` for screen readers. selection prop gives each list item a pointer
-            on hover, and visual feedback when clicked*/}
+        on hover, and visual feedback when clicked*/}
             <List selection inverted id="goalPane">
                 {/* map over termGoals prop and extract data. Replace <List.Item> with
                 <Goal /> component once it's built out.*/}
-                {filteredGoals.map( goal =>
-                    // Semantic UI list item
-                    <List.Item as={ Link } to={`./goals/${goal.id}`}  key={goal.title}>
-                        {/* Semantic UI Segment allows for a coloured card-like component.
-                        We could possibly modify List.Item to take a background colour if
-                        we want to edit the Less styles. But this works for now.*/}
-                        <Segment inverted className={`${goal.color}`}>
-                            <List.Content>
-                                <List.Header as='h3'>{goal.title}</List.Header>
-                            </List.Content>
-                        </Segment>
-                    </List.Item>
-                )}
+                {store.termGoals.length > 0 ? 
+                    filteredGoals.map( goal =>
+                        // Semantic UI list item
+                        <List.Item as={ Link } to={`./goals/${goal.id}`}  key={goal.title}>
+                            {/* Semantic UI Segment allows for a coloured card-like component.
+                            We could possibly modify List.Item to take a background colour if
+                            we want to edit the Less styles. But this works for now.*/}
+                            <Segment inverted color={`${goal.color}`}>
+                                <List.Content>
+                                    <List.Header as='h3'>{goal.title}</List.Header>
+                                </List.Content>
+                            </Segment>
+                        </List.Item>
+                )
+                : 
+                    <Container>You have no goals. Add a new task to start kicking your lifetime goals!</Container> }
             </List>
         </main>
     )
