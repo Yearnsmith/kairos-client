@@ -24,7 +24,7 @@ export default function NewEventModal() {
     const [open, setOpen] = useState(false)
     const [checklistItems, setAddChecklistItems] = useState({items: [], newItem: false, tempItem: ""})
     const [eventDateTime, setEventDateTime] = useState({
-        eventDate: selectedDate,
+        eventDate: moment(selectedDate).format("YYYY[-]MM[-]DD"),
         startTime: moment().format("HH[:]mm"),
         endTime: moment().add(30, 'minutes').format("HH[:]mm")
         })
@@ -60,7 +60,7 @@ export default function NewEventModal() {
     }
 
 
-    const eventGoalIds = getGoalIds(eventItems.eventGoals, goalsArray)
+    
 
     function handleSelectBox(e){
         if(e.target.className === 'delete icon'){
@@ -77,13 +77,25 @@ export default function NewEventModal() {
           })
         );
       }
-        // function handleCheckBoxes(e){
-        //   console.log(e.target.checked)
-        //   setFormData({
-        //     ...formData,
-        //     [e.target.name]: e.target.checked
-        //   })
-        // }
+    
+    function submitEvents() {
+        let data = {
+            title: eventItems.eventTitle,
+            description: eventItems.eventDescription,
+            eventStart: moment(`${eventDateTime.eventDate}T${eventDateTime.startTime}`).format(),
+            eventEnd: moment(`${eventDateTime.eventDate}T${eventDateTime.endTime}`).format(),
+            checklist: checklistItems.items,
+            location: eventItems.eventLocation,
+            url: eventItems.eventUrl,
+            goalsId: getGoalIds(eventItems.eventGoals, goalsArray)
+        }
+        if (data.title && data.description && data.eventStart && data.eventEnd) {
+            console.log(data)
+            setOpen(false)
+        } else {
+            alert("Please fill out all required fields")
+        }
+    }
 
 
 
@@ -122,7 +134,7 @@ export default function NewEventModal() {
                                 <label>From</label>
                                 <Input  type="time" id="eventStartTime"
                                         name="eventStartTime" defaultValue={moment().format("HH[:]mm")}
-                                        onChange={(e)=> setEventDateTime(oldValues => {return {...oldValues, eventStartTime:e.target.value}})} />  
+                                        onChange={(e)=> setEventDateTime(oldValues => {return {...oldValues, startTime:e.target.value}})} />  
                             </Form.Field>
                         </Grid.Column>
                         <Grid.Column>
@@ -130,7 +142,7 @@ export default function NewEventModal() {
                                 <label>Until</label>
                                 <Input  type="time" id="eventEndTime"
                                         name="eventEndTime" defaultValue={moment().add(30, 'minutes').format("HH[:]mm")}
-                                        onChange={(e)=> setEventDateTime(oldValues => {return {...oldValues, eventEndTime:e.target.value}})}
+                                        onChange={(e)=> setEventDateTime(oldValues => {return {...oldValues, endTime:e.target.value}})}
                                         />
                             </Form.Field>
                         </Grid.Column>
@@ -138,7 +150,7 @@ export default function NewEventModal() {
                 </Grid>
                 <Form.Field style={{'margin-top': '10px'}}>
                     <label>Description</label>
-                    <TextArea rows={4} placeholder='Describe the event' />
+                    <TextArea rows={4} placeholder='Describe the event' onChange={(e) => setEventItems(oldValues => {return {...oldValues, eventDescription: e.target.value}})}/>
                 </Form.Field>
                 {!checklistItems.newItem && <Button compact onClick={() => setAddChecklistItems(oldValues => {return {...oldValues, newItem: true}})}>
                     <Icon name="plus square outline"/> Add Checklist Item
@@ -151,16 +163,16 @@ export default function NewEventModal() {
                 {checklistItems && checklistItems.items.map((item) => <p> <Checkbox checked={false} label={item}/><Icon onClick={()=> handleRemoveChecklistItem(item)} style={{'margin-left': '5px'}} name="close" /></p>)}
                 <Form.Field>
                     <Input style={{'margin-top': '15px'}} icon='map marker alternate' 
-                    iconPosition='left' placeholder='Add Location' />
+                    iconPosition='left' placeholder='Add Location' onChange={(e) => setEventItems(oldValues => {return {...oldValues, eventLocation: e.target.value}})}/>
                 </Form.Field>
                 <Form.Field>
-                    <Input icon='linkify' iconPosition='left' placeholder='Add Related URL' />
+                    <Input icon='linkify' iconPosition='left' placeholder='Add Related URL' onChange={(e) => setEventItems(oldValues => {return {...oldValues, eventURL: e.target.value}})}/>
                 </Form.Field>
                 <Form.Field>
                     <label>Repeat Event:</label>
                     <div style={{'max-width': '100%'}}>
                         <Dropdown clearable options={repeatOptions} 
-                        selection placeholder="No Repetition" />
+                        selection placeholder="No Repetition" onChange={(e) => setEventItems(oldValues => {return {...oldValues, repeatEvent:e.target.textContent}})}/>
                     </div>
                 </Form.Field>
             </Form>
@@ -170,7 +182,7 @@ export default function NewEventModal() {
             content="Add Event"
             labelPosition='right'
             icon='checkmark'
-            onClick={() => setOpen(false)}
+            onClick={() => submitEvents()}
         />
         </Modal.Actions>
     </Modal>
