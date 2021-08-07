@@ -1,13 +1,14 @@
 import React, {useState} from 'react'
 import { Button, Dropdown, Form, Modal, Checkbox, Input, Icon, TextArea, Grid } from 'semantic-ui-react'
 import {data} from '../services/data'
+import moment from 'moment'
 import {UseGlobalState} from '../utils/stateContext'
 
 let goalsArray = []
 for (const goal of data.termGoals) {
-    goalsArray.push(goal.title)
+    goalsArray.push({title: goal.title, id: goal.id})
 }
-goalsArray = goalsArray.map(goal => ({key: goal, text: goal, value: goal}))
+goalsArray = goalsArray.map((goal, index) => ({key: index, text: goal.title, value: goal.id}))
 
 const repeatOptions = [
     { key: 1, text: 'Daily', value: 1 },
@@ -17,11 +18,74 @@ const repeatOptions = [
 
 export default function NewEventModal() {
 
-    const { store, dispatch } = UseGlobalState()
+    const { store } = UseGlobalState()
     const { selectedDate } = store
 
     const [open, setOpen] = useState(false)
-    const [addChecklist, setAddChecklist] = useState(false)
+    const [checklistItems, setAddChecklistItems] = useState({items: [], newItem: false, tempItem: ""})
+    const [eventDateTime, setEventDateTime] = useState({
+        eventDate: selectedDate,
+        startTime: moment().format("HH[:]mm"),
+        endTime: moment().add(30, 'minutes').format("HH[:]mm")
+        })
+    const [eventItems, setEventItems] = useState({
+        eventTitle: "",
+        eventGoals: [],
+        eventDescription: "",
+        eventLocation: "",
+        eventURL: "",
+        repeatEvent: ""
+    })
+
+    function getGoalIds (eventGoals, goalsArray){
+        let idArray = []
+        for (const goal of goalsArray) {
+            if(eventGoals.includes(goal.text)) {
+                idArray.push(goal.value)
+            }
+        }
+        return idArray
+    }
+
+    function handleNewChecklistItem() {
+        setAddChecklistItems(oldValues => 
+            {return {...oldValues, items: [...checklistItems.items, checklistItems.tempItem]}})
+        setAddChecklistItems(oldValues => {return {...oldValues, newItem: false, tempItem: ''}})
+        console.log(checklistItems.items)
+    }
+
+    function handleRemoveChecklistItem(item) {
+        setAddChecklistItems(oldValues => 
+            {return {...oldValues, items: checklistItems.items.filter(li => li !== item)}})
+    }
+
+
+    const eventGoalIds = getGoalIds(eventItems.eventGoals, goalsArray)
+
+    function handleSelectBox(e){
+        if(e.target.className === 'delete icon'){
+          setEventItems({
+            ...eventItems,
+            eventGoals: eventItems.eventGoals.filter( item => {
+              return item !== e.target.parentNode.innerText
+            })
+          });
+        }else(
+          setEventItems({
+            ...eventItems,
+            eventGoals: [...eventItems.eventGoals,(e.target.textContent)]
+          })
+        );
+      }
+        // function handleCheckBoxes(e){
+        //   console.log(e.target.checked)
+        //   setFormData({
+        //     ...formData,
+        //     [e.target.name]: e.target.checked
+        //   })
+        // }
+
+
 
   return (
     <Modal  onClose={() => setOpen(false)}
@@ -34,35 +98,40 @@ export default function NewEventModal() {
         <Modal.Content>
             <Form>
                 <Form.Field required >
-                    <Input size="big" placeholder='New Event Title'/>
+                    <Input  size="big" placeholder='New Event Title' 
+                            onChange={(e) => setEventItems(oldValues => {return {...oldValues, eventTitle: e.target.value}})}/>
                 </Form.Field>
                 <Form.Field>
                     <label>Related Goals</label>
                     <Dropdown   fluid multiple search selection 
-                                placeholder="Related Goals" options={goalsArray}/>
+                                placeholder="Related Goals" options={goalsArray}
+                                onChange={handleSelectBox}/>
                 </Form.Field>
                 <Grid columns={3} divided>
                     <Grid.Row>
                         <Grid.Column>
                             <Form.Field>
                                 <label>Date</label>
-                                <input  type="date" id="eventDate"
-                                        name="eventDate" defaultValue="2018-06-12" />
+                                <Input  type="date" id="eventDate" name="eventDate" 
+                                        defaultValue={moment(eventDateTime.eventDate).format("YYYY[-]MM[-]DD")} 
+                                        onChange={(e)=> setEventDateTime(oldValues => {return {...oldValues, eventDate:e.value}})}/>
                             </Form.Field>
                         </Grid.Column>
                         <Grid.Column>
                             <Form.Field>
                                 <label>From</label>
-                                <input  label="start"
-                                        type="time" id="eventStartTime"
-                                        name="eventStartTime" defaultValue="07:30" />  
+                                <Input  type="time" id="eventStartTime"
+                                        name="eventStartTime" defaultValue={moment().format("HH[:]mm")}
+                                        onChange={(e)=> setEventDateTime(oldValues => {return {...oldValues, eventStartTime:e.target.value}})} />  
                             </Form.Field>
                         </Grid.Column>
                         <Grid.Column>
                             <Form.Field>
                                 <label>Until</label>
-                                <input  type="time" id="eventEndTime"
-                                        name="eventEndTime" defaultValue="08:30" />
+                                <Input  type="time" id="eventEndTime"
+                                        name="eventEndTime" defaultValue={moment().add(30, 'minutes').format("HH[:]mm")}
+                                        onChange={(e)=> setEventDateTime(oldValues => {return {...oldValues, eventEndTime:e.target.value}})}
+                                        />
                             </Form.Field>
                         </Grid.Column>
                     </Grid.Row>
@@ -71,11 +140,17 @@ export default function NewEventModal() {
                     <label>Description</label>
                     <TextArea rows={4} placeholder='Describe the event' />
                 </Form.Field>
-                <div style={{'max-width': '150px', 'margin-bottom': '15px'}}>
+                {!checklistItems.newItem && <Button compact onClick={() => setAddChecklistItems(oldValues => {return {...oldValues, newItem: true}})}>
                     <Icon name="plus square outline"/> Add Checklist Item
+                </Button> }
+                
+                {checklistItems.newItem && <> <div style={{'margin-top': '5px', 'margin-bottom': '5px'}}> <Input onChange={(e)=> setAddChecklistItems(oldValues => {return {...oldValues, tempItem: e.target.value}})} size="mini" placeholder="New Checklist Item"/>
                 </div>
+                <Button onClick={()=> handleNewChecklistItem()} size="mini">Add</Button>
+                </> }
+                {checklistItems && checklistItems.items.map((item) => <p> <Checkbox checked={false} label={item}/><Icon onClick={()=> handleRemoveChecklistItem(item)} style={{'margin-left': '5px'}} name="close" /></p>)}
                 <Form.Field>
-                    <Input icon='map marker alternate' 
+                    <Input style={{'margin-top': '15px'}} icon='map marker alternate' 
                     iconPosition='left' placeholder='Add Location' />
                 </Form.Field>
                 <Form.Field>
@@ -92,7 +167,6 @@ export default function NewEventModal() {
         </Modal.Content>
         <Modal.Actions>
         <Button
-            type='submit'
             content="Add Event"
             labelPosition='right'
             icon='checkmark'
