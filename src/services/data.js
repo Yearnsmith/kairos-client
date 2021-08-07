@@ -8,14 +8,14 @@ export const data = {
             longTermGoal: 'lifestyle',
             timeframe: '1 week',
             events: [
-            {title: 'Do a thing'},
-            {title: 'Make another thing happen'},
-            {title: '...'},
-            {title: 'Profit'}
+            {title: 'Do a thing', completedAt: 1633092170000},
+            {title: 'Make another thing happen', completedAt: 16338256530000},
+            {title: '...', completedAt: 1634375356000},
+            {title: 'Profit', completedAt: 1634896926000}
             ],
-            createdAt:   123451972,
-            editedAt:    1238901972,
-            completedAt: 1238901972,
+            createdAt:   1628254855000,
+            editedAt:    1634896926000,
+            completedAt: 1634896926000,
             color: 'teal'},
         {
             id: 231,

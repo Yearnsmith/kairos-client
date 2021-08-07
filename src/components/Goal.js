@@ -1,13 +1,14 @@
 import React from 'react'
-import { Header, List, Card, Label, Icon, Segment, Container } from 'semantic-ui-react'
-import { unixTimeToLocale } from '../utils/goalUtils';
+import { Header, List, Card, Label, Icon, Segment, Container, Grid, CardMeta } from 'semantic-ui-react'
+import moment from 'moment'
+
 
 export default function Goal({termGoal}) {
     if(termGoal){
-
-        const {title, description, longTermGoal, timeframe, events, createdAt, editedAt} = termGoal;
+        
+        const {title, description, longTermGoal, timeframe, events, createdAt, editedAt, completedAt} = termGoal;
         // create human readable time from timestring
-        const goalCreated = unixTimeToLocale(createdAt);
+        // const goalCreated = unixTimeToLocale(createdAt);
         
         return (
             <main style={{padding:'1rem 1rem'}}>
@@ -28,11 +29,20 @@ export default function Goal({termGoal}) {
                                 </Label.Group>
                             </Container>
                         </Segment>
-                        <Segment compact secondary attached='bottom' inverted color='orange' className='extra'>
-                            Created on: {goalCreated.timeDate}
+                        <Segment
+                            tertiary
+                            attached='bottom'
+                            inverted
+                            color='orange'
+                            style={{fontSize:'.8em', padding:'.5em'}}>
+                            <Container style={{color:'#444'}}>Created: {moment(createdAt).format('LL, [at] LT')}</Container>
+                            <Container style={{color:'#444'}}>{completedAt ?
+                                `Completed: ${moment(completedAt).format('LL, [at] LT')}`
+                            :
+                                'Active'}</Container>
                         </Segment>
                     </Segment.Group>
-                    <Segment fluid inverted color='orange' data-testid='events-card'>
+                    <Segment inverted color='orange' data-testid='events-card'>
                         <Header as='h3' style={{display:'flex',justifyContent:'space-between'}} >
                             <Header.Content>Events</Header.Content>
                             <Icon name='add' link size='large' className='ui right floated'/>
@@ -42,9 +52,10 @@ export default function Goal({termGoal}) {
                                 <Container style={{color:'#fff'}}>You have no events. Add a new task to start kicking this goal!</Container>
                             :
                                 events.map( event =>
-                                    <Card as={List.Item} fluid key={event.title} style={{background:'#fff', margin: '1rem 0'}}>
-                                        <Card.Header as='h4' content={event.title} textAlign='left' />
-                                    </Card>
+                                    <Segment clearing as={List.Item} key={event.title} style={{background:'#fff', margin: '1rem 0'}}>
+                                        <Header as='h4' floated='left' content={event.title} textAlign='left' />
+                                        {event.completedAt ? <Icon name="check" size='large' color='green' className='ui right floated' /> : null}
+                                    </Segment>
                             )}
                         </List>
                     </Segment>
@@ -53,7 +64,7 @@ export default function Goal({termGoal}) {
     }else{
         return(
             <main>
-                <p>Sorry, can't find that message.</p>
+                <p>Sorry, can't find that goal.</p>
         </main>
         );
     }
