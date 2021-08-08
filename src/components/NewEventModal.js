@@ -97,7 +97,7 @@ export default function NewEventModal() {
             eventEnd: `${new Date(moment(`${eventDateTime.eventDate}T${eventDateTime.endTime}`).format())}`,
             checklist: checklistItems.items,
             location: eventItems.eventLocation,
-            url: eventItems.eventUrl
+            url: eventItems.eventURL
             // goalsId: getGoalIds(eventItems.eventGoals, goalsArray)
         }
         // console.log(data)
@@ -112,7 +112,6 @@ export default function NewEventModal() {
                 }else{
                     console.log(response)
                     setAddChecklistItems(defaultChecklist)
-                    setEventDateTime(defaultDate)
                     setEventItems(defaultEvents)
                     setOpen(false)
                 }
@@ -127,7 +126,12 @@ export default function NewEventModal() {
 
   return (
     <Modal  onClose={() => setOpen(false)}
-            onOpen={() => setOpen(true)} 
+            onOpen={() => {setOpen(true)
+                        setEventDateTime({
+                            eventDate: moment(selectedDate).format("YYYY[-]MM[-]DD"),
+                            startTime: moment().format("HH[:]mm"),
+                            endTime: moment().add(30, 'minutes').format("HH[:]mm")
+                            })}} 
             open={open} 
             trigger={<Button circular icon="plus"/>}>
         <Modal.Header>Create New Event</Modal.Header>

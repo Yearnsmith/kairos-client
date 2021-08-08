@@ -31,13 +31,10 @@ export default function ExpandableEvents () {
 
         return (
             <Container style={{display: 'flex', justifyContent: 'center', 'margin-top':'17px', 'margin-bottom':'20px'}}>
-            {/* {selectedDate} */}
+            
             <Accordion styled defaultActiveIndex={activeIndex}>
                 {storedEvent.map( (event,index) => 
                         <>
-                        {moment(event.eventStart).format()}
-
-                        {/*{eventid = 'events.id'}*/}
                         <Accordion.Title 
                             index={index}
                             active={activeIndex === index}
