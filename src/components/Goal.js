@@ -6,7 +6,7 @@ import moment from 'moment'
 export default function Goal({termGoal}) {
     if(termGoal){
         
-        const {title, description, longTermGoal, timeframe, events, createdAt, editedAt, completedAt} = termGoal;
+        const {title, description, lTGoalsId, timeframe, eventsId, createdAt, endDate, completedAt} = termGoal;
         // create human readable time from timestring
         // const goalCreated = unixTimeToLocale(createdAt);
         
@@ -24,7 +24,7 @@ export default function Goal({termGoal}) {
                                     <p>{description}</p>
                                 {/* </Card.Description> */}
                                 <Label.Group style={{display:'flex',justifyContent:'space-between'}}>
-                                    <Label style={{background: '#2185d0', color:'#fff'}}>{longTermGoal}</Label>
+                                    <Label style={{background: '#2185d0', color:'#fff'}}>{lTGoalsId[0].type}</Label>
                                     <Label style={{background: '#2185d0', color:'#fff'}}>{timeframe}</Label>
                                 </Label.Group>
                             </Container>
@@ -39,7 +39,7 @@ export default function Goal({termGoal}) {
                             <Container style={{color:'#444'}}>{completedAt ?
                                 `Completed: ${moment(completedAt).format('LL, [at] LT')}`
                             :
-                                'Active'}</Container>
+                                `Due: ${moment(endDate).format('LL')}`}</Container>
                         </Segment>
                     </Segment.Group>
                     <Segment inverted color='orange' data-testid='events-card'>
@@ -48,10 +48,10 @@ export default function Goal({termGoal}) {
                             <Icon name='add' link size='large' className='ui right floated'/>
                         </Header>
                         <List selection>
-                            {events.length === 0 ? 
+                            {eventsId.length === 0 ? 
                                 <Container style={{color:'#fff'}}>You have no events. Add a new task to start kicking this goal!</Container>
                             :
-                                events.map( event =>
+                                eventsId.map( event =>
                                     <Segment clearing as={List.Item} key={event.title} style={{background:'#fff', margin: '1rem 0'}}>
                                         <Header as='h4' floated='left' content={event.title} textAlign='left' />
                                         {event.completedAt ? <Icon name="check" size='large' color='green' className='ui right floated' /> : null}

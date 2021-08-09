@@ -15,6 +15,7 @@ import reducer from '../utils/reducer'
 import { StateContext } from '../utils/stateContext'
 import { data } from '../services/data'
 import { getGoals } from '../services/goalServices';
+import { getLTGoals } from '../services/lifetimeGoalServices';
 
 function App() {
 
@@ -24,10 +25,8 @@ function App() {
   // right now I'm unconcerned about users, auth, and events. I just want to get
   // goals rendering properly, and get the goals route rendering id.
   const initialState = {
-    termGoals: [
-      // include just enough properties to avoid error,
-      {title:'',events:[]},
-    ],
+    lTGoals:[],
+    termGoals: [],
     // set defaults for filter form on app load.
     // work out how to move this out of here to
     // clean up the file...
@@ -49,15 +48,28 @@ function App() {
   // Run dispatch as a side-effect of loading the page,
   // effectively updating the data in store.
   useEffect( () => {
-
-    // getGoals()
-    //   .then( goals =>{
+    getLTGoals()
+      .then( lTGoals => {
         dispatch({
-          type: "setTermGoals",
-          // data: goals
-          data: data.termGoals
+          type: "setLTGoals",
+          data: lTGoals
         });
-      // })
+      })
+      .then( () =>{
+        getGoals()
+          .then( goals =>{
+            dispatch({
+              type: "setTermGoals",
+              data: goals
+            });
+            dispatch({
+              type: "setFilter",
+              data: store.filter
+            })
+          })
+      })
+      .catch( err => console.error(err))
+
       // .catch( error => {
       //   console.log(error);
       //   setErrors({status: error.status, message: error.message})
@@ -67,12 +79,8 @@ function App() {
     // without having to hardcode the long term goals. We could abstract it,
     // but the reducer action already fills an empty filteredLongTermGoals
     // array into a full one).
-    dispatch({
-      type: "setFilter",
-      data: store.filter
-    })
   },[]);
-
+console.log(store)
   return (
     <div className="App">
       {/* <Nav /> */}

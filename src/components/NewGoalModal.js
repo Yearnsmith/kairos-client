@@ -1,24 +1,25 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { UseGlobalState } from '../utils/stateContext'
 import { Form, Modal, Button, Grid } from 'semantic-ui-react'
-import pluralize from 'pluralize'
-
-//* Set form Data
-// const timePeriodOptions =[
-//     {key: 'day', text: 'Day', value: 'day'},
-//     {key: 'week', text: 'Week', value: 'week'},
-//     {key: 'month', text: 'Month', value: 'month'},
-//     {key: 'Year/s', text: 'Year', value: 'year'}
-// ]
-const lifeTimeGoalOptions =[
-    {key: 'career', text:'Career', value:'career'},
-    {key: 'lifestyle', text:'Lifestyle', value:'lifestyle'},
-    {key: 'artistic', text:'Artistic', value:'artistic'},
-    {key: 'physical', text:'Physical', value:'physical'}
-  ]
+// import pluralize from 'pluralize'
+import { createGoal } from '../services/goalServices'
+import { compileNewGoal } from '../utils/goalUtils'
+import { getLTGoals } from '../services/lifetimeGoalServices'
 
 export default function NewGoalModal() {
+    // set modal status
+    const [open, setOpen] = useState(false)
 
+    const {store, dispatch} = UseGlobalState();
+    
+    const [lifetimeGoalOptions, setLTG] = useState([])
+
+//     useEffect(()=>{
+// 
+// 
+//     },[])
+    
+    
     const [timePeriodOptions, setTPO] = useState([
         {key: 'day', text: 'Day', value: 'day'},
         {key: 'week', text: 'Week', value: 'week'},
@@ -26,11 +27,7 @@ export default function NewGoalModal() {
         {key: 'Year/s', text: 'Year', value: 'year'}
     ])
 
-    // set modal status
-    const [open, setOpen] = useState(false)
 
-    const {store, dispatch} = UseGlobalState();
-    
     const [formData, setFormData] = useState({timeframeDigit: '1'})
     const {title, description, lifetimeGoal, timeframeDigit, timeframePeriod} = formData
     
@@ -43,36 +40,59 @@ export default function NewGoalModal() {
             ...formData,
             [data.name]: data.value
         });
-        }
-
+    }
+    
     function handleInput(e){
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
         });
     }
-    //submit form
     
-
     //render modal
     return (
         <Modal
-            closeIcon
+        closeIcon
             onClose={() => setOpen(false)}
-            onOpen={() => setOpen(true)}
+            onOpen={() => {
+                setOpen(true)
+                // getLTGoals()
+                // .then(goals =>{
+                    const options = store.lTGoals.map((g)=>{
+                        console.log(g)
+                        return {key: g.type, text: g.type, value: g.id}
+                    })
+                    setLTG(options)
+                // })
+            }}
             open={open}
             trigger={<Button content='New Goal' compact primary/>}
             dimmer='inverted'
             data-testid='newGoalModal'
         >
             <Modal.Content>
-            <Form onSubmit={(e)=>{
+            <Form onSubmit={ e => {
                 e.preventDefault();
-                dispatch({type:'addGoal', data: formData})
-                dispatch({type: 'setFilter', data: store.filter})
-                setOpen(false)
-                setFormData({})
-            }}>
+
+                // coalate form data into new goal and temp filler for Gaols view
+                const newGoal = compileNewGoal(formData)
+                console.log(newGoal)
+
+                //send goal data to database
+                createGoal(newGoal)
+                    .then(goal => {
+                        dispatch({type:'addGoal', data: goal})
+                        console.log('goal returned from server:',goal)
+                    })
+                    .then(()=>{
+                        console.log(store.filter.filteredLongTermGoals)
+                        dispatch({type: 'setFilter', data: store.filter})
+                    })
+                    .catch(e => console.error(e.message))
+                    
+                    setOpen(false)
+                    setFormData({})
+                }}>
                 {/* <Form.Field> */}
                     <Form.Input
                         label='title'
@@ -103,7 +123,7 @@ export default function NewGoalModal() {
                             id='lifetimeGoal'
                             // text='choose a lifetime goal'
                             value={lifetimeGoal}
-                            options={lifeTimeGoalOptions}
+                            options={lifetimeGoalOptions}
                             placeholder='choose one'
                             selection
                             compact
