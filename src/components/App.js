@@ -83,9 +83,9 @@ function App() {
 console.log(store)
   return (
     <div className="App">
-      {/* <Nav /> */}
     <StateContext.Provider value={{store,dispatch}}>
       <Router>
+        <Nav />
         <Switch>
           <Route exact path="/">
             <Redirect to="goals" />

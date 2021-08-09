@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { UseGlobalState } from '../utils/stateContext'
-import { Form, Modal, Button, Grid } from 'semantic-ui-react'
+import { Form, Modal, Button, Grid, Icon } from 'semantic-ui-react'
 // import pluralize from 'pluralize'
 import { createGoal } from '../services/goalServices'
 import { compileNewGoal } from '../utils/goalUtils'
@@ -14,10 +14,8 @@ export default function NewGoalModal() {
     
     const [lifetimeGoalOptions, setLTG] = useState([])
 
-//     useEffect(()=>{
-// 
-// 
-//     },[])
+    const [triggerColor, setTriggerColor] = useState(['grey', 'grey'])
+
     
     
     const [timePeriodOptions, setTPO] = useState([
@@ -48,12 +46,20 @@ export default function NewGoalModal() {
             [e.target.name]: e.target.value
         });
     }
+    const toggleTriggerColor = ()=>{
+        setTriggerColor(
+            triggerColor.includes('grey') ? ['blue', 'green'] : ['grey', 'grey']
+            )
+    }
     
     //render modal
     return (
         <Modal
-        closeIcon
-            onClose={() => setOpen(false)}
+            closeIcon
+            onClose={() => {
+                toggleTriggerColor()
+                setOpen(false)
+            }}
             onOpen={() => {
                 setOpen(true)
                 // getLTGoals()
@@ -66,9 +72,15 @@ export default function NewGoalModal() {
                 // })
             }}
             open={open}
-            trigger={<Button content='New Goal' compact primary/>}
+            // trigger={<Button content='New Goal' compact primary/>}
             dimmer='inverted'
             data-testid='newGoalModal'
+            trigger={
+                <Icon.Group size='huge' onClick={toggleTriggerColor}>
+                    <Icon color={triggerColor[0]} name='plus' />
+                    <Icon color={triggerColor[1]} name={'check circle'} corner='top right' />
+                </Icon.Group>
+            }
         >
             <Modal.Content>
             <Form onSubmit={ e => {
@@ -91,6 +103,7 @@ export default function NewGoalModal() {
                     .catch(e => console.error(e.message))
                     
                     setOpen(false)
+                    toggleTriggerColor()
                     setFormData({})
                 }}>
                 {/* <Form.Field> */}
@@ -172,10 +185,11 @@ export default function NewGoalModal() {
                         compact
                         onClick={()=> {
                             setFormData({})
+                            toggleTriggerColor()
                             setOpen(false)
                         }}
                     />
-                    <Button compact content='submit' positive/>
+                    <Button compact content='submit' positive />
 
                 </Form.Group>
             </Form>
