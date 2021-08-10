@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Form, Header,Icon,Input, Segment, TextArea } from 'semantic-ui-react';
+import { Form, Header, Segment, TextArea } from 'semantic-ui-react';
 import { createLTGoal } from '../services/lifetimeGoalServices';
-// import { UseGlobalState } from '../utils/stateContext'
+import { UseGlobalState } from '../utils/stateContext'
 
 //we will eventually pull this list dynamically from state, or from an API call
 const goalList = ['career','artistic','educational','physical','lifestyle'];
@@ -14,18 +14,19 @@ goalList.forEach( el => {
 })
 
 
+
 // This enables us to autonomously generate the text boxes
 const textAreaValues = goalList.map( goal =>
     {return {
         type: goal,
         labelText: goal.charAt(0).toUpperCase() + goal.slice(1)
     }});
-
+    
 
     //** Component Starts Here *//
-export default function SignUpForm() {
+    export default function SignUpForm({history}) {
     // reserved for hooking in global state and saving form
-    // const {dispatch} = UseGlobalState();
+    const {dispatch} = UseGlobalState();
     
     // we use local state for form inputs
     const [formData, setFormData] = useState(initialState);
@@ -52,6 +53,8 @@ export default function SignUpForm() {
     // reserved for saving form details to api & global state
      function handleSubmit(event){
          event.preventDefault();
+         dispatch({type: "setLoggedInUser", data:"true"})
+         history.push("/goals")
             console.log('Take the files back to the filing cabnet, Jeeves.')
      }
 

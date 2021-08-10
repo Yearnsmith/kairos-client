@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Form, Header,Input, Segment } from 'semantic-ui-react';
 import { signUp, signIn } from '../services/authServices';
+import { UseGlobalState } from '../utils/stateContext';
 
 
 export default function LoginForm({history}) {
@@ -8,6 +9,7 @@ export default function LoginForm({history}) {
     const [formData, setFormData] = useState({email:"", password:""});
     const { email, password } = formData;
     
+    const {dispatch} = UseGlobalState();
 
      function handleChange(event){
          setFormData({
@@ -29,15 +31,20 @@ export default function LoginForm({history}) {
                          console.log(response.error.message)
                      }else {
                          console.log(response)
-                         console.log('Jeeves, send this user in! ')
                          return history.push("/sign_up")
-                     }
-                 });
-             } else {
-                 signIn({email: email, password: password}).then( response =>{
-                    console.log(response)
-                 })
-                 console.log('Take this person to the cloak room, Jeeves')
+                         console.log('Take this person to the cloak room, Jeeves')
+                        }
+                    });
+                } else {
+                    signIn({email: email, password: password}).then( response =>{
+                        console.log(response)
+                    })
+                    .then( _ =>  {
+                        dispatch({type: "setLoggedInUser", data:"true"})
+                        console.log('Jeeves, send this user in! ')
+                        history.push("/goals")
+                })
+                // return history.push("/goals")
              }
          }
      }

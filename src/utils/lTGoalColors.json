@@ -1,0 +1,27 @@
+{
+    "career": {
+        "color": "orange",
+        "secondary": "#f7a36b",
+        "text": "#fff"
+    },
+    "physical": {
+        "color": "red",
+        "secondary": "#e87373",
+        "text": "#fff"
+    },
+    "lifestyle": {
+        "color": "teal",
+        "secondary": "#59cfca",
+        "text": "#fff"
+    },
+    "artistic": {
+        "color": "yellow",
+        "secondary":"#fcd45e",
+        "text": "#000"
+    },
+    "education": {
+        "color": "blue",
+        "secondary": "#6eb0e0",
+        "text": "#fff"
+    }
+}
