@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Menu, Icon } from 'semantic-ui-react'
 import { UseGlobalState } from '../utils/stateContext'
+import NewEventModal from './NewEventModal'
 import NewGoalModal from './NewGoalModal'
 
 
@@ -44,13 +45,14 @@ export default function Nav() {
         >
         {mobileItems.map( i =>
                 <Menu.Item
-                    as={i.item === 'add' ? false : Link}
-                    to={i.item === 'add' ? false : `/${i.item}`}
+                    as={i.item === 'add' ? null : Link}
+                    to={i.item === 'add' ? null : `/${i.item}`}
                     name={i.item}
                     active={i.item !== 'add' ? (activeTab === i.item) : false}
                     // force items to have white background, and cursor to be pointer
                     // We can remove these if I get time to modify SemanticUI CSS
                     style={{backgroundColor: 'white', cursor: 'pointer'}}
+                    key={i.key}
                 >
                 {/* <Link class='item' name={i.item} active={activeTab === i.item} onClick={handleItemClick}> */}
                     { i.item !== 'add' ?
@@ -58,12 +60,9 @@ export default function Nav() {
                     :
                         // conditionally add newEvent or newGoal modal. In this configuration it defaults
                         // to creating a new goal, unless the user is on the events page.
-                        pathname === '/calendar' ?
+                        pathname === '/monthly_events' || pathname === '/weekly_events' ?
                             // new goal event modal
-                            <Icon.Group size='huge'>
-                                <Icon color={handleColor(i.item)} name='plus' />
-                                <Icon color={handleColor(i.item)} name={i.event.icon} corner='top right' />
-                            </Icon.Group>
+                            <NewEventModal />
                         :   // new goal modal
                             <NewGoalModal />
                     }

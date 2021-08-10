@@ -51,6 +51,13 @@ export default function NewEventModal() {
     const [eventDateTime, setEventDateTime] = useState(defaultDate)
     const [eventItems, setEventItems] = useState(defaultEvents)
 
+    const [triggerColor, setTriggerColor] = useState(['grey', 'grey'])
+    const toggleTriggerColor = ()=>{
+        setTriggerColor(
+            triggerColor.includes('grey') ? ['blue', 'green'] : ['grey', 'grey']
+            )
+    }
+
     function getGoalIds (eventGoals, goalsArray){
         let idArray = []
         for (const goal of goalsArray) {
@@ -141,7 +148,12 @@ export default function NewEventModal() {
                             endTime: moment().add(30, 'minutes').format("HH[:]mm")
                             })}} 
             open={open} 
-            trigger={<Button circular icon="plus"/>}>
+            trigger={
+                <Icon.Group size='huge'>
+                    <Icon color={triggerColor[0]} name='plus' />
+                    <Icon color={triggerColor[1]} name='calendar alternate outline' corner='top right' />
+                </Icon.Group>
+            }>
         <Modal.Header>Create New Event</Modal.Header>
         <Icon style={{'padding-top': '7px',
                     'padding-right': '5px'}}name='close' onClick={() => setOpen(false)}/>

@@ -39,6 +39,7 @@ export default function Goals() {
           })
           .catch( err => console.error(err))
     },[])
+
     return (
         //replace div with semantic main element. We could move the element to wrap
         // the Router in App.js, and wrap JSX in a fragment. But this is nice for testing.
@@ -47,7 +48,6 @@ export default function Goals() {
             {/* this could be abstracted into a component */}
             <Menu borderless secondary widths={2}>
                 <FilterModal />
-                <NewGoalModal/>
                 {/* <Button content='Filter' size='huge' compact primary /> */}
                 {/* <Button content='Sort' size='huge' compact primary /> */}
                 <Button

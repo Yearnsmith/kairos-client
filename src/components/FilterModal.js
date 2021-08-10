@@ -31,8 +31,10 @@ function FilterModal() {
   // on page render:
   // - set formData to match filter
   useEffect(() => {
+    
     // updateFilter(filter)
     setFormData(filter)
+
   }, [filter])
   
   // create function for updating filter

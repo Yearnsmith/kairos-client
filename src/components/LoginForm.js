@@ -11,6 +11,9 @@ export default function LoginForm({history}) {
     
     const {dispatch} = UseGlobalState();
 
+    const [subButton, setSubButton] = useState("")
+    console.log(subButton)
+
      function handleChange(event){
          setFormData({
              ...formData,
@@ -22,7 +25,7 @@ export default function LoginForm({history}) {
          event.preventDefault();
         //  let submitter = event.nativeEvent.submitter.id;
         //  console.log(submitter);
-        console.log(subButton)
+        
          if(email.length > 0 && password.length > 0){
              if( subButton === 'signUp' ){
                  
@@ -36,21 +39,24 @@ export default function LoginForm({history}) {
                         }
                     });
                 } else {
-                    signIn({email: email, password: password}).then( response =>{
+                    signIn({email: email, password: password})
+                    .then( response =>{
                         console.log(response)
                     })
                     .then( _ =>  {
-                        dispatch({type: "setLoggedInUser", data:"true"})
-                        console.log('Jeeves, send this user in! ')
-                        history.push("/goals")
-                })
+                        if(localStorage.getItem("jwt")){
+                            dispatch({type: "setLoggedInUser", data:"true"})
+                            console.log('Jeeves, send this user in! ')
+                            history.push("/goals")
+                        }else {
+                            console.error("username or password incorrect")
+                        }
+                    })
+                    .catch( e => console.error(e))
                 // return history.push("/goals")
              }
          }
      }
-
-     const [subButton, setSubButton] = useState("")
-     console.log(subButton)
      
 
     return (
