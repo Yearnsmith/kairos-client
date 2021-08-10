@@ -69,6 +69,13 @@ export default function reducer(state, action) {
                 selectedDate: action.data
             }
         }
+
+        case "storeEvents": {
+            return {
+                ...state,
+                storedEvent: action.data
+            }
+        }
         
         case "addGoal": {
             return{
