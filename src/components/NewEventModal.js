@@ -4,6 +4,7 @@ import {data} from '../services/data'
 import moment from 'moment'
 import {UseGlobalState} from '../utils/stateContext'
 import {createEvent} from '../services/eventServices'
+import { getEventsByDate } from '../services/eventServices'
 
 let goalsArray = []
 for (const goal of data.termGoals) {
@@ -30,8 +31,14 @@ const defaultChecklist = {items: [], newItem: false, tempItem: ""}
 
 export default function NewEventModal() {
 
-    const { store } = UseGlobalState()
+    const { store, dispatch } = UseGlobalState()
     const { selectedDate } = store
+
+    const getEventsPls = (value) => getEventsByDate(`${value}`)
+    .then((response)=> dispatch({
+        type: 'storeEvents',
+        data: response})
+    )
 
     const defaultDate = {
         eventDate: moment(selectedDate).format("YYYY[-]MM[-]DD"),
@@ -113,6 +120,7 @@ export default function NewEventModal() {
                     console.log(response)
                     setAddChecklistItems(defaultChecklist)
                     setEventItems(defaultEvents)
+                    getEventsPls(selectedDate)
                     setOpen(false)
                 }
             })

@@ -21,11 +21,14 @@ export default function MonthlyEventsView({history}) {
         })
     }
 
-    const getEventsPls = (value) => getEventsByDate(`${value}`)
+    const getEventsPls = (value) => {
+        console.log(value)
+        getEventsByDate(`${value}`)
         .then((response)=> dispatch({
             type: 'storeEvents',
             data: response})
         )
+        }
 
     return (
         <main>
