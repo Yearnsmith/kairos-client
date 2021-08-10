@@ -140,7 +140,9 @@ export default function NewEventModal() {
 
 
   return (
-    <Modal  onClose={() => setOpen(false)}
+    <Modal  onClose={() => {setOpen(false)
+                            toggleTriggerColor()
+                            }}
             onOpen={() => {setOpen(true)
                         setEventDateTime({
                             eventDate: moment(selectedDate).format("YYYY[-]MM[-]DD"),
@@ -149,7 +151,7 @@ export default function NewEventModal() {
                             })}} 
             open={open} 
             trigger={
-                <Icon.Group size='huge'>
+                <Icon.Group size='huge' onClick={toggleTriggerColor}>
                     <Icon color={triggerColor[0]} name='plus' />
                     <Icon color={triggerColor[1]} name='calendar alternate outline' corner='top right' />
                 </Icon.Group>

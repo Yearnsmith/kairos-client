@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { List, Segment, Button, Menu, Container } from 'semantic-ui-react'
 import FilterModal from './FilterModal'
 import { UseGlobalState } from '../utils/stateContext'
-import NewGoalModal from './NewGoalModal'
 import { getLTGoals } from '../services/lifetimeGoalServices'
 import { getGoals } from '../services/goalServices'
 import { getGoalColor } from '../utils/goalUtils'
@@ -43,7 +42,7 @@ export default function Goals() {
     return (
         //replace div with semantic main element. We could move the element to wrap
         // the Router in App.js, and wrap JSX in a fragment. But this is nice for testing.
-        <main data-testid="goalsView">
+        <main data-testid="goalsView" style={{display: 'flex', flexDirection:'column', alignItems:'center',justifyContent: 'flex-start'}}>
             <h2>Goals</h2>
             {/* this could be abstracted into a component */}
             <Menu borderless secondary widths={2}>
@@ -70,7 +69,7 @@ export default function Goals() {
                 {store.termGoals.length > 0 ? 
                     filteredGoals.map( goal =>
                         // Semantic UI list item
-                        <List.Item as={ Link } to={`./goals/${goal.id}`}  key={goal.title}>
+                        <List.Item as={ Link } to={`./goals/${goal.id}`}  key={goal.title} style={{maxWidth: '800px'}}>
                             {/* Semantic UI Segment allows for a coloured card-like component.
                             We could possibly modify List.Item to take a background colour if
                             we want to edit the Less styles. But this works for now.*/}

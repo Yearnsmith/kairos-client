@@ -73,10 +73,11 @@ function App() {
                   <Redirect to="goals" />
                 </Route>
                 <Route exact path="/goals" component={Goals} />
-                <Route exact path="/goals/:id"
+                <Route exact path="/goals/:id" component={Goal} />
+                {/* <Route exact path="/goals/:id"
                   render={ (props) => <Goal {...props}
                   termGoal={findGoalById(termGoals, props.match.params.id)}/>}
-                />
+                /> */}
                 <Route exact path="/monthly_events" component={MonthlyEventsView} />
                 <Route exact path="/weekly_events" component={WeeklyEventsView} />
                 <Route exact path="/profile" component={UserProfile} />

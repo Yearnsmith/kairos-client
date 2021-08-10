@@ -66,7 +66,7 @@ export default function NewGoalModal() {
                 // .then(goals =>{
                     const options = store.lTGoals.map((g)=>{
                         console.log(g)
-                        return {key: g.type, text: g.type, value: g.id}
+                        return {key: g.type, text: g.description, value: g.id}
                     })
                     setLTG(options)
                 // })
@@ -82,6 +82,7 @@ export default function NewGoalModal() {
                 </Icon.Group>
             }
         >
+            <Modal.Header>Create New Goal</Modal.Header>
             <Modal.Content>
             <Form onSubmit={ e => {
                 e.preventDefault();
