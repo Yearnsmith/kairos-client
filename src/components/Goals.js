@@ -6,6 +6,8 @@ import { UseGlobalState } from '../utils/stateContext'
 import NewGoalModal from './NewGoalModal'
 import { getLTGoals } from '../services/lifetimeGoalServices'
 import { getGoals } from '../services/goalServices'
+import { getGoalColor } from '../utils/goalUtils'
+
 
 export default function Goals() {
 
@@ -72,7 +74,7 @@ export default function Goals() {
                             {/* Semantic UI Segment allows for a coloured card-like component.
                             We could possibly modify List.Item to take a background colour if
                             we want to edit the Less styles. But this works for now.*/}
-                            <Segment inverted color={`${goal.color}`}>
+                            <Segment inverted color={ getGoalColor(goal.lTGoalsId[0].type).color } >
                                 <List.Content>
                                     <List.Header as='h3'>{goal.title}</List.Header>
                                 </List.Content>
