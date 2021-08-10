@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Menu, Icon } from 'semantic-ui-react'
+import { UseGlobalState } from '../utils/stateContext'
 import NewGoalModal from './NewGoalModal'
 
 
@@ -13,16 +14,25 @@ const mobileItems = [
 ]
 
 export default function Nav() {
+    // stores which tab is active
+    const [activeTab, setActiveTab] = useState('');
 
-    const [menuState, setMenuState] = useState( { activeItem: 'goals' })
-    const {activeItem} = menuState
-    
-    const handleItemClick = (_,data) => setMenuState({activeItem: data.name})
-    
-    const handleColor = (item) => activeItem !== item ? 'grey' : 'blue'
-
+    // get current page
     const {pathname} = useLocation()
-    console.log(pathname)
+
+    // get location without precedin "/". This corresponds with menu item names
+    const currentScreen = pathname.substring(1)
+    console.log(currentScreen)
+    useEffect(()=>{
+        // listen to pathname, and set the active tab based on URL.        
+
+        setActiveTab(currentScreen)
+
+    },[pathname])
+
+    // toggle colour of tab based on which tab is active.
+    const handleColor = (item) => activeTab !== item ? 'grey' : 'blue'
+
 
     return (
         <Menu
@@ -37,11 +47,12 @@ export default function Nav() {
                     as={i.item === 'add' ? false : Link}
                     to={i.item === 'add' ? false : `/${i.item}`}
                     name={i.item}
-                    active={i.item !== 'add' ? (activeItem === i.item) : false}
-                    onClick={handleItemClick}
-                    style={{backgroundColor: 'white'}}
+                    active={i.item !== 'add' ? (activeTab === i.item) : false}
+                    // force items to have white background, and cursor to be pointer
+                    // We can remove these if I get time to modify SemanticUI CSS
+                    style={{backgroundColor: 'white', cursor: 'pointer'}}
                 >
-                {/* <Link class='item' name={i.item} active={activeItem === i.item} onClick={handleItemClick}> */}
+                {/* <Link class='item' name={i.item} active={activeTab === i.item} onClick={handleItemClick}> */}
                     { i.item !== 'add' ?
                         <Icon size='big' color={handleColor(i.item)} name={i.icon} />
                     :

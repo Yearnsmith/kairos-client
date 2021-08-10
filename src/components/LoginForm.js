@@ -31,20 +31,20 @@ export default function LoginForm({history}) {
                          console.log(response.error.message)
                      }else {
                          console.log(response)
-                         console.log('Jeeves, send this user in! ')
                          return history.push("/sign_up")
-                     }
-                 });
-             } else {
-                 signIn({email: email, password: password}).then( response =>{
-                    console.log(response)
-                })
-                .then( _ =>  {
-                    dispatch({type: "setLoggedInUser", data:"true"})
-                    history.push("/goals")
+                         console.log('Take this person to the cloak room, Jeeves')
+                        }
+                    });
+                } else {
+                    signIn({email: email, password: password}).then( response =>{
+                        console.log(response)
+                    })
+                    .then( _ =>  {
+                        dispatch({type: "setLoggedInUser", data:"true"})
+                        console.log('Jeeves, send this user in! ')
+                        history.push("/goals")
                 })
                 // return history.push("/goals")
-                 console.log('Take this person to the cloak room, Jeeves')
              }
          }
      }
