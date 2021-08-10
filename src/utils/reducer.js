@@ -68,6 +68,12 @@ export default function reducer(state, action) {
                 termGoals: [... state.termGoals, action.data]
             }
         };
+        case "setLoggedInUser": {
+            return{
+                ...state,
+                loggedInUser: action.data
+            }
+        }
 
         default:
             return console.log('no such action')

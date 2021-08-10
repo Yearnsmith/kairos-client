@@ -16,15 +16,17 @@ import { StateContext } from '../utils/stateContext'
 import { data } from '../services/data'
 import { getGoals } from '../services/goalServices';
 import { getLTGoals } from '../services/lifetimeGoalServices';
-
+// import jwt_decode from 'jwt-decode
+import { getEmailFromJWT } from '../utils/authUtils';
 function App() {
-
+  
   // const { termGoals } = data
-
+  
   // set initial, empty, state for first render.
   // right now I'm unconcerned about users, auth, and events. I just want to get
   // goals rendering properly, and get the goals route rendering id.
   const initialState = {
+    loggedInUser: localStorage.getItem("jwt") ? true : false,
     lTGoals:[],
     termGoals: [],
     // set defaults for filter form on app load.
@@ -37,69 +39,45 @@ function App() {
     },
     filteredGoals: []
   };
-
+  
   // instantiate reducer
   const [store, dispatch] = useReducer(reducer, initialState);
-  const {termGoals} = store;
-
+  const {termGoals, loggedInUser} = store;
+  console.log(loggedInUser)
+  
   //instantiate error messages
   const [errors, setErrors] = useState({});
 
-  // Run dispatch as a side-effect of loading the page,
-  // effectively updating the data in store.
-  useEffect( () => {
-    getLTGoals()
-      .then( lTGoals => {
-        dispatch({
-          type: "setLTGoals",
-          data: lTGoals
-        });
-      })
-      .then( () =>{
-        getGoals()
-          .then( goals =>{
-            dispatch({
-              type: "setTermGoals",
-              data: goals
-            });
-            dispatch({
-              type: "setFilter",
-              data: store.filter
-            })
-          })
-      })
-      .catch( err => console.error(err))
-
-      // .catch( error => {
-      //   console.log(error);
-      //   setErrors({status: error.status, message: error.message})
-      // });
-
-    // (this prefills filter Dropdown with all the LongTermGoals
-    // without having to hardcode the long term goals. We could abstract it,
-    // but the reducer action already fills an empty filteredLongTermGoals
-    // array into a full one).
-  },[]);
-console.log(store)
   return (
     <div className="App">
     <StateContext.Provider value={{store,dispatch}}>
       <Router>
-        <Nav />
         <Switch>
-          <Route exact path="/">
-            <Redirect to="goals" />
-          </Route>
-          {/*embed in home component */}
-          <Route exact path="/login" component={LoginForm} />
-          <Route exact path="/sign_up" component={LtGoalsForm} />
-          <Route exact path="/goals" component={Goals} />
-          <Route exact path="/goals/:id"
-            render={ (props) => <Goal {...props}
+          {!loggedInUser ? 
+            <main>
+              <Route path={"/"}>
+                <Redirect to="sign_in" />
+              </Route>
+              <Route exact path="/sign_in" component={LoginForm} />
+              <Route exact path="/sign_up" component={LtGoalsForm} />
+            </main>
+          :
+          <>
+            <Nav />
+            <main>
+              <Route exact path="/">
+                <Redirect to="goals" />
+              </Route>
+              <Route exact path="/goals" component={Goals} />
+              <Route exact path="/goals/:id"
+              render={ (props) => <Goal {...props}
               termGoal={findGoalById(termGoals, props.match.params.id)}/>}
-          />
-          <Route exact path="/calendar" component={Calendar} />
-          <Route exact path="/profile" component={UserProfile} />
+              />
+              <Route exact path="/calendar" component={Calendar} />
+              <Route exact path="/profile" component={UserProfile} />
+            </main>
+            </>
+            }
         </Switch>
       </Router>
     </StateContext.Provider>

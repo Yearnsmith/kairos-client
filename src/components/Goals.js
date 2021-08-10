@@ -1,15 +1,42 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { Link } from 'react-router-dom'
 import { List, Segment, Button, Menu, Container } from 'semantic-ui-react'
 import FilterModal from './FilterModal'
 import { UseGlobalState } from '../utils/stateContext'
 import NewGoalModal from './NewGoalModal'
+import { getLTGoals } from '../services/lifetimeGoalServices'
+import { getGoals } from '../services/goalServices'
 
 export default function Goals() {
 
     const { store, dispatch } = UseGlobalState();
     const { filteredGoals } = store
 
+    // moved from App.js to avoid 401 error (can't fetch messages when not logged in)
+    // And automatically load goals
+    useEffect( () => {
+        getLTGoals()
+          .then( lTGoals => {
+            dispatch({
+              type: "setLTGoals",
+              data: lTGoals
+            });
+          })
+          .then( () =>{
+            getGoals()
+              .then( goals =>{
+                dispatch({
+                  type: "setTermGoals",
+                  data: goals
+                });
+                dispatch({
+                  type: "setFilter",
+                  data: store.filter
+                })
+              })
+          })
+          .catch( err => console.error(err))
+    },[])
     return (
         //replace div with semantic main element. We could move the element to wrap
         // the Router in App.js, and wrap JSX in a fragment. But this is nice for testing.
