@@ -3,6 +3,7 @@ import {Container, Accordion, Icon, Checkbox, Divider, Label} from 'semantic-ui-
 import {UseGlobalState} from '../utils/stateContext'
 import {getGoals} from '../services/goalServices'
 import moment from 'moment'
+import EditEventModal from './EditEventModal'
 
 
 
@@ -30,12 +31,8 @@ export default function ExpandableEvents () {
         (activeIndex === titleProps.index) ? setActiveIndex('') :
         setActiveIndex(titleProps.index)
     }
-
+    
     console.log(storedEvent)
-    // let goalTitles = {}
-    // for (const goal of termGoals) {
-
-    // }
     
     if (typeof(storedEvent) !== 'undefined' && `${storedEvent}` !== '') {
 
@@ -53,8 +50,11 @@ export default function ExpandableEvents () {
                                 <div style={{color: 'black'}}>{event.title}</div>
                                 <Icon name='dropdown' />
                                 </div>
+                                <div style={{display: 'flex', justifyContent: 'space-between'}}>
                                 {moment(event.eventStart).format('h:mm a')} - 
                                 {' '}{moment(event.eventEnd).format('h:mm a')}
+                                <EditEventModal eventId={event.id}/>
+                                </div>
                                 <div>
                                 {event.goalsId.map(goal => <Label size='mini' style={{marginTop: '3px'}}>{goal.title}</Label>)}
                                 </div>
@@ -62,7 +62,7 @@ export default function ExpandableEvents () {
                         <Accordion.Content active={activeIndex === index} style={{paddingTop:'0px'}}>
                             {event.description && <p>{event.description}</p>}
                             {event.checklist && event.checklist.map((item, index) => <p> <Checkbox checked={item.done} label={item}/></p>)}
-                            <Divider/>
+                            {(event.location || event.url) && <Divider/> }
                             {event.location && <p>{'\u00A0'}<Icon name="map marker alternate" />{'\u00A0'}{event.location}</p>}
                             {event.url && <p>{'\u00A0'}<Icon name="linkify" />{'\u00A0'}<a href={event.url}>{event.url}</a></p>}
                         </Accordion.Content>
