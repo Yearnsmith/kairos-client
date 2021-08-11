@@ -6,19 +6,29 @@ import SortGoalsModal from './SortGoalsModal'
 import { UseGlobalState } from '../utils/stateContext'
 import { getLTGoals } from '../services/lifetimeGoalServices'
 import { getGoals } from '../services/goalServices'
-import { getGoalColor } from '../utils/goalUtils'
+import { getGoalColor, sortGoals } from '../utils/goalUtils'
 
 export default function Goals() {
 
     const { store, dispatch } = UseGlobalState();
     const { filteredGoals } = store
+    console.log('filteredGoals', filteredGoals)
 
-    const [sortState, setSortState] = useState([])
-    console.log(sortState)
-
-    function handleSort(string){
-      setSortState(string)
+    const [sortMethod, setSortMethod] = useState('dateCreated')
+    const [sortedGoals, setSortedGoals] = useState([])
+    console.log(sortedGoals)
+  
+    function handleSort(action){
+      console.log('handlesort:', action)
+      setSortMethod(action)
+      setSortedGoals( sortGoals(filteredGoals, action) )
     }
+
+    useEffect(() => {
+      setSortedGoals(
+        sortGoals(filteredGoals, sortMethod)
+      )
+  }, [filteredGoals])
 
     // moved from App.js to avoid 401 error (can't fetch messages when not logged in)
     // And automatically load goals
@@ -54,7 +64,7 @@ export default function Goals() {
             {/* this could be abstracted into a component */}
             <Button.Group compact>
               <FilterModal />
-              <SortGoalsModal sortState={sortState} handleSort={handleSort} />
+              <SortGoalsModal sortMethod={sortMethod} handleSort={handleSort} />
               <Button
               style={{textAlign: 'center'}}
               content='All'
@@ -73,8 +83,7 @@ export default function Goals() {
             <List selection inverted id="goalPane">
                 {/* map over termGoals prop and extract data. Replace <List.Item> with
                 <Goal /> component once it's built out.*/}
-                {store.termGoals.length > 0 ? 
-                    filteredGoals.map( goal =>
+                {sortedGoals.length > 0 ? sortedGoals.map( goal =>
                         // Semantic UI list item
                         <List.Item as={ Link } to={`./goals/${goal.id}`}  key={goal.title} style={{maxWidth: '800px'}}>
                             {/* Semantic UI Segment allows for a coloured card-like component.

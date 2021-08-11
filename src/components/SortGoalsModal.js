@@ -12,17 +12,16 @@ import { UseGlobalState } from '../utils/stateContext'
   ]
 
 
-function FilterModal({sortState, handleSort}) {
+function FilterModal({sortMethod, handleSort}) {
   // set modal status
   const [open, setOpen] = useState(false)
     
   // set initial form data
-  const [formData, setFormData] = useState('dateCreated')
-    console.log('this is the formDataState', formData)
+  const [formData, setFormData] = useState(sortMethod)
+
   // Set undo value from Goals
-  const [undoSort, setUndoSort] = useState(sortState)
-  console.log('this is the undoSort state:', undoSort)
-  
+  const [undoSort, setUndoSort] = useState(sortMethod)
+
     function handleChange(e, data){
       setFormData(data.value)
     }
@@ -62,6 +61,14 @@ function FilterModal({sortState, handleSort}) {
                 slider
               />
               <Radio
+                label='Date Completed'
+                name='sortBy'
+                value='dateCompleted'
+                checked={formData === 'dateCompleted'}
+                onChange={handleChange}
+                slider
+              />
+              <Radio
                 label='Lifetime Goal'
                 name='sortBy'
                 value='LTG'
@@ -70,18 +77,10 @@ function FilterModal({sortState, handleSort}) {
                 slider
               />
               <Radio
-                label='Lifetime Goal Type'
+                label='Title'
                 name='sortBy'
-                value='LTGCategory'
-                checked={formData === 'LTGCategory'}
-                onChange={handleChange}
-                slider
-              />
-              <Radio
-                label='Date Completed'
-                name='sortBy'
-                value='dateCompleted'
-                checked={formData === 'dateCompleted'}
+                value='title'
+                checked={formData === 'title'}
                 onChange={handleChange}
                 slider
               />
@@ -90,18 +89,7 @@ function FilterModal({sortState, handleSort}) {
         </Modal.Description>
       </Modal.Content>
       <Modal.Actions as={Segment} clearing attached='bottom'>
-        {/* <Button 
-        floated='left'
-        content='cancel'
-        labelPosition='right'
-        icon='delete'
-        onClick={() => {
-          setFormData(undoSort);
-          console.log('formData reset to:\n>', undoSort )
-          setOpen(false)
-        }}
-        negative
-      /> */}
+
         <Button
           floated='right'
           content="Sort"
@@ -114,7 +102,6 @@ function FilterModal({sortState, handleSort}) {
             console.log('set filter state to:\n>', formData)
             setOpen(false)
           }}
-          // positive
         />
       </Modal.Actions>
     </Modal>

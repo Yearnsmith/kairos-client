@@ -1,10 +1,12 @@
 // import moment from "moment";
 import pluralize from "pluralize";
+import moment,{diff} from 'moment'
 import goalColors from './lTGoalColors.json'
 
-export function findGoalById(goalList, id){
-    return goalList.find( item => item.id === id );
-  }
+
+// export function findGoalById(goalList, id){
+//     return goalList.find( item => item.id === id );
+//   }
 
 export function compileNewGoal(data){
   const {title, description, lifetimeGoal, timeframeDigit, timeframePeriod} = data
@@ -44,5 +46,44 @@ export function getGoalColor(category){
     default:
       return "No such Long Term Goal goal"
   }
+
+}
+// extract to sortReducer???
+export function sortGoals(goals, action){
+  const sortBy = (property) => goals.sort((a,b) => {
+    
+    let propA = property !== 'lTGoalsId' ? a[property].toLowerCase() : a[property][0].type
+    let propB = property !== 'lTGoalsId' ? b[property].toLowerCase() : b[property][0].type
+      if(propA < propB){
+        return -1;
+      }
+      if (propA > propB){
+        return 1;
+      }
+      return 0
+  })
+
+  const sortByDate = property => goals.sort((a,b)=> moment(a[property]).diff(b[property]) )
+  switch(action){
+    case 'dateCreated':
+      return sortByDate('createdAt')
+
+    case 'dateDue':
+      return sortByDate('endDate')
+    case 'LTG':
+    return sortBy('lTGoalsId')
+
+    case 'dateCompleted':
+      return sortByDate('completedAt')
+
+    case 'title':
+      return sortBy('title')
+    default:
+      return 'no such sort action'
+  
+  }
+  // goals.sort( (a,b) =>{
+  //   return a.createdAt - b.createdAt
+  // })
 
 }
