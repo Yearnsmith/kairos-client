@@ -1,17 +1,24 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import { List, Segment, Button, Menu, Container } from 'semantic-ui-react'
 import FilterModal from './FilterModal'
+import SortGoalsModal from './SortGoalsModal'
 import { UseGlobalState } from '../utils/stateContext'
 import { getLTGoals } from '../services/lifetimeGoalServices'
 import { getGoals } from '../services/goalServices'
 import { getGoalColor } from '../utils/goalUtils'
 
-
 export default function Goals() {
 
     const { store, dispatch } = UseGlobalState();
     const { filteredGoals } = store
+
+    const [sortState, setSortState] = useState([])
+    console.log(sortState)
+
+    function handleSort(string){
+      setSortState(string)
+    }
 
     // moved from App.js to avoid 401 error (can't fetch messages when not logged in)
     // And automatically load goals
@@ -45,21 +52,21 @@ export default function Goals() {
         <main data-testid="goalsView" style={{display: 'flex', flexDirection:'column', alignItems:'center',justifyContent: 'flex-start'}}>
             <h2>Goals</h2>
             {/* this could be abstracted into a component */}
-            <Menu borderless secondary widths={2}>
-                <FilterModal />
-                {/* <Button content='Filter' size='huge' compact primary /> */}
+            <Button.Group compact>
+              <FilterModal />
+              <SortGoalsModal sortState={sortState} handleSort={handleSort} />
+              <Button
+              style={{textAlign: 'center'}}
+              content='All'
+              attached='right'
+              onClick={()=> dispatch({
+                  type: 'setFilter',
+                  data: {filteredLongTermGoals: [], showCompleted: true, showActive: true}
+                  })}
+              />
+            </Button.Group>
+
                 {/* <Button content='Sort' size='huge' compact primary /> */}
-                <Button
-                content='All'
-                size='huge'
-                compact
-                primary
-                onClick={()=> dispatch({
-                    type: 'setFilter',
-                    data: {filteredLongTermGoals: [], showCompleted: true, showActive: true}
-                    })}
-                />
-            </Menu>
             {/*id subject to change. This wraps all goal elements, and gives it an accessible
             role of `list` for screen readers. selection prop gives each list item a pointer
         on hover, and visual feedback when clicked*/}

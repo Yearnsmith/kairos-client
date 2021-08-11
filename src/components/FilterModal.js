@@ -77,7 +77,7 @@ function FilterModal() {
       onClose={() => setOpen(false)}
       onOpen={() => setOpen(true)}
       open={open}
-      trigger={<Button content='Filter' size='huge' compact primary />}
+      trigger={<Button content='Filter' attached='left' />}
       dimmer='inverted'
       data-testid='modalComponent'
     >
