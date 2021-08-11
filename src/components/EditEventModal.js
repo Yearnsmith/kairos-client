@@ -60,6 +60,7 @@ export default function EditEventModal({eventId}) {
                 defaultDate.startTime = moment(event.eventStart).format("HH[:]mm")
                 defaultDate.endTime = moment(event.eventEnd).format("HH[:]mm")
                 defaultChecklist.items = event.checklist
+                console.log(defaultEvents.eventGoals)
             })
     },[])
 
@@ -174,8 +175,8 @@ console.log(eventDateTime.startTime)
                             onChange={(e) => setEventItems(oldValues => {return {...oldValues, eventTitle: e.target.value}})}/>
                 </Form.Field>
                 <Form.Field>
-                    <label>Related Goals</label>
-                    {/* <Dropdown   fluid multiple search selection
+                    {/* <label>Related Goals</label>
+                    <Dropdown   fluid multiple search selection
                                 options={goalsArray}
                                 defaultValue={eventItems.eventGoals}
                                 onChange={handleSelectBox}
