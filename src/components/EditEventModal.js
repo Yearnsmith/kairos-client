@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { Button, Dropdown, Form, Modal, Checkbox, Input, Icon, TextArea, Grid } from 'semantic-ui-react'
 import moment from 'moment'
 import {UseGlobalState} from '../utils/stateContext'
-import {createEvent} from '../services/eventServices'
+import {getEventsById, updateEvent} from '../services/eventServices'
 import { getEventsByDate } from '../services/eventServices'
 import { getGoals } from '../services/goalServices'
 
@@ -13,18 +13,9 @@ const repeatOptions = [
     { key: 3, text: 'Monthly', value: 3 },
   ]
 
-const defaultEvents = {
-    eventTitle: "",
-    eventGoals: [],
-    eventDescription: "",
-    eventLocation: "",
-    eventURL: "",
-    repeatEvent: ""
-}
-
 const defaultChecklist = {items: [], newItem: false, tempItem: ""}
 
-export default function NewEventModal() {
+export default function EditEventModal({eventId}) {
 
     const { store, dispatch } = UseGlobalState()
     const { selectedDate, termGoals } = store
@@ -35,7 +26,22 @@ export default function NewEventModal() {
         data: response})
     )
 
-    useEffect(() => 
+    const defaultEvents = {
+        eventTitle: "",
+        eventGoals: [],
+        eventDescription: "",
+        eventLocation: "",
+        eventURL: "",
+        repeatEvent: ""
+    }
+
+    const defaultDate = {
+        eventDate: "",
+        startTime: "",
+        endTime: ""
+        }
+
+    useEffect(() => {
         getGoals()
             .then( goals =>{
                 dispatch({
@@ -43,15 +49,21 @@ export default function NewEventModal() {
                     data: goals
                 })
               })
-    ,[])
+        getEventsById(eventId)
+            .then(event => {
+                defaultEvents.eventTitle = event.title
+                defaultEvents.eventGoals = event.goalsId.map((goal, index) => ({key: index, text: goal.title, value: goal.id}))
+                defaultEvents.eventDescription = event.description
+                defaultEvents.eventLocation = event.location
+                defaultEvents.eventURL = event.url
+                defaultDate.eventDate = moment(event.eventStart).format("YYYY[-]MM[-]DD")
+                defaultDate.startTime = moment(event.eventStart).format("HH[:]mm")
+                defaultDate.endTime = moment(event.eventEnd).format("HH[:]mm")
+                defaultChecklist.items = event.checklist
+            })
+    },[])
 
-
-
-    const defaultDate = {
-        eventDate: moment(selectedDate).format("YYYY[-]MM[-]DD"),
-        startTime: moment().format("HH[:]mm"),
-        endTime: moment().add(30, 'minutes').format("HH[:]mm")
-        }
+    
 
     const [open, setOpen] = useState(false)
     const [checklistItems, setAddChecklistItems] = useState(defaultChecklist)
@@ -124,13 +136,13 @@ export default function NewEventModal() {
             goalsId: getGoalIds(eventItems.eventGoals, goalsArray)
         }
         if (data.title && data.description && data.eventStart && data.eventEnd) {
-            createEvent(data).then((response)=> {
+            updateEvent(data, eventId).then((response)=> {
                 if (response.error){
                     console.log(response.error.message)
                 }else{
-                    console.log(response)
-                    setAddChecklistItems(defaultChecklist)
-                    setEventItems(defaultEvents)
+                    // console.log(response)
+                    // setAddChecklistItems(defaultChecklist)
+                    // setEventItems(defaultEvents)
                     getEventsPls(selectedDate)
                     setOpen(false)
                 }
@@ -140,25 +152,17 @@ export default function NewEventModal() {
             alert("Please fill out all required fields")
         }
     }
-
-
+console.log(eventId)
+console.log(eventDateTime.startTime)
 
   return (
     <Modal  onClose={() => {setOpen(false)
                             toggleTriggerColor()
                             }}
-            onOpen={() => {setOpen(true)
-                        setEventDateTime({
-                            eventDate: moment(selectedDate).format("YYYY[-]MM[-]DD"),
-                            startTime: moment().format("HH[:]mm"),
-                            endTime: moment().add(30, 'minutes').format("HH[:]mm")
-                            })}} 
+            onOpen={() => {setOpen(true)}} 
             open={open} 
             trigger={
-                <Icon.Group size='huge' onClick={toggleTriggerColor}>
-                    <Icon color={triggerColor[0]} name='plus' />
-                    <Icon color={triggerColor[1]} name='calendar alternate outline' corner='top right' />
-                </Icon.Group>
+                    <Icon name='edit outline' color="grey" />
             }>
         <Modal.Header>Create New Event</Modal.Header>
         <Icon style={{'padding-top': '7px',
@@ -166,14 +170,16 @@ export default function NewEventModal() {
         <Modal.Content>
             <Form>
                 <Form.Field>
-                    <Input  size="big" placeholder='New Event Title' 
+                    <Input  size="big" placeholder='New Event Title' defaultValue={eventItems.eventTitle} 
                             onChange={(e) => setEventItems(oldValues => {return {...oldValues, eventTitle: e.target.value}})}/>
                 </Form.Field>
                 <Form.Field>
                     <label>Related Goals</label>
-                    <Dropdown   fluid multiple search selection 
-                                placeholder="Related Goals" options={goalsArray}
-                                onChange={handleSelectBox}/>
+                    {/* <Dropdown   fluid multiple search selection
+                                options={goalsArray}
+                                defaultValue={eventItems.eventGoals}
+                                onChange={handleSelectBox}
+                                /> */}
                 </Form.Field>
                 <Grid columns={3} divided>
                     <Grid.Row>
@@ -181,7 +187,7 @@ export default function NewEventModal() {
                             <Form.Field>
                                 <label>Date</label>
                                 <Input  type="date" id="eventDate" name="eventDate" 
-                                        defaultValue={moment(selectedDate).format("YYYY[-]MM[-]DD")} 
+                                        defaultValue={eventDateTime.eventDate} 
                                         onChange={(e)=> setEventDateTime(oldValues => {return {...oldValues, eventDate:e.target.value}})}/>
                             </Form.Field>
                         </Grid.Column>
@@ -189,7 +195,7 @@ export default function NewEventModal() {
                             <Form.Field>
                                 <label>From</label>
                                 <Input  type="time" id="eventStartTime"
-                                        name="eventStartTime" defaultValue={moment().format("HH[:]mm")}
+                                        name="eventStartTime" defaultValue={eventDateTime.startTime}
                                         onChange={(e)=> setEventDateTime(oldValues => {return {...oldValues, startTime:e.target.value}})} />  
                             </Form.Field>
                         </Grid.Column>
@@ -197,7 +203,7 @@ export default function NewEventModal() {
                             <Form.Field>
                                 <label>Until</label>
                                 <Input  type="time" id="eventEndTime"
-                                        name="eventEndTime" defaultValue={moment().add(30, 'minutes').format("HH[:]mm")}
+                                        name="eventEndTime" defaultValue={eventDateTime.endTime}
                                         onChange={(e)=> setEventDateTime(oldValues => {return {...oldValues, endTime:e.target.value}})}
                                         />
                             </Form.Field>
@@ -206,7 +212,8 @@ export default function NewEventModal() {
                 </Grid>
                 <Form.Field style={{'margin-top': '10px'}}>
                     <label>Description</label>
-                    <TextArea   rows={4} placeholder='Describe the event' 
+                    <TextArea   rows={4} placeholder='Describe the event'
+                                defaultValue={eventItems.eventDescription} 
                                 onChange={(e) => setEventItems(oldValues => 
                                 {return {...oldValues, eventDescription: e.target.value}})}/>
                 </Form.Field>
@@ -222,10 +229,10 @@ export default function NewEventModal() {
                 {checklistItems && checklistItems.items.map((item) => <p> <Checkbox checked={false} label={item}/><Icon onClick={()=> handleRemoveChecklistItem(item)} style={{'margin-left': '5px'}} name="close" /></p>)}
                 <Form.Field>
                     <Input style={{'margin-top': '15px'}} icon='map marker alternate' 
-                    iconPosition='left' placeholder='Add Location' onChange={(e) => setEventItems(oldValues => {return {...oldValues, eventLocation: e.target.value}})}/>
+                    iconPosition='left' placeholder='Add Location' defaultValue={eventItems.eventLocation} onChange={(e) => setEventItems(oldValues => {return {...oldValues, eventLocation: e.target.value}})}/>
                 </Form.Field>
                 <Form.Field>
-                    <Input icon='linkify' iconPosition='left' placeholder='Add Related URL' onChange={(e) => setEventItems(oldValues => {return {...oldValues, eventURL: e.target.value}})}/>
+                    <Input icon='linkify' iconPosition='left' placeholder='Add Related URL' defaultValue={eventItems.eventURL} onChange={(e) => setEventItems(oldValues => {return {...oldValues, eventURL: e.target.value}})}/>
                 </Form.Field>
                 <Form.Field>
                     <label>Repeat Event:</label>
@@ -238,7 +245,7 @@ export default function NewEventModal() {
         </Modal.Content>
         <Modal.Actions>
         <Button
-            content="Add Event"
+            content="Edit Event"
             labelPosition='right'
             icon='checkmark'
             onClick={() => submitEvents()}

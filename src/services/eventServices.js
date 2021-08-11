@@ -21,8 +21,8 @@ export async function createEvent(data){
     return response.data;
 };
 
-export async function updateEvent(data){
-    const response = await kairosAPI.put(`/events/${data.id}`, data);
+export async function updateEvent(data, id){
+    const response = await kairosAPI.put(`/events/${id}`, data);
     return response.data;
 };
 
