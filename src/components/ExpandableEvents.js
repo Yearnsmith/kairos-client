@@ -2,7 +2,6 @@ import React, {useState} from 'react'
 import {Container, Accordion, Icon, Checkbox, Divider} from 'semantic-ui-react'
 import {UseGlobalState} from '../utils/stateContext'
 import moment from 'moment'
-import {response} from '../sampledata/events' // to be deleted
 
 
 
@@ -13,8 +12,6 @@ export default function ExpandableEvents () {
     const [activeIndex, setActiveIndex] = useState(0)
     const { store } = UseGlobalState()
     const { storedEvent } = store
-
-
     
     
 
@@ -27,11 +24,11 @@ export default function ExpandableEvents () {
 
     //const events =  (storedEvent !== []) ? storedEvent.sort((a, b) => new Date(a.startDate) - new Date(b.startDate)) : console.log('hi')// to be deleted
     //console.log(storedEvent)
-    if (storedEvent) {
+    
+    if (typeof(storedEvent) !== 'undefined' && `${storedEvent}` !== '') {
 
         return (
             <Container style={{display: 'flex', justifyContent: 'center', 'margin-top':'17px', 'margin-bottom':'20px'}}>
-            
             <Accordion styled defaultActiveIndex={activeIndex}>
                 {storedEvent.map( (event,index) => 
                         <>

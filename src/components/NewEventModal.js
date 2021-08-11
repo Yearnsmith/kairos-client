@@ -1,16 +1,12 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Button, Dropdown, Form, Modal, Checkbox, Input, Icon, TextArea, Grid } from 'semantic-ui-react'
 import {data} from '../services/data'
 import moment from 'moment'
 import {UseGlobalState} from '../utils/stateContext'
 import {createEvent} from '../services/eventServices'
 import { getEventsByDate } from '../services/eventServices'
+import { getGoals } from '../services/goalServices'
 
-let goalsArray = []
-for (const goal of data.termGoals) {
-    goalsArray.push({title: goal.title, id: goal.id})
-}
-goalsArray = goalsArray.map((goal, index) => ({key: index, text: goal.title, value: goal.id}))
 
 const repeatOptions = [
     { key: 1, text: 'Daily', value: 1 },
@@ -32,13 +28,25 @@ const defaultChecklist = {items: [], newItem: false, tempItem: ""}
 export default function NewEventModal() {
 
     const { store, dispatch } = UseGlobalState()
-    const { selectedDate } = store
+    const { selectedDate, termGoals } = store
 
     const getEventsPls = (value) => getEventsByDate(`${value}`)
     .then((response)=> dispatch({
         type: 'storeEvents',
         data: response})
     )
+
+    useEffect(() => 
+        getGoals()
+            .then( goals =>{
+                dispatch({
+                    type: "setTermGoals",
+                    data: goals
+                })
+              })
+    ,[])
+
+
 
     const defaultDate = {
         eventDate: moment(selectedDate).format("YYYY[-]MM[-]DD"),
@@ -57,6 +65,8 @@ export default function NewEventModal() {
             triggerColor.includes('grey') ? ['blue', 'green'] : ['grey', 'grey']
             )
     }
+    
+    const goalsArray = termGoals.map((goal, index) => ({key: index, text: goal.title, value: goal.id}))
 
     function getGoalIds (eventGoals, goalsArray){
         let idArray = []

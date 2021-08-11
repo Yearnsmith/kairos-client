@@ -80,9 +80,10 @@ export default function reducer(state, action) {
         case "addGoal": {
             return{
                 ...state,
-                termGoals: [... state.termGoals, action.data]
+                termGoals: [...state.termGoals, action.data]
             }
-        };
+        }
+
         case "setLoggedInUser": {
             return{
                 ...state,
