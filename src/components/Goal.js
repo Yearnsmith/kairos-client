@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from 'react'
-import { Header, List, Label, Icon, Segment, Container, LabelDetail } from 'semantic-ui-react'
+import { Header, List, Label, Icon, Segment, Container, Button } from 'semantic-ui-react'
 import moment from 'moment'
-import goalColors from '../utils/lTGoalColors.json'
 import { getGoalColor } from '../utils/goalUtils';
 import { getGoalById } from '../services/goalServices';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom';
+import EditGoalModal from './EditGoalModal';
 
-export default function Goal({termGoal}) {
+export default function Goal() {
     
     const [goal, setGoal] = useState(null)
-    // const {title, description, lTGoalsId, timeframe, eventsId, createdAt, endDate, completedAt} = goal;
+    
     const {id} = useParams();
-    console.log('this is the id:', id)
+    
     const [goalColors, setGoalColors]=useState({color: '#ccc', secondary: '#eee', text: '#555'})
-
-            const goalColor = goalColors.color
-            const secondaryColor = goalColors.secondary
-            const textColor = goalColors.text
+        const goalColor = goalColors.color
+        const secondaryColor = goalColors.secondary
+        const textColor = goalColors.text
+    
+    const [goalUpdated, setGoalUpdated] = useState(false)
             
             useEffect(()=>{
                 getGoalById(id)
@@ -26,10 +27,9 @@ export default function Goal({termGoal}) {
                     setGoalColors(
                         getGoalColor(goal.lTGoalsId[0].type)
                     )
-                    console.log(goal)
                 })
                 .catch( error => console.error(error) );
-        }, [id, goalColors]);
+        }, [id, goalColors, goalUpdated]);
 
 
         return (
@@ -82,17 +82,23 @@ export default function Goal({termGoal}) {
                             )}
                         </List>
                     </Segment>
+                        <Button.Group>
+                            <Button 
+                                content="Achieved!"
+                                icon='trophy'
+                                //onClick={handleAchieve}
+                            />
+                            <EditGoalModal goalTitle={goal.title} setGoalUpdated={setGoalUpdated} />
+                            <Button
+                                content='delete'
+                                icon='trash'
+                                //onClick={handleDelete}
+                            />
+                        </Button.Group>
                 </>
                 :
                     <Container>Sorry, can't find that message</Container>
                 }
                 </main>
         );
-    // }else{
-    //     return(
-    //         <main>
-    //             <p>Sorry, can't find that goal.</p>
-    //     </main>
-    //     );
-    // }
 }

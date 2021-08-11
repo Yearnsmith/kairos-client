@@ -46,11 +46,37 @@ function App() {
   
   // instantiate reducer
   const [store, dispatch] = useReducer(reducer, initialState);
-  const {termGoals, loggedInUser} = store;
-  console.log(loggedInUser)
+  const {loggedInUser} = store;
+  
   
   //instantiate error messages
   const [errors, setErrors] = useState({});
+
+    // moved from App.js to avoid 401 error (can't fetch messages when not logged in)
+    // And automatically load goals
+    useEffect( () => {
+      getLTGoals()
+        .then( lTGoals => {
+          dispatch({
+            type: "setLTGoals",
+            data: lTGoals
+          });
+        })
+        .then( () =>{
+          getGoals()
+            .then( goals =>{
+              dispatch({
+                type: "setTermGoals",
+                data: goals
+              });
+              dispatch({
+                type: "setFilter",
+                data: store.filter
+              })
+            })
+        })
+        .catch( err => console.error(err))
+  },[])
 
   return (
     <div className="App">

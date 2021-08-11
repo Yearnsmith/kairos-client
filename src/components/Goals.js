@@ -30,31 +30,31 @@ export default function Goals() {
       )
   }, [filteredGoals])
 
-    // moved from App.js to avoid 401 error (can't fetch messages when not logged in)
-    // And automatically load goals
-    useEffect( () => {
-        getLTGoals()
-          .then( lTGoals => {
-            dispatch({
-              type: "setLTGoals",
-              data: lTGoals
-            });
-          })
-          .then( () =>{
-            getGoals()
-              .then( goals =>{
-                dispatch({
-                  type: "setTermGoals",
-                  data: goals
-                });
-                dispatch({
-                  type: "setFilter",
-                  data: store.filter
-                })
-              })
-          })
-          .catch( err => console.error(err))
-    },[])
+    // // moved from App.js to avoid 401 error (can't fetch messages when not logged in)
+    // // And automatically load goals
+    // useEffect( () => {
+    //     getLTGoals()
+    //       .then( lTGoals => {
+    //         dispatch({
+    //           type: "setLTGoals",
+    //           data: lTGoals
+    //         });
+    //       })
+    //       .then( () =>{
+    //         getGoals()
+    //           .then( goals =>{
+    //             dispatch({
+    //               type: "setTermGoals",
+    //               data: goals
+    //             });
+    //             dispatch({
+    //               type: "setFilter",
+    //               data: store.filter
+    //             })
+    //           })
+    //       })
+    //       .catch( err => console.error(err))
+    // },[])
 
     return (
         //replace div with semantic main element. We could move the element to wrap

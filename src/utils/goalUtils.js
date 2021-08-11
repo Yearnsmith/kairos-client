@@ -1,6 +1,6 @@
 // import moment from "moment";
 import pluralize from "pluralize";
-import moment,{diff} from 'moment'
+import moment from 'moment'
 import goalColors from './lTGoalColors.json'
 
 
@@ -22,6 +22,35 @@ export function compileNewGoal(data){
     eventsId: [],
   }
   return newGoal
+}
+
+export function compileExistingGoal(id, goalData, formData){
+
+  formData.timeframe = `${pluralize(formData.timeframePeriod, Number(formData.timeframeDigit), true)}`
+  delete formData.timeframeDigit
+  delete formData.timeframePeriod
+  delete goalData.lTGoalsId
+  goalData.lTGoalsId = [formData.lifetimeGoal]
+  delete formData.lifetimeGoal
+
+  return Object.assign(goalData, formData)
+
+}
+
+export function extractGoalData(goalObject){
+
+  const splitTimeFrame = goalObject.timeframe.split(" ")
+  const timeframeDigit = parseInt(splitTimeFrame[0])
+  const timeframePeriod = pluralize(splitTimeFrame[1], 1, false)
+  
+  return {
+      title: goalObject.title,
+      description: goalObject.description,
+      lifetimeGoal: goalObject.lTGoalsId[0].id,
+      timeframeDigit: timeframeDigit,
+      timeframePeriod: timeframePeriod
+  }
+
 }
 
 export function getGoalColor(category){

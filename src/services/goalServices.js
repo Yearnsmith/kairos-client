@@ -17,7 +17,8 @@ export async function createGoal(data){
 };
 
 export async function updateGoal(data){
-    const response = await kairosAPI.put(`/goals/${data.id}`, data);
+    console.log(typeof data)
+    const response = await kairosAPI.put(`/goals/${parseInt(data.id)}`, data);
     return response.data;
 };
 

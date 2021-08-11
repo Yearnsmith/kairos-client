@@ -23,7 +23,7 @@ export default function Nav() {
 
     // get location without precedin "/". This corresponds with menu item names
     const currentScreen = pathname.substring(1)
-    console.log(currentScreen)
+    
     useEffect(()=>{
         // listen to pathname, and set the active tab based on URL.        
 
