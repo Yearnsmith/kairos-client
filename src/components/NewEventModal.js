@@ -121,14 +121,9 @@ export default function NewEventModal() {
             eventEnd: `${new Date(moment(`${eventDateTime.eventDate}T${eventDateTime.endTime}`).format())}`,
             checklist: checklistItems.items,
             location: eventItems.eventLocation,
-            url: eventItems.eventURL
-            // goalsId: getGoalIds(eventItems.eventGoals, goalsArray)
+            url: eventItems.eventURL,
+            goalsId: getGoalIds(eventItems.eventGoals, goalsArray)
         }
-        // console.log(data)
-        // setAddChecklistItems(defaultChecklist)
-        // setEventDateTime(defaultDate)
-        // setEventItems(defaultEvents)
-        // setOpen(false)
         if (data.title && data.description && data.eventStart && data.eventEnd) {
             createEvent(data).then((response)=> {
                 if (response.error){
@@ -171,7 +166,7 @@ export default function NewEventModal() {
                     'padding-right': '5px'}}name='close' onClick={() => setOpen(false)}/>
         <Modal.Content>
             <Form>
-                <Form.Field required >
+                <Form.Field>
                     <Input  size="big" placeholder='New Event Title' 
                             onChange={(e) => setEventItems(oldValues => {return {...oldValues, eventTitle: e.target.value}})}/>
                 </Form.Field>

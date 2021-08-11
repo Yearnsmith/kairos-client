@@ -12,7 +12,7 @@ export default function MonthlyEventsView({history}) {
 
 
     const { store, dispatch } = UseGlobalState()
-    const { selectedDate } = store
+    const { selectedDate, storedEvent } = store
 
     const storeDate = function (value) {
         dispatch({
@@ -29,6 +29,11 @@ export default function MonthlyEventsView({history}) {
             data: response})
         )
         }
+    
+
+    if(typeof(storedEvent) === 'undefined') {
+        getEventsPls(moment(new Date()).hour(0).minute(0).second(0))
+    }
 
     return (
         <main>

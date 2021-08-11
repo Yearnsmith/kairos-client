@@ -1,6 +1,7 @@
-import React, {useState} from 'react'
-import {Container, Accordion, Icon, Checkbox, Divider} from 'semantic-ui-react'
+import React, {useState, useEffect} from 'react'
+import {Container, Accordion, Icon, Checkbox, Divider, Label} from 'semantic-ui-react'
 import {UseGlobalState} from '../utils/stateContext'
+import {getGoals} from '../services/goalServices'
 import moment from 'moment'
 
 
@@ -10,25 +11,36 @@ export default function ExpandableEvents () {
     
     // Set which event is expanded by default (useState = "" is all collapsed, 0 is first expanded etc.)
     const [activeIndex, setActiveIndex] = useState(0)
-    const { store } = UseGlobalState()
-    const { storedEvent } = store
+    const { store, dispatch } = UseGlobalState()
+    const { storedEvent, termGoals } = store
     
-    
+    useEffect(() => {
+        getGoals()
+            .then( goals =>{
+                dispatch({
+                    type: "setTermGoals",
+                    data: goals
+                })
+              })
+        
+            }
+    ,[])
 
     const expandCollapse = (titleProps) => {
         (activeIndex === titleProps.index) ? setActiveIndex('') :
         setActiveIndex(titleProps.index)
     }
 
-    
+    console.log(storedEvent)
+    // let goalTitles = {}
+    // for (const goal of termGoals) {
 
-    //const events =  (storedEvent !== []) ? storedEvent.sort((a, b) => new Date(a.startDate) - new Date(b.startDate)) : console.log('hi')// to be deleted
-    //console.log(storedEvent)
+    // }
     
     if (typeof(storedEvent) !== 'undefined' && `${storedEvent}` !== '') {
 
         return (
-            <Container style={{display: 'flex', justifyContent: 'center', 'margin-top':'17px', 'margin-bottom':'20px'}}>
+            <Container style={{display: 'flex', justifyContent: 'center', 'margin-top':'17px', marginBottom:'20px'}}>
             <Accordion styled defaultActiveIndex={activeIndex}>
                 {storedEvent.map( (event,index) => 
                         <>
@@ -37,14 +49,17 @@ export default function ExpandableEvents () {
                             active={activeIndex === index}
                             onClick={(e, titleProps)=>expandCollapse(titleProps)}
                             >
-                                <div style={{'display': 'flex', 'justify-content': 'space-between'}}>
-                                <div style={{'color': 'black'}}>{event.title}</div>
+                                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                <div style={{color: 'black'}}>{event.title}</div>
                                 <Icon name='dropdown' />
                                 </div>
                                 {moment(event.eventStart).format('h:mm a')} - 
                                 {' '}{moment(event.eventEnd).format('h:mm a')}
+                                <div>
+                                {event.goalsId.map(goal => <Label size='mini' style={{marginTop: '3px'}}>{goal.title}</Label>)}
+                                </div>
                         </Accordion.Title>
-                        <Accordion.Content active={activeIndex === index}>
+                        <Accordion.Content active={activeIndex === index} style={{paddingTop:'0px'}}>
                             {event.description && <p>{event.description}</p>}
                             {event.checklist && event.checklist.map((item, index) => <p> <Checkbox checked={item.done} label={item}/></p>)}
                             <Divider/>
