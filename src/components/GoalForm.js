@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Button, Grid, Modal, Segment, Container, Card } from 'semantic-ui-react'
+import { Form, Button, Grid} from 'semantic-ui-react'
 import { useParams } from 'react-router-dom'
 import { UseGlobalState } from '../utils/stateContext'
 import { createGoal, updateGoal } from '../services/goalServices'
 import { compileExistingGoal, compileNewGoal, extractGoalData } from '../utils/goalUtils'
-import { getLTGoalById } from '../services/lifetimeGoalServices'
 import { getGoalById } from '../services/goalServices'
 
 export default function NewGoalModal({setOpen, toggleTriggerColor, setGoalUpdated}) {

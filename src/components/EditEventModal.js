@@ -109,21 +109,21 @@ export default function EditEventModal({eventId}) {
 
     
 
-    function handleSelectBox(e){
-        if(e.target.className === 'delete icon'){
-          setEventItems({
-            ...eventItems,
-            eventGoals: eventItems.eventGoals.filter( item => {
-              return item !== e.target.parentNode.innerText
-            })
-          });
-        }else(
-          setEventItems({
-            ...eventItems,
-            eventGoals: [...eventItems.eventGoals,(e.target.textContent)]
-          })
-        );
-      }
+    // function handleSelectBox(e){
+    //     if(e.target.className === 'delete icon'){
+    //       setEventItems({
+    //         ...eventItems,
+    //         eventGoals: eventItems.eventGoals.filter( item => {
+    //           return item !== e.target.parentNode.innerText
+    //         })
+    //       });
+    //     }else(
+    //       setEventItems({
+    //         ...eventItems,
+    //         eventGoals: [...eventItems.eventGoals,(e.target.textContent)]
+    //       })
+    //     );
+    //   }
     
     function submitEvents() {
         let data = {

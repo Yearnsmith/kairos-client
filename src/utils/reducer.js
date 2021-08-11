@@ -49,7 +49,7 @@ export default function reducer(state, action) {
                 })
             });
             goalsToShow = Array.from(new Set(goalsToShow))
-            console.log(goalsToShow)
+            
             return{
                 ...state,
                 filter: {

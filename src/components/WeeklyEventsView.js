@@ -3,7 +3,6 @@ import {Header, Button, Container} from 'semantic-ui-react'
 import moment from 'moment'
 import ExpandableEvents from './ExpandableEvents'
 import {UseGlobalState} from '../utils/stateContext'
-import NewEventModal from './NewEventModal'
 import { getEventsByDate } from '../services/eventServices'
 
 

@@ -1,20 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { useGlobalState } from '../utils/stateContext'
-import { Form, Modal, Button, Grid, Icon } from 'semantic-ui-react'
-// import { useParams } from 'react-router-dom'
-import { UseGlobalState } from '../utils/stateContext'
-// // import pluralize from 'pluralize'
-// import { createGoal } from '../services/goalServices'
-// import { compileNewGoal } from '../utils/goalUtils'
-// import { getLTGoalById, getLTGoals } from '../services/lifetimeGoalServices'
-// import { getGoalById } from '../services/goalServices'
+import React, { useState } from 'react'
+import { Modal, Icon } from 'semantic-ui-react'
 import GoalForm from './GoalForm'
 
 export default function NewGoalModal() {
     // set modal status
     const [open, setOpen] = useState(false)
 
-    const {store, dispatch} = UseGlobalState();
     const [triggerColor, setTriggerColor] = useState(['grey', 'grey'])
     
     const toggleTriggerColor = ()=>{

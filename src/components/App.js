@@ -1,5 +1,5 @@
 // import './App.css';
-import React, { useReducer, useEffect, useState } from 'react';
+import React, { useReducer, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import Nav from './Nav';
 import LoginForm from './LoginForm';
@@ -9,25 +9,19 @@ import Goal from './Goal';
 import MonthlyEventsView from './MonthlyEventsView'
 import WeeklyEventsView from './WeeklyEventsView'
 import UserProfile from './UserProfile'
-import { findGoalById } from '../utils/goalUtils'
 
 //import reducer and state
 import reducer from '../utils/reducer'
 import { StateContext } from '../utils/stateContext'
-import { data } from '../services/data'
 import { getGoals } from '../services/goalServices';
 import { getLTGoals } from '../services/lifetimeGoalServices';
-// import jwt_decode from 'jwt-decode
-import { getEmailFromJWT } from '../utils/authUtils';
+
 function App() {
-  
-  // const { termGoals } = data
+  const hasFetchedData = useRef(false)
   
   // set initial, empty, state for first render.
   // right now I'm unconcerned about users, auth, and events. I just want to get
   // goals rendering properly, and get the goals route rendering id.
-
-
   const initialState = {
     loggedInUser: localStorage.getItem("jwt") ? true : false,
     lTGoals:[],
@@ -50,33 +44,37 @@ function App() {
   
   
   //instantiate error messages
-  const [errors, setErrors] = useState({});
+  // const [errors, setErrors] = useState({});
 
-    // moved from App.js to avoid 401 error (can't fetch messages when not logged in)
-    // And automatically load goals
+
     useEffect( () => {
-      getLTGoals()
+    if (loggedInUser){
+      if(!hasFetchedData.current){
+        getLTGoals()
         .then( lTGoals => {
-          dispatch({
-            type: "setLTGoals",
-            data: lTGoals
+        dispatch({
+          type: "setLTGoals",
+          data: lTGoals
           });
         })
         .then( () =>{
           getGoals()
             .then( goals =>{
               dispatch({
-                type: "setTermGoals",
-                data: goals
-              });
-              dispatch({
-                type: "setFilter",
-                data: store.filter
+                  type: "setTermGoals",
+                  data: goals
+                });
+                dispatch({
+                  type: "setFilter",
+                  data: store.filter
+                })
+                hasFetchedData.current = true
               })
             })
-        })
-        .catch( err => console.error(err))
-  },[])
+            .catch( err => console.error(err))
+        }
+      }
+    },[loggedInUser, store.filter])
 
   return (
     <div className="App">

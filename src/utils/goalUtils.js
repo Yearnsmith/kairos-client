@@ -1,12 +1,6 @@
-// import moment from "moment";
 import pluralize from "pluralize";
 import moment from 'moment'
 import goalColors from './lTGoalColors.json'
-
-
-// export function findGoalById(goalList, id){
-//     return goalList.find( item => item.id === id );
-//   }
 
 export function compileNewGoal(data){
   const {title, description, lifetimeGoal, timeframeDigit, timeframePeriod} = data
@@ -17,14 +11,13 @@ export function compileNewGoal(data){
     title: title,
     description: description,
     timeframe: timeframe,
-    // endDate: ,
     lTGoalsId: lifetimeGoal,
     eventsId: [],
   }
   return newGoal
 }
 
-export function compileExistingGoal(id, goalData, formData){
+export function compileExistingGoal(goalData, formData){
 
   formData.timeframe = `${pluralize(formData.timeframePeriod, Number(formData.timeframeDigit), true)}`
   delete formData.timeframeDigit
@@ -59,10 +52,10 @@ export function getGoalColor(category){
   switch(category){
     case "career":
       return career
-      break;
+
     case "physical":
       return physical
-      break;
+      
     case "lifestyle":
       return lifestyle
    
@@ -111,8 +104,5 @@ export function sortGoals(goals, action){
       return 'no such sort action'
   
   }
-  // goals.sort( (a,b) =>{
-  //   return a.createdAt - b.createdAt
-  // })
 
 }

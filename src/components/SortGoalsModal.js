@@ -1,16 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Dropdown, Form, Modal, Radio, Segment } from 'semantic-ui-react'
-import { UseGlobalState } from '../utils/stateContext'
-
-  //* Set Data for Dropdown
-  //* replace with db query for LTGoalsId.
-  const dropdownOptions =[
-    {key: 'career', text:'Career', value:'career'},
-    {key: 'lifestyle', text:'Lifestyle', value:'lifestyle'},
-    {key: 'artistic', text:'Artistic', value:'artistic'},
-    {key: 'physical', text:'Physical', value:'physical'}
-  ]
-
+import React, { useState } from 'react'
+import { Button, Form, Modal, Radio, Segment } from 'semantic-ui-react'
 
 function FilterModal({sortMethod, handleSort}) {
   // set modal status
@@ -42,7 +31,6 @@ function FilterModal({sortMethod, handleSort}) {
       <Modal.Content>
         <Modal.Description>
           <Form>
-            {/* <label>Sort By:</label> */}
             <Form.Field style={{minHeight:'200px',display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
               <Radio
                 label='Date Created'

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Menu, Icon } from 'semantic-ui-react'
-import { UseGlobalState } from '../utils/stateContext'
 import NewEventModal from './NewEventModal'
 import NewGoalModal from './NewGoalModal'
 
@@ -54,7 +53,6 @@ export default function Nav() {
                     style={{backgroundColor: 'white', cursor: 'pointer'}}
                     key={i.key}
                 >
-                {/* <Link class='item' name={i.item} active={activeTab === i.item} onClick={handleItemClick}> */}
                     { i.item !== 'add' ?
                         <Icon size='big' color={handleColor(i.item)} name={i.icon} />
                     :

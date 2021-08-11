@@ -31,11 +31,10 @@ export default function LoginForm({history}) {
                  
                  signUp({email: email, password: password}).then((response)=> {
                      if (response.error){
-                         console.log(response.error.message)
+                         console.error(response.error.message)
                      }else {
-                         console.log(response)
-                         return history.push("/sign_up")
                          console.log('Take this person to the cloak room, Jeeves')
+                         return history.push("/sign_up")
                         }
                     });
                 } else {
@@ -53,7 +52,6 @@ export default function LoginForm({history}) {
                         }
                     })
                     .catch( e => console.error(e))
-                // return history.push("/goals")
              }
          }
      }

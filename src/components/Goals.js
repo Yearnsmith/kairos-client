@@ -1,22 +1,18 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { List, Segment, Button, Menu, Container } from 'semantic-ui-react'
+import { List, Segment, Button, Container } from 'semantic-ui-react'
 import FilterModal from './FilterModal'
 import SortGoalsModal from './SortGoalsModal'
 import { UseGlobalState } from '../utils/stateContext'
-import { getLTGoals } from '../services/lifetimeGoalServices'
-import { getGoals } from '../services/goalServices'
 import { getGoalColor, sortGoals } from '../utils/goalUtils'
 
 export default function Goals() {
 
     const { store, dispatch } = UseGlobalState();
     const { filteredGoals } = store
-    console.log('filteredGoals', filteredGoals)
 
     const [sortMethod, setSortMethod] = useState('dateCreated')
     const [sortedGoals, setSortedGoals] = useState([])
-    console.log(sortedGoals)
   
     function handleSort(action){
       console.log('handlesort:', action)
@@ -28,33 +24,7 @@ export default function Goals() {
       setSortedGoals(
         sortGoals(filteredGoals, sortMethod)
       )
-  }, [filteredGoals])
-
-    // // moved from App.js to avoid 401 error (can't fetch messages when not logged in)
-    // // And automatically load goals
-    // useEffect( () => {
-    //     getLTGoals()
-    //       .then( lTGoals => {
-    //         dispatch({
-    //           type: "setLTGoals",
-    //           data: lTGoals
-    //         });
-    //       })
-    //       .then( () =>{
-    //         getGoals()
-    //           .then( goals =>{
-    //             dispatch({
-    //               type: "setTermGoals",
-    //               data: goals
-    //             });
-    //             dispatch({
-    //               type: "setFilter",
-    //               data: store.filter
-    //             })
-    //           })
-    //       })
-    //       .catch( err => console.error(err))
-    // },[])
+  }, [filteredGoals, sortMethod])
 
     return (
         //replace div with semantic main element. We could move the element to wrap

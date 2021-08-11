@@ -13,7 +13,7 @@ export default function ExpandableEvents () {
     // Set which event is expanded by default (useState = "" is all collapsed, 0 is first expanded etc.)
     const [activeIndex, setActiveIndex] = useState(0)
     const { store, dispatch } = UseGlobalState()
-    const { storedEvent, termGoals } = store
+    const { storedEvent } = store
     
     useEffect(() => {
         getGoals()

@@ -12,7 +12,7 @@ export default function Goal() {
     
     const {id} = useParams();
     
-    const [goalColors, setGoalColors]=useState({color: '#ccc', secondary: '#eee', text: '#555'})
+    const [goalColors, setGoalColors]=useState({color: 'black', secondary: 'black', text: 'grey'})
         const goalColor = goalColors.color
         const secondaryColor = goalColors.secondary
         const textColor = goalColors.text
