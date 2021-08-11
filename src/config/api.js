@@ -2,8 +2,8 @@ import axios from "axios";
 
 const kairosAPI = axios.create({
     // reserved for production url
-    // baseURL: 'https://kairos.herokuapp.com'
-    baseURL: 'http://localhost:4000'
+    baseURL: 'https://kairos-planner.herokuapp.com/'
+    // baseURL: 'http://localhost:4000'
 })
 
 kairosAPI.interceptors.request.use(req => {
