@@ -3,10 +3,10 @@ import {Container, Accordion, Icon, Checkbox, Divider, Label, Header} from 'sema
 import {UseGlobalState} from '../utils/stateContext'
 import {getGoals} from '../services/goalServices'
 import {updateEvent} from '../services/eventServices'
+import {getURL} from '../utils/eventUtils'
 import moment from 'moment'
 import EditEventModal from './EditEventModal'
 import {getGoalColor} from '../utils/goalUtils'
-
 
 
 
@@ -71,7 +71,7 @@ export default function ExpandableEvents () {
                             }/></p>)}
                             {(event.location || event.url) && <Divider/> }
                             {event.location && <p>{'\u00A0'}<Icon name="map marker alternate" />{'\u00A0'}{event.location}</p>}
-                            {event.url && <p>{'\u00A0'}<Icon name="linkify" />{'\u00A0'}<a href={event.url}>{event.url}</a></p>}
+                            {event.url && <p>{'\u00A0'}<Icon name="linkify" />{'\u00A0'}<a href={`https://${getURL(event.url)}`} target="_blank" rel="noreferrer" >{event.url}</a></p>}
                         </Accordion.Content>
                         </>
                     
