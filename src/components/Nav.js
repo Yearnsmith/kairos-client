@@ -13,7 +13,7 @@ const mobileItems = [
     {key: 'settings', item: 'settings', icon: 'sliders'}
 ]
 
-export default function Nav() {
+export default function Nav({navBarRef}) {
     // stores which tab is active
     const [activeTab, setActiveTab] = useState('');
 
@@ -41,6 +41,7 @@ export default function Nav() {
         widths={5}
         fixed='bottom'
         size='mini'
+        ref={navBarRef}
         >
         {mobileItems.map( i =>
                 <Menu.Item
@@ -68,7 +69,7 @@ export default function Nav() {
                 </Menu.Item>
 
         )}
-  
-          </Menu>
-      )
-  }
+
+        </Menu>
+    )
+}

@@ -37,7 +37,7 @@ export default function Goal() {
                 {goal ?
                 <>
                     {/*https://react.semantic-ui.com/elements/header/#variations-block */}
-                   <Header as='h2' color={goalColor} block content={goal.title}/>
+                    <Header as='h2' color={goalColor} block content={goal.title}/>
                     <Segment.Group style={{minWidth: '300px', maxWidth: '500px'}}>
                         <Segment inverted color={goalColor} data-testid='info-card' attached='top'>
                             <Container style={{color: textColor}}>
@@ -82,7 +82,7 @@ export default function Goal() {
                             )}
                         </List>
                     </Segment>
-                        <Button.Group>
+                        <Button.Group vertical>
                             <Button 
                                 content="Achieved!"
                                 icon='trophy'

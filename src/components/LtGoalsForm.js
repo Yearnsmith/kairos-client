@@ -4,20 +4,22 @@ import { createLTGoal } from '../services/lifetimeGoalServices';
 import { UseGlobalState } from '../utils/stateContext'
 
 //we will eventually pull this list dynamically from state, or from an API call
-const goalList = ['career','artistic','educational','physical','lifestyle'];
+// possibly move to initial state in App.js?
+const goalList = ['career','artistic','intellectual','physical','lifestyle'];
 
-// create initial state from the goalList. We could combine this
+// create initial state from the lifetime goals list. We could combine this
 // with the above function into one if we're pulling from state.
 const initialState = {}
+
 goalList.forEach( el => {
     initialState[el] = "" 
 })
 
 
-
 // This enables us to autonomously generate the text boxes
 const textAreaValues = goalList.map( goal =>
     {return {
+        key: goal,
         type: goal,
         labelText: goal.charAt(0).toUpperCase() + goal.slice(1)
     }});
@@ -30,10 +32,10 @@ const textAreaValues = goalList.map( goal =>
     
     // we use local state for form inputs
     const [formData, setFormData] = useState(initialState);
-    // console.log(formData)
+
     // This tracks which field has a save button attached.
     // it simply stores the name of the field.
-    const [activeField, setActiveField] = useState();
+    const [activeField, setActiveField] = useState('');
 
     // This toggles a field on and off, since use state stores the name
     // of the field, this takes an input of fieldName, and checks it against
@@ -43,20 +45,20 @@ const textAreaValues = goalList.map( goal =>
     }
 
     // For handling controlled components
-     function handleChange(event){
-         setFormData({
-             ...formData,
-             [event.target.name]: event.target.value
-         });
-     }
+    function handleChange(event){
+        setFormData({
+            ...formData,
+            [event.target.name]: event.target.value
+        });
+    }
 
     // reserved for saving form details to api & global state
-     function handleSubmit(event){
-         event.preventDefault();
-         dispatch({type: "setLoggedInUser", data:"true"})
-         history.push("/goals")
-            console.log('Take the files back to the filing cabnet, Jeeves.')
-     }
+    function handleSubmit(event){
+        event.preventDefault();
+        dispatch({type: "setLoggedInUser", data:"true"})
+        history.push("/goals")
+        console.log('Take the files back to the filing cabnet, Jeeves.')
+    }
 
     return (
         <Segment>
@@ -75,7 +77,7 @@ const textAreaValues = goalList.map( goal =>
                                 <TextArea
                                     id={goal.type}
                                     name={goal.type}
-                                    placeholder={goal.type}
+                                    placeholder={`write a lifetime ${goal.type} goal here.`}
                                     value={formData[goal.type]}
                                     onChange={handleChange}
                                     // change field to 'active'. I don't want a toggle here,
@@ -91,19 +93,19 @@ const textAreaValues = goalList.map( goal =>
                                     content='save'
                                     icon='check'
                                     floated='right'
-                                    // reserved for saving field value to global state (maybe with an api call, too?)
-                                    // perhaps include an 'undoField' like in the goal filter component
-                                    // (for when segment loses focus without a save.)
+                                    // save field entry to state
                                     onClick={() => {
-                                        console.log({type: goal.type, description: formData[goal.type]})
                                         createLTGoal({type: goal.type, description: formData[goal.type]}).then(response =>{
                                             if(response.error){
-                                                console.log(response.error);
+                                                console.error(response.error);
+                                                //TODO: insert UI error block
                                             }else{
-                                                console.log('Goal created response:', response)
+                                                // reserved for confirmation message
+                                                //TODO: Insert connfirmation message
                                             }
                                         })
                                         console.log(`Jeeves, file "${formData[goal.type]}" under "${goal.type}".`)
+                                        // should this be moved into the promise above?
                                         toggleActiveField(goal.type)
                                     }}
                                 />
@@ -112,7 +114,7 @@ const textAreaValues = goalList.map( goal =>
                         </Segment>);
                 })}
                 {/* get us out of here! Work out how to centre this thing. */}
-                <Form.Button compact content='Done' icon='check' />
+                <Form.Button compact content='Done' icon='check' floated='right' />
             </Form>
         </Segment>
     );

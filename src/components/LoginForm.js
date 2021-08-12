@@ -12,36 +12,30 @@ export default function LoginForm({history}) {
     const {dispatch} = UseGlobalState();
 
     const [subButton, setSubButton] = useState("")
-    console.log(subButton)
 
-     function handleChange(event){
-         setFormData({
-             ...formData,
-             [event.target.name]: event.target.value
-         });
-     }
-     function handleSubmit(event){
-        //  console.log(event)
-         event.preventDefault();
-        //  let submitter = event.nativeEvent.submitter.id;
-        //  console.log(submitter);
+    function handleChange(event){
+        setFormData({
+            ...formData,
+            [event.target.name]: event.target.value
+        });
+    }
+    function handleSubmit(event){
+        event.preventDefault();
         
-         if(email.length > 0 && password.length > 0){
-             if( subButton === 'signUp' ){
-                 
-                 signUp({email: email, password: password}).then((response)=> {
-                     if (response.error){
-                         console.error(response.error.message)
-                     }else {
-                         console.log('Take this person to the cloak room, Jeeves')
-                         return history.push("/sign_up")
-                        }
-                    });
-                } else {
-                    signIn({email: email, password: password})
-                    .then( response =>{
-                        console.log(response)
+        if(email.length > 0 && password.length > 0){
+            if( subButton === 'signUp' ){
+                signUp({email: email, password: password})
+                    .then((response)=> {
+                        if (response.error){
+                            console.error(response.error.message)
+                        }else {
+                            console.log('Take this person to the cloak room, Jeeves')
+                            return history.push("/sign_up")
+                            }
                     })
+                    .catch( e => console.error(e));
+            } else {
+                signIn({email: email, password: password})
                     .then( _ =>  {
                         if(localStorage.getItem("jwt")){
                             dispatch({type: "setLoggedInUser", data:"true"})
@@ -51,12 +45,12 @@ export default function LoginForm({history}) {
                             console.error("username or password incorrect")
                         }
                     })
-                    .catch( e => console.error(e))
-             }
-         }
-     }
-     
+                    .catch( e => console.error(e));
+            };
+        }
+    }
 
+    
     return (
         <Segment>
             <Header>
@@ -64,7 +58,7 @@ export default function LoginForm({history}) {
                 <Header.Subheader>sign up today to start manifesting your true potential</Header.Subheader>
             </Header>
             <Form onSubmit={handleSubmit}>
-                    {/* <label htmlFor='email'>email</label> */}
+                    <label htmlFor='email'>email</label>
                     <Form.Input
                         type='email'
                         id='email'

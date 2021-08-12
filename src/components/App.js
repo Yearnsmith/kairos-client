@@ -77,6 +77,7 @@ function App() {
     },[loggedInUser, store.filter])
 
   return (
+      
     <div className="App">
     <StateContext.Provider value={{store,dispatch}}>
       <Router>
@@ -90,20 +91,23 @@ function App() {
               <Route exact path="/sign_up" component={LtGoalsForm} />
             </main>
           :
-            <>
-              <Nav />
+          <>
+              <Nav/>
               <main>
                 <Route exact path="/">
                   <Redirect to="goals" />
                 </Route>
                 <Route exact path="/goals" component={Goals} />
+
                 <Route exact path="/goals/:id" component={Goal} />
-                {/* <Route exact path="/goals/:id"
-                  render={ (props) => <Goal {...props}
-                  termGoal={findGoalById(termGoals, props.match.params.id)}/>}
-                /> */}
+                {/* This is a repeated route, but we want to keep the sign_up in the sanctioned
+                    area above. */}
+                <Route exact path="/lifetime_goals" component={LtGoalsForm} />
+                
                 <Route exact path="/monthly_events" component={MonthlyEventsView} />
+                
                 <Route exact path="/weekly_events" component={WeeklyEventsView} />
+                
                 <Route exact path="/profile" component={UserProfile} />
               </main>
             </>
