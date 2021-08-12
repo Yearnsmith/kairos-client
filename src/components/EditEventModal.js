@@ -52,7 +52,7 @@ export default function EditEventModal({eventId}) {
         getEventsById(eventId)
             .then(event => {
                 defaultEvents.eventTitle = event.title
-                defaultEvents.eventGoals = event.goalsId.map((goal, index) => ({key: index, text: goal.title, value: goal.id}))
+                // defaultEvents.eventGoals = event.goalsIdevent.goalsId.map((goal, index) => ({key: goal.title, text: goal.title, value: goal.id}))
                 defaultEvents.eventDescription = event.description
                 defaultEvents.eventLocation = event.location
                 defaultEvents.eventURL = event.url
@@ -63,7 +63,6 @@ export default function EditEventModal({eventId}) {
                 console.log(defaultEvents.eventGoals)
             })
     },[])
-
     
 
     const [open, setOpen] = useState(false)

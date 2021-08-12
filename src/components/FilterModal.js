@@ -26,7 +26,7 @@ function FilterModal() {
   const {filteredLongTermGoals, showCompleted, showActive} = formData
 
   const [undoFilter, setUndoFilter] = useState(filter)
-
+console.log(filter)
 
   // on page render:
   // - set formData to match filter

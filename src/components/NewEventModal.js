@@ -5,26 +5,33 @@ import {UseGlobalState} from '../utils/stateContext'
 import {createEvent} from '../services/eventServices'
 import { getEventsByDate } from '../services/eventServices'
 import { getGoals } from '../services/goalServices'
-
+import { useLocation } from 'react-router-dom'
 
 const repeatOptions = [
     { key: 1, text: 'Daily', value: 1 },
     { key: 2, text: 'Weekly', value: 2 },
     { key: 3, text: 'Monthly', value: 3 },
   ]
-
-const defaultEvents = {
-    eventTitle: "",
-    eventGoals: [],
-    eventDescription: "",
-    eventLocation: "",
-    eventURL: "",
-    repeatEvent: ""
-}
+    
 
 
+export default function NewEventModal(props) {
 
-export default function NewEventModal() {
+    //get the location. See if we are in goals view or an events view
+    const {pathname} = useLocation();
+    const thisView = pathname.split("/")[1]
+    const findThisGoal = view => thisView.length > 2 ? pathname.split("/")[2] : null
+    const relatedGoal = findThisGoal(thisView)
+
+    //set the default values for the form
+    const defaultEvents = {
+        eventTitle: "",
+        eventGoals: [relatedGoal],
+        eventDescription: "",
+        eventLocation: "",
+        eventURL: "",
+        repeatEvent: ""
+    }
 
     const { store, dispatch } = UseGlobalState()
     const { selectedDate, termGoals } = store
@@ -45,18 +52,20 @@ export default function NewEventModal() {
               })
     ,[])
 
+    
     const defaultChecklist = {items: [], newItem: false, tempItem: ""}
-
+    
     const defaultDate = {
         eventDate: moment(selectedDate).format("YYYY[-]MM[-]DD"),
         startTime: moment().format("HH[:]mm"),
         endTime: moment().add(30, 'minutes').format("HH[:]mm")
-        }
-
+    }
+    
     const [open, setOpen] = useState(false)
     const [checklistItems, setAddChecklistItems] = useState(defaultChecklist)
     const [eventDateTime, setEventDateTime] = useState(defaultDate)
     const [eventItems, setEventItems] = useState(defaultEvents)
+    const { eventGoals } = eventItems
 
     const [triggerColor, setTriggerColor] = useState(['grey', 'grey'])
     const toggleTriggerColor = ()=>{
@@ -65,17 +74,25 @@ export default function NewEventModal() {
             )
     }
     
-    const goalsArray = termGoals.map((goal, index) => ({key: index, text: goal.title, value: goal.id}))
+    const goalsArray = termGoals.map((goal, index) => ({key: goal.title, text: goal.title, value: goal.id}))
 
-    function getGoalIds (eventGoals, goalsArray){
-        let idArray = []
-        for (const goal of goalsArray) {
-            if(eventGoals.includes(goal.text)) {
-                idArray.push(goal.value)
-            }
-        }
-        return idArray
-    }
+    // function getGoalIds (eventGoals, goalsArray){
+    //     let idArray = []
+    //     for (const goal of goalsArray) {
+    //         if(eventGoals.includes(goal.text)) {
+    //             idArray.push(goal.value)
+    //         }
+    //     }
+    //     return idArray
+    // }
+
+    function handleSelectBox(e, data){
+        setEventItems({
+            ...eventItems,
+            eventGoals: [...data.value]
+          })
+      }
+
 
     function handleNewChecklistItem() {
         let mappedChecklist = checklistItems.items.map(item => item.title)
@@ -96,23 +113,6 @@ export default function NewEventModal() {
 
 
     
-
-    function handleSelectBox(e){
-        if(e.target.className === 'delete icon'){
-          setEventItems({
-            ...eventItems,
-            eventGoals: eventItems.eventGoals.filter( item => {
-              return item !== e.target.parentNode.innerText
-            })
-          });
-        }else(
-          setEventItems({
-            ...eventItems,
-            eventGoals: [...eventItems.eventGoals,(e.target.textContent)]
-          })
-        );
-      }
-    
     function submitEvents() {
         let data = {
             title: eventItems.eventTitle,
@@ -122,8 +122,10 @@ export default function NewEventModal() {
             checklist: checklistItems.items,
             location: eventItems.eventLocation,
             url: eventItems.eventURL,
-            goalsId: getGoalIds(eventItems.eventGoals, goalsArray)
+            // goalsId: getGoalIds(eventItems.eventGoals, goalsArray)
+            goalsId: eventItems.eventGoals
         }
+        console.log(data)
         if (data.title && data.eventStart && data.eventEnd) {
             createEvent(data).then((response)=> {
                 if (response.error){
@@ -136,13 +138,25 @@ export default function NewEventModal() {
                     setOpen(false)
                 }
             })
+        if(thisView === 'goals'){
+            props.setGoalUpdated(true)
+        }
             
         } else {
             alert("Please fill out all required fields")
         }
     }
 
-
+    function selectTrigger(view){
+        if(view === 'goals'){
+            return <Icon name='plus' style={{cursor: 'pointer'}}/>
+        }else if( view === 'monthly_events' || view === 'weekly_events'){
+            return <Icon.Group size='huge' onClick={toggleTriggerColor}>
+                        <Icon color={triggerColor[0]} name='plus' />
+                        <Icon color={triggerColor[1]} name='calendar alternate outline' corner='top right' />
+                    </Icon.Group>
+        }
+    }
 
   return (
     <Modal  onClose={() => {setOpen(false)
@@ -156,15 +170,10 @@ export default function NewEventModal() {
                             endTime: moment().add(30, 'minutes').format("HH[:]mm")
                             })}} 
             open={open} 
-            trigger={
-                <Icon.Group size='huge' onClick={toggleTriggerColor}>
-                    <Icon color={triggerColor[0]} name='plus' />
-                    <Icon color={triggerColor[1]} name='calendar alternate outline' corner='top right' />
-                </Icon.Group>
-            }>
+            trigger={selectTrigger(thisView)}>
         <Modal.Header>Create New Event</Modal.Header>
-        <Icon style={{'padding-top': '7px',
-                    'padding-right': '5px'}}name='close' onClick={() => {   toggleTriggerColor()
+        <Icon style={{paddingTop: '7px',
+                    paddingRight: '5px'}}name='close' onClick={() => {   toggleTriggerColor()
                                                                             setOpen(false)
                                                                             setAddChecklistItems(defaultChecklist)}}/>
         <Modal.Content>
@@ -175,9 +184,9 @@ export default function NewEventModal() {
                 </Form.Field>
                 <Form.Field>
                     <label>Related Goals</label>
-                    <Dropdown   fluid multiple search selection 
-                                placeholder="Related Goals" options={goalsArray}
-                                onChange={handleSelectBox}/>
+                    <Dropdown   label='Related Goals' fluid multiple search selection 
+                                options={goalsArray}
+                                onChange={handleSelectBox} value={eventGoals}/>
                 </Form.Field>
                 <Grid columns={3} divided>
                     <Grid.Row>
@@ -208,7 +217,7 @@ export default function NewEventModal() {
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
-                <Form.Field style={{'margin-top': '10px'}}>
+                <Form.Field style={{'marginTop': '10px'}}>
                     <label>Description</label>
                     <TextArea   rows={4} placeholder='Describe the event' 
                                 onChange={(e) => setEventItems(oldValues => 
@@ -219,13 +228,13 @@ export default function NewEventModal() {
                     <Icon name="plus square outline"/> Add Checklist Item
                 </Button> }
                 
-                {checklistItems.newItem && <> <div style={{'margin-top': '5px', 'margin-bottom': '5px'}}> <Input onChange={(e)=> setAddChecklistItems(oldValues => {return {...oldValues, tempItem: e.target.value}})} size="mini" placeholder="New Checklist Item"/>
+                {checklistItems.newItem && <> <div style={{marginTop: '5px', marginBottom: '5px'}}> <Input onChange={(e)=> setAddChecklistItems(oldValues => {return {...oldValues, tempItem: e.target.value}})} size="mini" placeholder="New Checklist Item"/>
                 </div>
                 <Button onClick={()=> handleNewChecklistItem()} size="mini">Add</Button>
                 </> }
                 {checklistItems.items && checklistItems.items.map((item) => <p> <Checkbox checked={item.checked} label={item.title}/><Icon onClick={()=> handleRemoveChecklistItem(item.title)} style={{'margin-left': '5px'}} name="close" /></p>)}
                 <Form.Field>
-                    <Input style={{'margin-top': '15px'}} icon='map marker alternate' 
+                    <Input style={{marginTop: '15px'}} icon='map marker alternate' 
                     iconPosition='left' placeholder='Add Location' onChange={(e) => setEventItems(oldValues => {return {...oldValues, eventLocation: e.target.value}})}/>
                 </Form.Field>
                 <Form.Field>
@@ -233,7 +242,7 @@ export default function NewEventModal() {
                 </Form.Field>
                 <Form.Field>
                     <label>Repeat Event:</label>
-                    <div style={{'max-width': '100%'}}>
+                    <div style={{maxWidth: '100%'}}>
                         <Dropdown clearable options={repeatOptions} 
                         selection placeholder="No Repetition" onChange={(e) => setEventItems(oldValues => {return {...oldValues, repeatEvent:e.target.textContent}})}/>
                     </div>
