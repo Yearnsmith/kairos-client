@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { List, Segment, Button, Container } from 'semantic-ui-react'
+import { List, Segment, Button, Container, Header, Icon } from 'semantic-ui-react'
 import FilterModal from './FilterModal'
 import SortGoalsModal from './SortGoalsModal'
 import { UseGlobalState } from '../utils/stateContext'
 import { getGoalColor, sortGoals } from '../utils/goalUtils'
 
 export default function Goals() {
-
     const { store, dispatch } = UseGlobalState();
     const { filteredGoals } = store
+    console.log(store.filteredGoals)
 
     const [sortMethod, setSortMethod] = useState('dateCreated')
     const [sortedGoals, setSortedGoals] = useState([])
@@ -30,6 +30,7 @@ export default function Goals() {
         //replace div with semantic main element. We could move the element to wrap
         // the Router in App.js, and wrap JSX in a fragment. But this is nice for testing.
         <main data-testid="goalsView" style={{display: 'flex', flexDirection:'column', alignItems:'center',justifyContent: 'flex-start'}}>
+            
             <h2>Goals</h2>
             {/* this could be abstracted into a component */}
             <Button.Group compact>
@@ -67,7 +68,21 @@ export default function Goals() {
                         </List.Item>
                 )
                 : 
-                    <Container>You have no goals. Add a new task to start kicking your lifetime goals!</Container> }
+                    <Container style={{display: 'flex', flexDirection:'column', justifyContent: 'center', paddingTop:'18px'}}>
+                    <div style={{display: 'flex', justifyContent: 'center', marginBottom:'17px'}}>
+                    <Header>No Goals To Display</Header>
+                    </div>
+                    <div style={{display: 'flex', justifyContent: 'center', marginBottom: '17px'}}>
+                    <Icon size="huge" name="folder open outline" />
+                    </div>
+                    <div style={{display: 'flex', justifyContent: 'center', marginBottom: '8px'}}>
+                    <Header >Try Creating One</Header>
+                    </div>
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                    <Icon size="big" name="long arrow down" />
+                    </div>
+                    </Container>
+                    }
             </List>
         </main>
     )

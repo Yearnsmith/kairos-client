@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from 'react'
-import {Container, Accordion, Icon, Checkbox, Divider, Label} from 'semantic-ui-react'
+import {Container, Accordion, Icon, Checkbox, Divider, Label, Header} from 'semantic-ui-react'
 import {UseGlobalState} from '../utils/stateContext'
 import {getGoals} from '../services/goalServices'
+import {updateEvent} from '../services/eventServices'
+import {getURL} from '../utils/eventUtils'
 import moment from 'moment'
 import EditEventModal from './EditEventModal'
-
+import {getGoalColor} from '../utils/goalUtils'
 
 
 
@@ -32,7 +34,7 @@ export default function ExpandableEvents () {
         setActiveIndex(titleProps.index)
     }
     
-    console.log(storedEvent)
+    console.log(activeIndex)
     
     if (typeof(storedEvent) !== 'undefined' && `${storedEvent}` !== '') {
 
@@ -56,15 +58,20 @@ export default function ExpandableEvents () {
                                 <EditEventModal eventId={event.id}/>
                                 </div>
                                 <div>
-                                {event.goalsId.map(goal => <Label size='mini' style={{marginTop: '3px'}}>{goal.title}</Label>)}
+                                {(event.goalsId[0]) ? event.goalsId.map(goal => <Label size='tiny' color={getGoalColor(goal.lTGoalsId[0].type).color} style={{marginTop: '3px'}}>{goal.title}</Label>) : ""}
                                 </div>
                         </Accordion.Title>
                         <Accordion.Content active={activeIndex === index} style={{paddingTop:'0px'}}>
                             {event.description && <p>{event.description}</p>}
-                            {event.checklist && event.checklist.map((item, index) => <p> <Checkbox checked={item.done} label={item}/></p>)}
+                            {event.checklist && event.checklist.map((item, index) => 
+                            <p> <Checkbox defaultChecked={item.checked} label={item.title} 
+                            onChange={ ()=> {event.checklist[`${index}`] = {title: item.title, checked: !item.checked}
+                                            updateEvent({checklist: event.checklist}, event.id)
+                                            }       
+                            }/></p>)}
                             {(event.location || event.url) && <Divider/> }
                             {event.location && <p>{'\u00A0'}<Icon name="map marker alternate" />{'\u00A0'}{event.location}</p>}
-                            {event.url && <p>{'\u00A0'}<Icon name="linkify" />{'\u00A0'}<a href={event.url}>{event.url}</a></p>}
+                            {event.url && <p>{'\u00A0'}<Icon name="linkify" />{'\u00A0'}<a href={`https://${getURL(event.url)}`} target="_blank" rel="noreferrer" >{event.url}</a></p>}
                         </Accordion.Content>
                         </>
                     
@@ -75,7 +82,20 @@ export default function ExpandableEvents () {
         )
     } else {
         return (
-            <div>No events to show</div>
+            <Container style={{display: 'flex', flexDirection:'column', justifyContent: 'center', paddingTop:'18px'}}>
+            <div style={{display: 'flex', justifyContent: 'center', marginBottom:'17px'}}>
+            <Header>No Events To Display</Header>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'center', marginBottom: '17px'}}>
+            <Icon size="huge" name="calendar outline" />
+            </div>
+            <div style={{display: 'flex', justifyContent: 'center', marginBottom: '8px'}}>
+            <Header >Try Creating One</Header>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'center'}}>
+            <Icon size="big" name="long arrow down" />
+            </div>
+            </Container>
         )
     }
 }

@@ -2,12 +2,16 @@ import React, { useState, useEffect } from 'react'
 import { Header, List, Label, Icon, Segment, Container, Button } from 'semantic-ui-react'
 import moment from 'moment'
 import { getGoalColor } from '../utils/goalUtils';
-import { getGoalById } from '../services/goalServices';
+import { deleteGoal, getGoalById, updateGoal } from '../services/goalServices';
 import { useParams } from 'react-router-dom';
 import EditGoalModal from './EditGoalModal';
-
-export default function Goal() {
+import NewEventModal from './NewEventModal';
+import { UseGlobalState } from '../utils/stateContext';
+export default function Goal({history}) {
     
+    // get global state
+    const { store, dispatch } = UseGlobalState();
+
     const [goal, setGoal] = useState(null)
     
     const {id} = useParams();
@@ -31,7 +35,48 @@ export default function Goal() {
                 .catch( error => console.error(error) );
         }, [id, goalColors, goalUpdated]);
 
+        function handleAchieve(){
+            const newEventsId = []
+            goal.eventsId.forEach( e => {
+                newEventsId.push(e.id)
+            })
+            console.log('newEventsId', newEventsId)
+            const newlTGoalsId = []
+            goal.lTGoalsId.forEach(ltg => {
+                newlTGoalsId.push(ltg.id)
+            })
+            console.log('newlTGoalsId', newlTGoalsId)
+            
+            const updatedGoal = {
+                ...goal,
+                eventsId: newEventsId,
+                completedAt: Date.now(),
+                lTGoalsId: newlTGoalsId
+            }
+            updateGoal(updatedGoal)
+                .then( res =>{
+                    dispatch({
+                        type:'updateGoal',
+                        data: res
+                    })
+                    dispatch({
+                        type: 'setFilter',
+                        data: store.filter
+                    })
+                    history.push("/goals")
+                })
+        }
 
+        function deleteGoalHandler(){
+            deleteGoal(id)
+                .then( res =>{
+                    dispatch({type:'removeGoal', data: id})
+                    dispatch({type:'setFilter', data: store.filter})
+                    history.push("/goals")
+                })
+        }
+
+        console.log(goal)
         return (
             <main style={{padding:'1rem 1rem', display: 'flex', flexDirection:'column', alignItems:'center'}}>
                 {goal ?
@@ -68,7 +113,7 @@ export default function Goal() {
                     <Segment inverted color={goalColor} style={{color: textColor, minWidth: '300px', maxWidth:'500px'}} data-testid='events-card'>
                         <Header as='h3' style={{display:'flex',justifyContent:'space-between', color: textColor}} >
                             <Header.Content>Events</Header.Content>
-                            <Icon name='add' link size='large' className='ui right floated'/>
+                            <NewEventModal setGoalUpdated={setGoalUpdated} />
                         </Header>
                         <List selection>
                             {goal.eventsId.length === 0 ? 
@@ -86,13 +131,13 @@ export default function Goal() {
                             <Button 
                                 content="Achieved!"
                                 icon='trophy'
-                                //onClick={handleAchieve}
+                                onClick={handleAchieve}
                             />
                             <EditGoalModal goalTitle={goal.title} setGoalUpdated={setGoalUpdated} />
                             <Button
                                 content='delete'
                                 icon='trash'
-                                //onClick={handleDelete}
+                                onClick={deleteGoalHandler}
                             />
                         </Button.Group>
                 </>

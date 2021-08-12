@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Form, Header,Input, Segment } from 'semantic-ui-react';
+import { Button, Form, Header,Input, Segment, Container } from 'semantic-ui-react';
 import { signUp, signIn } from '../services/authServices';
 import { UseGlobalState } from '../utils/stateContext';
 
@@ -52,6 +52,7 @@ export default function LoginForm({history}) {
 
     
     return (
+        <Container style={{display: 'flex', justifyContent: 'center', 'margin-top':'20px', marginBottom:'20px'}}>
         <Segment>
             <Header>
                 <Header.Content as='h2'>Unlock your best self</Header.Content>
@@ -85,13 +86,14 @@ export default function LoginForm({history}) {
                         />
                     </Form.Field>
                     <Form.Group style={{justifyContent: 'center'}}>
-                        <Button.Group>
-                            <Button content='Sign In' id='signIn' onClick={()=> setSubButton('signIn')} />
-                            <Button content='Sign Up' id='signUp' onClick={()=> setSubButton('signUp')}/>
-                        </Button.Group>
+                        
+                            <Button content='Sign In' id='signIn' onClick={()=> setSubButton('signIn')} style={{marginRight:'10px'}} />
+                            <Button content='Sign Up' id='signUp' onClick={()=> setSubButton('signUp')} style={{marginLeft:'10px'}} />
+                        
 
                     </Form.Group>
             </Form>
         </Segment>
+        </Container>
     );
 }

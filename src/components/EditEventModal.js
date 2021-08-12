@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { Button, Dropdown, Form, Modal, Checkbox, Input, Icon, TextArea, Grid } from 'semantic-ui-react'
 import moment from 'moment'
 import {UseGlobalState} from '../utils/stateContext'
-import {getEventsById, updateEvent} from '../services/eventServices'
+import {getEventsById, updateEvent, deleteEvent} from '../services/eventServices'
 import { getEventsByDate } from '../services/eventServices'
 import { getGoals } from '../services/goalServices'
 
@@ -52,7 +52,7 @@ export default function EditEventModal({eventId}) {
         getEventsById(eventId)
             .then(event => {
                 defaultEvents.eventTitle = event.title
-                defaultEvents.eventGoals = event.goalsId.map((goal, index) => ({key: index, text: goal.title, value: goal.id}))
+                defaultEvents.eventGoals = event.goalsId.map(goal => goal.id)
                 defaultEvents.eventDescription = event.description
                 defaultEvents.eventLocation = event.location
                 defaultEvents.eventURL = event.url
@@ -60,16 +60,15 @@ export default function EditEventModal({eventId}) {
                 defaultDate.startTime = moment(event.eventStart).format("HH[:]mm")
                 defaultDate.endTime = moment(event.eventEnd).format("HH[:]mm")
                 defaultChecklist.items = event.checklist
-                console.log(defaultEvents.eventGoals)
             })
     },[])
-
     
 
     const [open, setOpen] = useState(false)
     const [checklistItems, setAddChecklistItems] = useState(defaultChecklist)
     const [eventDateTime, setEventDateTime] = useState(defaultDate)
     const [eventItems, setEventItems] = useState(defaultEvents)
+    const { eventGoals } = eventItems
 
     const [triggerColor, setTriggerColor] = useState(['grey', 'grey'])
     const toggleTriggerColor = ()=>{
@@ -79,6 +78,7 @@ export default function EditEventModal({eventId}) {
     }
     
     const goalsArray = termGoals.map((goal, index) => ({key: index, text: goal.title, value: goal.id}))
+    
 
     function getGoalIds (eventGoals, goalsArray){
         let idArray = []
@@ -90,40 +90,29 @@ export default function EditEventModal({eventId}) {
         return idArray
     }
 
+    function handleSelectBox(e, data){
+        setEventItems({
+            ...eventItems,
+            eventGoals: [...data.value]
+          })
+      }
+
     function handleNewChecklistItem() {
-        if (!checklistItems.items.includes(checklistItems.tempItem)) {
+        let mappedChecklist = checklistItems.items.map(item => item.title)
+        if (!mappedChecklist.includes(checklistItems.tempItem) && checklistItems.tempItem !== '') {
         setAddChecklistItems(oldValues => 
-            {return {...oldValues, items: [...checklistItems.items, checklistItems.tempItem]}})
+            {return {...oldValues, items: [...checklistItems.items, {title: checklistItems.tempItem, checked: false}]}})
         setAddChecklistItems(oldValues => {return {...oldValues, newItem: false, tempItem: ''}})
         } else {
-            alert("Checklist items must be unique")
+            alert("Checklist items must be unique and contain at least one character")
         }
        
     }
 
     function handleRemoveChecklistItem(item) {
         setAddChecklistItems(oldValues => 
-            {return {...oldValues, items: checklistItems.items.filter(li => li !== item)}})
+            {return {...oldValues, items: checklistItems.items.filter(li => li.title !== item)}})
     }
-
-
-    
-
-    // function handleSelectBox(e){
-    //     if(e.target.className === 'delete icon'){
-    //       setEventItems({
-    //         ...eventItems,
-    //         eventGoals: eventItems.eventGoals.filter( item => {
-    //           return item !== e.target.parentNode.innerText
-    //         })
-    //       });
-    //     }else(
-    //       setEventItems({
-    //         ...eventItems,
-    //         eventGoals: [...eventItems.eventGoals,(e.target.textContent)]
-    //       })
-    //     );
-    //   }
     
     function submitEvents() {
         let data = {
@@ -134,18 +123,14 @@ export default function EditEventModal({eventId}) {
             checklist: checklistItems.items,
             location: eventItems.eventLocation,
             url: eventItems.eventURL,
-            goalsId: getGoalIds(eventItems.eventGoals, goalsArray)
+            goalsId: eventItems.eventGoals
         }
         if (data.title && data.description && data.eventStart && data.eventEnd) {
             updateEvent(data, eventId).then((response)=> {
                 if (response.error){
                     console.log(response.error.message)
                 }else{
-                    // console.log(response)
-                    // setAddChecklistItems(defaultChecklist)
-                    // setEventItems(defaultEvents)
                     getEventsPls(selectedDate)
-                    setOpen(false)
                 }
             })
             
@@ -153,8 +138,7 @@ export default function EditEventModal({eventId}) {
             alert("Please fill out all required fields")
         }
     }
-console.log(eventId)
-console.log(eventDateTime.startTime)
+
 
   return (
     <Modal  onClose={() => {setOpen(false)
@@ -175,12 +159,10 @@ console.log(eventDateTime.startTime)
                             onChange={(e) => setEventItems(oldValues => {return {...oldValues, eventTitle: e.target.value}})}/>
                 </Form.Field>
                 <Form.Field>
-                    {/* <label>Related Goals</label>
-                    <Dropdown   fluid multiple search selection
+                
+                <Dropdown   label='Related Goals' fluid multiple search selection 
                                 options={goalsArray}
-                                defaultValue={eventItems.eventGoals}
-                                onChange={handleSelectBox}
-                                /> */}
+                                onChange={handleSelectBox} value={eventGoals}/>
                 </Form.Field>
                 <Grid columns={3} divided>
                     <Grid.Row>
@@ -227,7 +209,7 @@ console.log(eventDateTime.startTime)
                 </div>
                 <Button onClick={()=> handleNewChecklistItem()} size="mini">Add</Button>
                 </> }
-                {checklistItems && checklistItems.items.map((item) => <p> <Checkbox checked={false} label={item}/><Icon onClick={()=> handleRemoveChecklistItem(item)} style={{'margin-left': '5px'}} name="close" /></p>)}
+                {checklistItems.items && checklistItems.items.map((item) => <p> <Checkbox checked={item.checked} label={item.title}/><Icon onClick={()=> handleRemoveChecklistItem(item.title)} style={{'margin-left': '5px'}} name="close" /></p>)}
                 <Form.Field>
                     <Input style={{'margin-top': '15px'}} icon='map marker alternate' 
                     iconPosition='left' placeholder='Add Location' defaultValue={eventItems.eventLocation} onChange={(e) => setEventItems(oldValues => {return {...oldValues, eventLocation: e.target.value}})}/>
@@ -246,10 +228,21 @@ console.log(eventDateTime.startTime)
         </Modal.Content>
         <Modal.Actions>
         <Button
+            content="Delete Event"
+            labelPosition='right'
+            icon='delete'
+            onClick={() => {deleteEvent(eventId)
+                            getEventsPls(selectedDate)
+                            setOpen(false)
+                            }}
+        />
+        <Button
             content="Edit Event"
             labelPosition='right'
             icon='checkmark'
-            onClick={() => submitEvents()}
+            onClick={() => {setOpen(false)
+                            submitEvents()
+            }}
         />
         </Modal.Actions>
     </Modal>

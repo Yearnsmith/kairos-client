@@ -10,7 +10,7 @@ const mobileItems = [
     {key: 'monthly', item: 'monthly_events', icon: 'calendar outline alternate'},
     {key: 'add', item: 'add', goal:{icon: 'check circle'}, event:{icon: 'calendar outline alternate'}},
     {key: 'profile', item: 'profile', icon: 'user'},
-    {key: 'settings', item: 'settings', icon: 'sliders'}
+    {key: 'lifetime_goals', item: 'lifetime_goals', icon: 'sliders'}
 ]
 
 export default function Nav() {
