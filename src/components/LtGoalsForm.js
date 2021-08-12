@@ -31,10 +31,10 @@ const textAreaValues = goalList.map( goal =>
     //** Component Starts Here *//
     export default function SignUpForm({history}) {
     // reserved for hooking in global state and saving form
-    const {dispatch, store} = UseGlobalState();
-    const {globalBeenSaved} = store
+    const {dispatch} = UseGlobalState();
+    // const {globalBeenSaved} = store
 
-    let hasBeenSaved = globalBeenSaved ? globalBeenSaved : []
+    let hasBeenSaved = []
 
     
     // we use local state for form inputs

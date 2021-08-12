@@ -9,12 +9,6 @@ export default function reducer(state, action) {
                 ...state,  // spread current state
                 lTGoals: action.data
             };
-        case "setHasBeenSaved":
-            // set the state with data recieved from action
-            return{
-                ...state,  // spread current state
-                globalBeenSaved: action.data
-            };
         case "setTermGoals":
             return {
                 ...state,
