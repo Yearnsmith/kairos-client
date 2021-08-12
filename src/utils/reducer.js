@@ -14,6 +14,9 @@ export default function reducer(state, action) {
                 ...state,
                 termGoals: action.data
             };
+        case "removeGoal":
+            const newTermGoals = state.termGoals.filter(g => g.id !== action.data)
+
         //makes filter persistent
         case "setFilter": {
             // destructure action.data
