@@ -124,7 +124,6 @@ export default function NewEventModal() {
             url: eventItems.eventURL,
             goalsId: getGoalIds(eventItems.eventGoals, goalsArray)
         }
-        console.log(data)
         if (data.title && data.eventStart && data.eventEnd) {
             createEvent(data).then((response)=> {
                 if (response.error){
