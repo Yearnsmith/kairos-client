@@ -58,7 +58,7 @@ export default function ExpandableEvents () {
                                 <EditEventModal eventId={event.id}/>
                                 </div>
                                 <div>
-                                {event.goalsId.map(goal => <Label size='tiny' color={getGoalColor(goal.lTGoalsId[0].type).color} style={{marginTop: '3px'}}>{goal.title}</Label>)}
+                                {(event.goalsId[0]) ? event.goalsId.map(goal => <Label size='tiny' color={getGoalColor(goal.lTGoalsId[0].type).color} style={{marginTop: '3px'}}>{goal.title}</Label>) : ""}
                                 </div>
                         </Accordion.Title>
                         <Accordion.Content active={activeIndex === index} style={{paddingTop:'0px'}}>
