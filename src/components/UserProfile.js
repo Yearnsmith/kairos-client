@@ -19,18 +19,20 @@ export default function UserProfile(props) {
         }
     })
     //get goals that are completed
-    const completedGoals = termGoals.filter(goal => goal.completedAt).length
-
     const lTGoalDisplay = lTGoals.map( ltg => {
+    
+        const completedGoals = termGoals.filter(goal => {
+            return goal.completedAt && goal.lTGoalsId[0].type === ltg.type ? goal.id : null
+        })
+
         return {
             key: ltg.id,
             type: ltg.type,
             total: termGoals.filter(g => g.lTGoalsId[0].type === ltg.type).length,
-            complete: completedGoals
+            complete: completedGoals.length
         }
     })
-    console.log(goalDisplay)
-    console.log(lTGoalDisplay)
+
     return (
         // create a grid that will stack on small screen sizes
         <Grid columns={3} centered stackable verticalAlign='middle' style={{paddingTop: '2rem'}}>
@@ -48,7 +50,7 @@ export default function UserProfile(props) {
                         <span
                             onClick={() => {
                                 localStorage.removeItem("jwt")
-                                props.history.push("/")
+                                props.history.push("/sign_in")
                             }}
                             style={{cursor: 'pointer'}}
                         >
