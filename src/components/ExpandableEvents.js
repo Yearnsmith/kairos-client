@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {Container, Accordion, Icon, Checkbox, Divider, Label} from 'semantic-ui-react'
+import {Container, Accordion, Icon, Checkbox, Divider, Label, Header} from 'semantic-ui-react'
 import {UseGlobalState} from '../utils/stateContext'
 import {getGoals} from '../services/goalServices'
 import moment from 'moment'
@@ -75,7 +75,20 @@ export default function ExpandableEvents () {
         )
     } else {
         return (
-            <div>No events to show</div>
+            <Container style={{display: 'flex', flexDirection:'column', justifyContent: 'center', marginTop:'25px', marginBottom:'20px'}}>
+            <div style={{display: 'flex', justifyContent: 'center', marginBottom:'17px'}}>
+            <Header>No Events To Display</Header>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'center', marginBottom: '17px'}}>
+            <Icon size="huge" name="calendar times outline" />
+            </div>
+            <div style={{display: 'flex', justifyContent: 'center', marginBottom: '8px'}}>
+            <Header >Try Creating One</Header>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'center'}}>
+            <Icon size="big" name="long arrow down" />
+            </div>
+            </Container>
         )
     }
 }
