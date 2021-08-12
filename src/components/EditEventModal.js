@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { Button, Dropdown, Form, Modal, Checkbox, Input, Icon, TextArea, Grid } from 'semantic-ui-react'
 import moment from 'moment'
 import {UseGlobalState} from '../utils/stateContext'
-import {getEventsById, updateEvent} from '../services/eventServices'
+import {getEventsById, updateEvent, deleteEvent} from '../services/eventServices'
 import { getEventsByDate } from '../services/eventServices'
 import { getGoals } from '../services/goalServices'
 
@@ -222,6 +222,15 @@ export default function EditEventModal({eventId}) {
             </Form>
         </Modal.Content>
         <Modal.Actions>
+        <Button
+            content="Delete Event"
+            labelPosition='right'
+            icon='delete'
+            onClick={() => {deleteEvent(eventId)
+                            setOpen(false)
+                            getEventsPls(selectedDate)
+                            }}
+        />
         <Button
             content="Edit Event"
             labelPosition='right'
