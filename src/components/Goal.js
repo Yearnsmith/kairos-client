@@ -5,6 +5,7 @@ import { getGoalColor } from '../utils/goalUtils';
 import { getGoalById } from '../services/goalServices';
 import { useParams } from 'react-router-dom';
 import EditGoalModal from './EditGoalModal';
+import NewEventModal from './NewEventModal';
 
 export default function Goal() {
     
@@ -31,7 +32,7 @@ export default function Goal() {
                 .catch( error => console.error(error) );
         }, [id, goalColors, goalUpdated]);
 
-
+        console.log(goal)
         return (
             <main style={{padding:'1rem 1rem', display: 'flex', flexDirection:'column', alignItems:'center'}}>
                 {goal ?
@@ -68,7 +69,7 @@ export default function Goal() {
                     <Segment inverted color={goalColor} style={{color: textColor, minWidth: '300px', maxWidth:'500px'}} data-testid='events-card'>
                         <Header as='h3' style={{display:'flex',justifyContent:'space-between', color: textColor}} >
                             <Header.Content>Events</Header.Content>
-                            <Icon name='add' link size='large' className='ui right floated'/>
+                            <NewEventModal setGoalUpdated={setGoalUpdated} />
                         </Header>
                         <List selection>
                             {goal.eventsId.length === 0 ? 
