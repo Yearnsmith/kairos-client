@@ -123,7 +123,6 @@ export default function EditEventModal({eventId}) {
                     console.log(response.error.message)
                 }else{
                     getEventsPls(selectedDate)
-                    setOpen(false)
                 }
             })
             
@@ -235,7 +234,9 @@ export default function EditEventModal({eventId}) {
             content="Edit Event"
             labelPosition='right'
             icon='checkmark'
-            onClick={() => submitEvents()}
+            onClick={() => {setOpen(false)
+                            submitEvents()
+            }}
         />
         </Modal.Actions>
     </Modal>

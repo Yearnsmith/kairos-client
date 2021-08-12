@@ -126,16 +126,16 @@ export default function NewEventModal(props) {
             goalsId: eventItems.eventGoals
         }
         console.log(data)
-        if (data.title && data.eventStart && data.eventEnd) {
+        if (data.title && data.description && data.eventStart && data.eventEnd) {
             createEvent(data).then((response)=> {
                 if (response.error){
                     console.log(response.error.message)
+                    alert('Error creating event')
                 }else{
                     console.log(response)
                     setAddChecklistItems(defaultChecklist)
                     setEventItems(defaultEvents)
                     getEventsPls(selectedDate)
-                    setOpen(false)
                 }
             })
         if(thisView === 'goals'){
@@ -254,7 +254,8 @@ export default function NewEventModal(props) {
             content="Add Event"
             labelPosition='right'
             icon='checkmark'
-            onClick={() => submitEvents()}
+            onClick={() => { setOpen(false)
+                submitEvents()}}
         />
         </Modal.Actions>
     </Modal>
