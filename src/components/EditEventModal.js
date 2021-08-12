@@ -52,7 +52,7 @@ export default function EditEventModal({eventId}) {
         getEventsById(eventId)
             .then(event => {
                 defaultEvents.eventTitle = event.title
-                // defaultEvents.eventGoals = event.goalsIdevent.goalsId.map((goal, index) => ({key: goal.title, text: goal.title, value: goal.id}))
+                defaultEvents.eventGoals = event.goalsId.map(goal => goal.id)
                 defaultEvents.eventDescription = event.description
                 defaultEvents.eventLocation = event.location
                 defaultEvents.eventURL = event.url
@@ -60,7 +60,6 @@ export default function EditEventModal({eventId}) {
                 defaultDate.startTime = moment(event.eventStart).format("HH[:]mm")
                 defaultDate.endTime = moment(event.eventEnd).format("HH[:]mm")
                 defaultChecklist.items = event.checklist
-                console.log(defaultEvents.eventGoals)
             })
     },[])
     
@@ -69,6 +68,7 @@ export default function EditEventModal({eventId}) {
     const [checklistItems, setAddChecklistItems] = useState(defaultChecklist)
     const [eventDateTime, setEventDateTime] = useState(defaultDate)
     const [eventItems, setEventItems] = useState(defaultEvents)
+    const { eventGoals } = eventItems
 
     const [triggerColor, setTriggerColor] = useState(['grey', 'grey'])
     const toggleTriggerColor = ()=>{
@@ -78,6 +78,7 @@ export default function EditEventModal({eventId}) {
     }
     
     const goalsArray = termGoals.map((goal, index) => ({key: index, text: goal.title, value: goal.id}))
+    
 
     function getGoalIds (eventGoals, goalsArray){
         let idArray = []
@@ -88,6 +89,13 @@ export default function EditEventModal({eventId}) {
         }
         return idArray
     }
+
+    function handleSelectBox(e, data){
+        setEventItems({
+            ...eventItems,
+            eventGoals: [...data.value]
+          })
+      }
 
     function handleNewChecklistItem() {
         let mappedChecklist = checklistItems.items.map(item => item.title)
@@ -115,7 +123,7 @@ export default function EditEventModal({eventId}) {
             checklist: checklistItems.items,
             location: eventItems.eventLocation,
             url: eventItems.eventURL,
-            goalsId: getGoalIds(eventItems.eventGoals, goalsArray)
+            goalsId: eventItems.eventGoals
         }
         if (data.title && data.description && data.eventStart && data.eventEnd) {
             updateEvent(data, eventId).then((response)=> {
@@ -123,7 +131,6 @@ export default function EditEventModal({eventId}) {
                     console.log(response.error.message)
                 }else{
                     getEventsPls(selectedDate)
-                    setOpen(false)
                 }
             })
             
@@ -152,12 +159,10 @@ export default function EditEventModal({eventId}) {
                             onChange={(e) => setEventItems(oldValues => {return {...oldValues, eventTitle: e.target.value}})}/>
                 </Form.Field>
                 <Form.Field>
-                    {/* <label>Related Goals</label>
-                    <Dropdown   fluid multiple search selection
+                
+                <Dropdown   label='Related Goals' fluid multiple search selection 
                                 options={goalsArray}
-                                defaultValue={eventItems.eventGoals}
-                                onChange={handleSelectBox}
-                                /> */}
+                                onChange={handleSelectBox} value={eventGoals}/>
                 </Form.Field>
                 <Grid columns={3} divided>
                     <Grid.Row>
@@ -227,15 +232,17 @@ export default function EditEventModal({eventId}) {
             labelPosition='right'
             icon='delete'
             onClick={() => {deleteEvent(eventId)
-                            setOpen(false)
                             getEventsPls(selectedDate)
+                            setOpen(false)
                             }}
         />
         <Button
             content="Edit Event"
             labelPosition='right'
             icon='checkmark'
-            onClick={() => submitEvents()}
+            onClick={() => {setOpen(false)
+                            submitEvents()
+            }}
         />
         </Modal.Actions>
     </Modal>

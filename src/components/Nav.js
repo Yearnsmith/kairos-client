@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu, Icon } from 'semantic-ui-react'
+import { Menu, Icon, Sidebar } from 'semantic-ui-react'
 import NewEventModal from './NewEventModal'
 import NewGoalModal from './NewGoalModal'
-
+import { debounce } from '../utils/debounce'
 
 const mobileItems = [
     {key: 'goals', item: 'goals', icon: 'check circle'},
@@ -13,7 +13,7 @@ const mobileItems = [
     {key: 'lifetime_goals', item: 'lifetime_goals', icon: 'sliders'}
 ]
 
-export default function Nav({navBarRef}) {
+export default function Nav() {
     // stores which tab is active
     const [activeTab, setActiveTab] = useState('');
 
@@ -33,15 +33,50 @@ export default function Nav({navBarRef}) {
     // toggle colour of tab based on which tab is active.
     const handleColor = (item) => activeTab !== item ? 'grey' : 'blue'
 
+    // Hide on scroll. Set some states
+    const [prevScrollPos, setPrevScrollPos] = useState(0)
+    const [visible, setVisible] = useState(true)
+
+    //stop scrollbar firing constantly
+    const handleScroll = debounce( ()=>{
+
+        // get current position
+        const currentScrollPos = window.pageYOffset;
+
+        // if this evaluates to true, navbar is vislible.
+        // It evalutes to true if current scroll position is not greater than previous, or we're scrolling WAY up
+        // But if we've scrolled less than 10px, it's still visible.
+        setVisible( ((prevScrollPos > currentScrollPos) && (prevScrollPos - currentScrollPos) > 30) ||
+                     (currentScrollPos < 10)
+            );
+
+            //set state to new position
+            setPrevScrollPos(currentScrollPos);
+
+        }, 100, true ) // milliseconds between listener firing 
+    
+    //add event listener to listen for scrolling
+    useEffect(()=>{
+        
+        window.addEventListener('scroll', handleScroll);
+
+    },[prevScrollPos, visible, handleScroll]);
+
+    console.log(visible, prevScrollPos)
+
 
     return (
-        <Menu
-        icon
-        borderless
+        <Sidebar
+        as={Menu}
+        role='navigation'
+        direction='bottom'
+        animation='overlay'
+        width='very thin'
         widths={5}
-        fixed='bottom'
-        size='mini'
-        ref={navBarRef}
+        visible={visible}
+        borderless
+        size='tiny'
+        icon
         >
         {mobileItems.map( i =>
                 <Menu.Item
@@ -70,6 +105,6 @@ export default function Nav({navBarRef}) {
 
         )}
 
-        </Menu>
+        </Sidebar>
     )
 }
