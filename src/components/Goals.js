@@ -7,9 +7,9 @@ import { UseGlobalState } from '../utils/stateContext'
 import { getGoalColor, sortGoals } from '../utils/goalUtils'
 
 export default function Goals() {
-
     const { store, dispatch } = UseGlobalState();
     const { filteredGoals } = store
+    console.log(store.filteredGoals)
 
     const [sortMethod, setSortMethod] = useState('dateCreated')
     const [sortedGoals, setSortedGoals] = useState([])
