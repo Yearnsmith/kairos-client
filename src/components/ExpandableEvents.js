@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {Container, Accordion, Icon, Checkbox, Divider, Label, Header} from 'semantic-ui-react'
 import {UseGlobalState} from '../utils/stateContext'
 import {getGoals} from '../services/goalServices'
+import {updateEvent} from '../services/eventServices'
 import moment from 'moment'
 import EditEventModal from './EditEventModal'
 
@@ -61,7 +62,12 @@ export default function ExpandableEvents () {
                         </Accordion.Title>
                         <Accordion.Content active={activeIndex === index} style={{paddingTop:'0px'}}>
                             {event.description && <p>{event.description}</p>}
-                            {event.checklist && event.checklist.map((item, index) => <p> <Checkbox checked={item.done} label={item}/></p>)}
+                            {event.checklist && event.checklist.map((item, index) => 
+                            <p> <Checkbox defaultChecked={item.checked} label={item.title} 
+                            onChange={ ()=> {event.checklist[`${index}`] = {title: item.title, checked: !item.checked}
+                                            updateEvent({checklist: event.checklist}, event.id)
+                                            }       
+                            }/></p>)}
                             {(event.location || event.url) && <Divider/> }
                             {event.location && <p>{'\u00A0'}<Icon name="map marker alternate" />{'\u00A0'}{event.location}</p>}
                             {event.url && <p>{'\u00A0'}<Icon name="linkify" />{'\u00A0'}<a href={event.url}>{event.url}</a></p>}
@@ -80,7 +86,7 @@ export default function ExpandableEvents () {
             <Header>No Events To Display</Header>
             </div>
             <div style={{display: 'flex', justifyContent: 'center', marginBottom: '17px'}}>
-            <Icon size="huge" name="calendar times outline" />
+            <Icon size="huge" name="calendar outline" />
             </div>
             <div style={{display: 'flex', justifyContent: 'center', marginBottom: '8px'}}>
             <Header >Try Creating One</Header>

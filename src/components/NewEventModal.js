@@ -22,7 +22,7 @@ const defaultEvents = {
     repeatEvent: ""
 }
 
-const defaultChecklist = {items: [], newItem: false, tempItem: ""}
+
 
 export default function NewEventModal() {
 
@@ -45,7 +45,7 @@ export default function NewEventModal() {
               })
     ,[])
 
-
+    const defaultChecklist = {items: [], newItem: false, tempItem: ""}
 
     const defaultDate = {
         eventDate: moment(selectedDate).format("YYYY[-]MM[-]DD"),
@@ -78,19 +78,20 @@ export default function NewEventModal() {
     }
 
     function handleNewChecklistItem() {
-        if (!checklistItems.items.includes(checklistItems.tempItem)) {
+        let mappedChecklist = checklistItems.items.map(item => item.title)
+        if (!mappedChecklist.includes(checklistItems.tempItem) && checklistItems.tempItem !== '') {
         setAddChecklistItems(oldValues => 
-            {return {...oldValues, items: [...checklistItems.items, checklistItems.tempItem]}})
+            {return {...oldValues, items: [...checklistItems.items, {title: checklistItems.tempItem, checked: false}]}})
         setAddChecklistItems(oldValues => {return {...oldValues, newItem: false, tempItem: ''}})
         } else {
-            alert("Checklist items must be unique")
+            alert("Checklist items must be unique and contain at least one character")
         }
        
     }
 
     function handleRemoveChecklistItem(item) {
         setAddChecklistItems(oldValues => 
-            {return {...oldValues, items: checklistItems.items.filter(li => li !== item)}})
+            {return {...oldValues, items: checklistItems.items.filter(li => li.title !== item)}})
     }
 
 
@@ -123,7 +124,8 @@ export default function NewEventModal() {
             url: eventItems.eventURL,
             goalsId: getGoalIds(eventItems.eventGoals, goalsArray)
         }
-        if (data.title && data.description && data.eventStart && data.eventEnd) {
+        console.log(data)
+        if (data.title && data.eventStart && data.eventEnd) {
             createEvent(data).then((response)=> {
                 if (response.error){
                     console.log(response.error.message)
@@ -146,6 +148,7 @@ export default function NewEventModal() {
   return (
     <Modal  onClose={() => {setOpen(false)
                             toggleTriggerColor()
+                            setAddChecklistItems(defaultChecklist)
                             }}
             onOpen={() => {setOpen(true)
                         setEventDateTime({
@@ -162,11 +165,13 @@ export default function NewEventModal() {
             }>
         <Modal.Header>Create New Event</Modal.Header>
         <Icon style={{'padding-top': '7px',
-                    'padding-right': '5px'}}name='close' onClick={() => setOpen(false)}/>
+                    'padding-right': '5px'}}name='close' onClick={() => {   toggleTriggerColor()
+                                                                            setOpen(false)
+                                                                            setAddChecklistItems(defaultChecklist)}}/>
         <Modal.Content>
             <Form>
                 <Form.Field>
-                    <Input  size="big" placeholder='New Event Title' 
+                    <Input  size="big" placeholder='New Event Title (Required)' 
                             onChange={(e) => setEventItems(oldValues => {return {...oldValues, eventTitle: e.target.value}})}/>
                 </Form.Field>
                 <Form.Field>
@@ -219,7 +224,7 @@ export default function NewEventModal() {
                 </div>
                 <Button onClick={()=> handleNewChecklistItem()} size="mini">Add</Button>
                 </> }
-                {checklistItems && checklistItems.items.map((item) => <p> <Checkbox checked={false} label={item}/><Icon onClick={()=> handleRemoveChecklistItem(item)} style={{'margin-left': '5px'}} name="close" /></p>)}
+                {checklistItems.items && checklistItems.items.map((item) => <p> <Checkbox checked={item.checked} label={item.title}/><Icon onClick={()=> handleRemoveChecklistItem(item.title)} style={{'margin-left': '5px'}} name="close" /></p>)}
                 <Form.Field>
                     <Input style={{'margin-top': '15px'}} icon='map marker alternate' 
                     iconPosition='left' placeholder='Add Location' onChange={(e) => setEventItems(oldValues => {return {...oldValues, eventLocation: e.target.value}})}/>
