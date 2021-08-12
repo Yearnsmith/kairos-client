@@ -16,6 +16,11 @@ export default function reducer(state, action) {
             };
         case "removeGoal":
             const newTermGoals = state.termGoals.filter(g => g.id !== action.data)
+            return {
+                ...state,
+                termGoals: newTermGoals
+            }
+            
 
         //makes filter persistent
         case "setFilter": {
