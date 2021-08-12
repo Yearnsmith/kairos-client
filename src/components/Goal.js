@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Header, List, Label, Icon, Segment, Container, Button } from 'semantic-ui-react'
 import moment from 'moment'
 import { getGoalColor } from '../utils/goalUtils';
-import { deleteGoal, getGoalById } from '../services/goalServices';
+import { deleteGoal, getGoalById, updateGoal } from '../services/goalServices';
 import { useParams } from 'react-router-dom';
 import EditGoalModal from './EditGoalModal';
 import NewEventModal from './NewEventModal';
@@ -34,6 +34,38 @@ export default function Goal({history}) {
                 })
                 .catch( error => console.error(error) );
         }, [id, goalColors, goalUpdated]);
+
+        function handleAchieve(){
+            const newEventsId = []
+            goal.eventsId.forEach( e => {
+                newEventsId.push(e.id)
+            })
+            console.log('newEventsId', newEventsId)
+            const newlTGoalsId = []
+            goal.lTGoalsId.forEach(ltg => {
+                newlTGoalsId.push(ltg.id)
+            })
+            console.log('newlTGoalsId', newlTGoalsId)
+            
+            const updatedGoal = {
+                ...goal,
+                eventsId: newEventsId,
+                completedAt: Date.now(),
+                lTGoalsId: newlTGoalsId
+            }
+            updateGoal(updatedGoal)
+                .then( res =>{
+                    dispatch({
+                        type:'updateGoal',
+                        data: res
+                    })
+                    dispatch({
+                        type: 'setFilter',
+                        data: store.filter
+                    })
+                    history.push("/goals")
+                })
+        }
 
         function deleteGoalHandler(){
             deleteGoal(id)
@@ -99,7 +131,7 @@ export default function Goal({history}) {
                             <Button 
                                 content="Achieved!"
                                 icon='trophy'
-                                //onClick={handleAchieve}
+                                onClick={handleAchieve}
                             />
                             <EditGoalModal goalTitle={goal.title} setGoalUpdated={setGoalUpdated} />
                             <Button
