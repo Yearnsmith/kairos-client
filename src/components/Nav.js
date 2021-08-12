@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { Menu, Icon, Sidebar } from 'semantic-ui-react'
 import NewEventModal from './NewEventModal'
 import NewGoalModal from './NewGoalModal'
-
+import { debounce } from '../utils/debounce'
 
 const mobileItems = [
     {key: 'goals', item: 'goals', icon: 'check circle'},
@@ -37,29 +37,34 @@ export default function Nav() {
     const [prevScrollPos, setPrevScrollPos] = useState(0)
     const [visible, setVisible] = useState(true)
 
-    function handleScroll(){
+    //stop scrollbar firing constantly
+    const handleScroll = debounce( ()=>{
+
         // get current position
         const currentScrollPos = window.pageYOffset;
-        // if this evaluates to true, navbar is vislible
-        setVisible(
-            //evalutes to true if current scroll position is not greater than previous, or we're scrolling WAY up
-            // But if we've scrolled less than 10px, it's still visible.
-            ( (prevScrollPos > currentScrollPos && (prevScrollPos - currentScrollPos) > 70) || (currentScrollPos < 10) )
+
+        // if this evaluates to true, navbar is vislible.
+        // It evalutes to true if current scroll position is not greater than previous, or we're scrolling WAY up
+        // But if we've scrolled less than 10px, it's still visible.
+        setVisible( ((prevScrollPos > currentScrollPos) && (prevScrollPos - currentScrollPos) > 30) ||
+                     (currentScrollPos < 10)
             );
 
             //set state to new position
             setPrevScrollPos(currentScrollPos);
-    };
+
+        }, 100, true ) // milliseconds between listener firing 
     
     //add event listener to listen for scrolling
     useEffect(()=>{
         
         window.addEventListener('scroll', handleScroll);
 
-    },[prevScrollPos, handleScroll]);
+    },[prevScrollPos, visible, handleScroll]);
 
     console.log(visible, prevScrollPos)
-    console.log()
+
+
     return (
         <Sidebar
         as={Menu}
