@@ -9,11 +9,22 @@ export default function reducer(state, action) {
                 ...state,  // spread current state
                 lTGoals: action.data
             };
+
         case "setTermGoals":
             return {
                 ...state,
                 termGoals: action.data
             };
+
+        case "updateGoal":
+            const goal = state.termGoals.find( goal => goal.id === action.data.id)
+            const restOfList = state. termGoals.filter( goal => goal.id !== action.data.id )
+            const updatedGoal = Object.assign(goal, action.data)
+            return {
+                ...state,
+                termGoals: [updatedGoal, ...restOfList]
+            }
+
         case "removeGoal":
             const newTermGoals = state.termGoals.filter(g => g.id !== action.data)
             return {
