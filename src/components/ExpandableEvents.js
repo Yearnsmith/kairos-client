@@ -5,6 +5,7 @@ import {getGoals} from '../services/goalServices'
 import {updateEvent} from '../services/eventServices'
 import moment from 'moment'
 import EditEventModal from './EditEventModal'
+import {getGoalColor} from '../utils/goalUtils'
 
 
 
@@ -57,7 +58,7 @@ export default function ExpandableEvents () {
                                 <EditEventModal eventId={event.id}/>
                                 </div>
                                 <div>
-                                {event.goalsId.map(goal => <Label size='mini' style={{marginTop: '3px'}}>{goal.title}</Label>)}
+                                {event.goalsId.map(goal => <Label size='tiny' color={getGoalColor(goal.lTGoalsId[0].type).color} style={{marginTop: '3px'}}>{goal.title}</Label>)}
                                 </div>
                         </Accordion.Title>
                         <Accordion.Content active={activeIndex === index} style={{paddingTop:'0px'}}>
@@ -81,7 +82,7 @@ export default function ExpandableEvents () {
         )
     } else {
         return (
-            <Container style={{display: 'flex', flexDirection:'column', justifyContent: 'center', marginTop:'25px', marginBottom:'20px'}}>
+            <Container style={{display: 'flex', flexDirection:'column', justifyContent: 'center', paddingTop:'18px'}}>
             <div style={{display: 'flex', justifyContent: 'center', marginBottom:'17px'}}>
             <Header>No Events To Display</Header>
             </div>
