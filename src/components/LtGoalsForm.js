@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Form, Header, Segment, TextArea } from 'semantic-ui-react';
-import { createLTGoal, updateLTGoal } from '../services/lifetimeGoalServices';
+import { createLTGoal, updateLTGoal, getLTGoals } from '../services/lifetimeGoalServices';
 import { UseGlobalState } from '../utils/stateContext'
 
 //we will eventually pull this list dynamically from state, or from an API call
@@ -15,7 +15,7 @@ goalList.forEach( el => {
     initialState[el] = "" 
 })
 
-let hasBeenSaved = []
+
 
 // This enables us to autonomously generate the text boxes
 const textAreaValues = goalList.map( goal =>
@@ -32,6 +32,10 @@ const textAreaValues = goalList.map( goal =>
     export default function SignUpForm({history}) {
     // reserved for hooking in global state and saving form
     const {dispatch} = UseGlobalState();
+    // const {globalBeenSaved} = store
+
+    let hasBeenSaved = []
+
     
     // we use local state for form inputs
     const [formData, setFormData] = useState(initialState);
@@ -90,7 +94,7 @@ const textAreaValues = goalList.map( goal =>
                                     onBlur={() => {
                                         if (hasBeenSaved.map(saved=>saved.type).includes(`${goal.type}`)) {
                                             updateLTGoal({type: goal.type, description: formData[goal.type]}, 
-                                                `${hasBeenSaved.map(saved=>(saved.type === `${goal.type}`) ? saved.id : "").join("")}`)
+                                                `${hasBeenSaved.map(saved=>(saved.type === `${goal.type}`) ? saved.id : "").filter(item => item !== "")[0]}`)
                                                 .then(response => {
                                                     if(response.error){
                                                         console.error(response.error)
@@ -122,11 +126,12 @@ const textAreaValues = goalList.map( goal =>
                                     floated='right'
                                     // save field entry to state
                                     onClick={() => {
-                                        console.log(hasBeenSaved.map(saved=>saved.type))
+                                        console.log(hasBeenSaved)
+                                        console.log(`${goal.type}`)
                                         if (hasBeenSaved.map(saved=>saved.type).includes(`${goal.type}`)) {
                                             console.log('chekpoint')
                                             updateLTGoal({type: goal.type, description: formData[goal.type]}, 
-                                                `${hasBeenSaved.map(saved=>(saved.type === `${goal.type}`) ? saved.id : "").join("")}`)
+                                                `${hasBeenSaved.map(saved=>(saved.type === `${goal.type}`) ? saved.id : "").filter(item => item !== "")[0]}`)
                                                 .then(response => {
                                                     if(response.error){
                                                         console.error(response.error)
