@@ -32,6 +32,7 @@ export default function NewEventModal(props) {
         eventURL: "",
         repeatEvent: ""
     }
+    console.log(relatedGoal)
 
     const { store, dispatch } = UseGlobalState()
     const { selectedDate, termGoals } = store
@@ -158,6 +159,7 @@ export default function NewEventModal(props) {
         }
     }
 
+
   return (
     <Modal  onClose={() => {setOpen(false)
                             toggleTriggerColor()
@@ -175,6 +177,7 @@ export default function NewEventModal(props) {
         <Icon style={{paddingTop: '7px',
                     paddingRight: '5px'}}name='close' onClick={() => {   toggleTriggerColor()
                                                                             setOpen(false)
+                                                                            setEventItems(defaultEvents)
                                                                             setAddChecklistItems(defaultChecklist)}}/>
         <Modal.Content>
             <Form>

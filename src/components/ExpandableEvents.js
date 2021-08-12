@@ -34,7 +34,7 @@ export default function ExpandableEvents () {
         setActiveIndex(titleProps.index)
     }
     
-    console.log(storedEvent)
+    console.log(activeIndex)
     
     if (typeof(storedEvent) !== 'undefined' && `${storedEvent}` !== '') {
 
