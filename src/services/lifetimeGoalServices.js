@@ -16,8 +16,8 @@ export async function createLTGoal(data){
     return response.data;
 };
 
-export async function updateLTGoal(data){
-    const response = await kairosAPI.put(`/ltgoals/${data.id}`, data);
+export async function updateLTGoal(data, id){
+    const response = await kairosAPI.put(`/ltgoals/${id}`, data);
     return response.data;
 };
 

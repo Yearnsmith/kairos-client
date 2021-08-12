@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Form, Header, Segment, TextArea } from 'semantic-ui-react';
-import { createLTGoal } from '../services/lifetimeGoalServices';
+import { createLTGoal, updateLTGoal } from '../services/lifetimeGoalServices';
 import { UseGlobalState } from '../utils/stateContext'
 
 //we will eventually pull this list dynamically from state, or from an API call
@@ -15,6 +15,7 @@ goalList.forEach( el => {
     initialState[el] = "" 
 })
 
+let hasBeenSaved = []
 
 // This enables us to autonomously generate the text boxes
 const textAreaValues = goalList.map( goal =>
@@ -23,6 +24,8 @@ const textAreaValues = goalList.map( goal =>
         type: goal,
         labelText: goal.charAt(0).toUpperCase() + goal.slice(1)
     }});
+
+    
     
 
     //** Component Starts Here *//
@@ -36,6 +39,8 @@ const textAreaValues = goalList.map( goal =>
     // This tracks which field has a save button attached.
     // it simply stores the name of the field.
     const [activeField, setActiveField] = useState('');
+
+    
 
     // This toggles a field on and off, since use state stores the name
     // of the field, this takes an input of fieldName, and checks it against
@@ -60,6 +65,8 @@ const textAreaValues = goalList.map( goal =>
         console.log('Take the files back to the filing cabnet, Jeeves.')
     }
 
+    
+
     return (
         <Segment>
             <Header>
@@ -80,9 +87,29 @@ const textAreaValues = goalList.map( goal =>
                                     placeholder={`write a lifetime ${goal.type} goal here.`}
                                     value={formData[goal.type]}
                                     onChange={handleChange}
-                                    // change field to 'active'. I don't want a toggle here,
-                                    // because if I switch focus back from the save button,
-                                    // it will dissapear the save button.
+                                    onBlur={() => {
+                                        if (hasBeenSaved.map(saved=>saved.type).includes(`${goal.type}`)) {
+                                            updateLTGoal({type: goal.type, description: formData[goal.type]}, 
+                                                `${hasBeenSaved.map(saved=>(saved.type === `${goal.type}`) ? saved.id : "").join("")}`)
+                                                .then(response => {
+                                                    if(response.error){
+                                                        console.error(response.error)
+                                                    } else {
+                                                        console.log("Life Time Goal Updated!")
+                                                    }
+                                                })
+                                        } else {
+                                            createLTGoal({type: goal.type, description: formData[goal.type]}).then(response =>{
+                                                if(response.error){
+                                                    console.error(response.error);
+                                                    //TODO: insert UI error block
+                                                }else{
+                                                    console.log(`Jeeves, file "${formData[goal.type]}" under "${goal.type}".`)
+                                                    hasBeenSaved.push({type: `${goal.type}`, id: `${response.id}`})
+                                                } 
+                                            })
+                                        }   
+                                    }}
                                     onFocus={() => setActiveField(goal.type)}
                                 />
                             </Form.Field>
@@ -95,20 +122,32 @@ const textAreaValues = goalList.map( goal =>
                                     floated='right'
                                     // save field entry to state
                                     onClick={() => {
-                                        createLTGoal({type: goal.type, description: formData[goal.type]}).then(response =>{
-                                            if(response.error){
-                                                console.error(response.error);
-                                                //TODO: insert UI error block
-                                            }else{
-                                                // reserved for confirmation message
-                                                //TODO: Insert connfirmation message
-                                            }
-                                        })
-                                        console.log(`Jeeves, file "${formData[goal.type]}" under "${goal.type}".`)
-                                        // should this be moved into the promise above?
+                                        console.log(hasBeenSaved.map(saved=>saved.type))
+                                        if (hasBeenSaved.map(saved=>saved.type).includes(`${goal.type}`)) {
+                                            console.log('chekpoint')
+                                            updateLTGoal({type: goal.type, description: formData[goal.type]}, 
+                                                `${hasBeenSaved.map(saved=>(saved.type === `${goal.type}`) ? saved.id : "").join("")}`)
+                                                .then(response => {
+                                                    if(response.error){
+                                                        console.error(response.error)
+                                                    } else {
+                                                        console.log("Life Time Goal Updated!")
+                                                    }
+                                                })
+                                        } else {
+                                            createLTGoal({type: goal.type, description: formData[goal.type]}).then(response =>{
+                                                if(response.error){
+                                                    console.error(response.error);
+                                                    //TODO: insert UI error block
+                                                }else{
+                                                    console.log(`Jeeves, file "${formData[goal.type]}" under "${goal.type}".`)
+                                                    hasBeenSaved.push({type: `${goal.type}`, id: `${response.id}`})
+                                                } 
+                                            })
+                                        }   
                                         toggleActiveField(goal.type)
                                     }}
-                                />
+                                    />
                             : null
                             }
                         </Segment>);
