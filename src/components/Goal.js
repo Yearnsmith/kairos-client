@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react'
 import { Header, List, Label, Icon, Segment, Container, Button } from 'semantic-ui-react'
 import moment from 'moment'
 import { getGoalColor } from '../utils/goalUtils';
-import { getGoalById } from '../services/goalServices';
+import { deleteGoal, getGoalById } from '../services/goalServices';
 import { useParams } from 'react-router-dom';
 import EditGoalModal from './EditGoalModal';
 import NewEventModal from './NewEventModal';
-
-export default function Goal() {
+import { UseGlobalState } from '../utils/stateContext';
+export default function Goal({history}) {
     
+    // get global state
+    const { store, dispatch } = UseGlobalState();
+
     const [goal, setGoal] = useState(null)
     
     const {id} = useParams();
@@ -31,6 +34,15 @@ export default function Goal() {
                 })
                 .catch( error => console.error(error) );
         }, [id, goalColors, goalUpdated]);
+
+        function deleteGoalHandler(){
+            deleteGoal(id)
+                .then( res =>{
+                    dispatch({type:'removeGoal', data: id})
+                    dispatch({type:'setFilter', data: store.filter})
+                    history.push("/goals")
+                })
+        }
 
         console.log(goal)
         return (
@@ -93,7 +105,7 @@ export default function Goal() {
                             <Button
                                 content='delete'
                                 icon='trash'
-                                //onClick={handleDelete}
+                                onClick={deleteGoalHandler}
                             />
                         </Button.Group>
                 </>
