@@ -77,15 +77,14 @@ export default function NewEventModal(props) {
     
     const goalsArray = termGoals.map((goal, index) => ({key: goal.title, text: goal.title, value: goal.id}))
 
-    // function getGoalIds (eventGoals, goalsArray){
-    //     let idArray = []
-    //     for (const goal of goalsArray) {
-    //         if(eventGoals.includes(goal.text)) {
-    //             idArray.push(goal.value)
-    //         }
-    //     }
-    //     return idArray
-    // }
+    function getGoalIds (eventGoals, goalsArray){
+        let idArray = []
+        for (const goal of goalsArray) {
+            if(eventGoals.includes(goal.text)) {
+                idArray.push(goal.value)
+            }
+        }
+        return idArray
 
     function handleSelectBox(e, data){
         setEventItems({
@@ -112,6 +111,21 @@ export default function NewEventModal(props) {
             {return {...oldValues, items: checklistItems.items.filter(li => li.title !== item)}})
     }
 
+    function handleSelectBox(e){
+        if(e.target.className === 'delete icon'){
+          setEventItems({
+            ...eventItems,
+            eventGoals: eventItems.eventGoals.filter( item => {
+              return item !== e.target.parentNode.innerText
+            })
+          });
+        }else(
+          setEventItems({
+            ...eventItems,
+            eventGoals: [...eventItems.eventGoals,(e.target.textContent)]
+          })
+        )
+        }
 
     
     function submitEvents() {
@@ -137,6 +151,7 @@ export default function NewEventModal(props) {
                     setAddChecklistItems(defaultChecklist)
                     setEventItems(defaultEvents)
                     getEventsPls(selectedDate)
+                    setOpen(false)
                 }
             })
         if(thisView === 'goals'){
@@ -146,7 +161,6 @@ export default function NewEventModal(props) {
         } else {
             alert("Please fill out all required fields")
         }
-    }
 
     function selectTrigger(view){
         if(view === 'goals'){
@@ -187,9 +201,9 @@ export default function NewEventModal(props) {
                 </Form.Field>
                 <Form.Field>
                     <label>Related Goals</label>
-                    <Dropdown   label='Related Goals' fluid multiple search selection 
-                                options={goalsArray}
-                                onChange={handleSelectBox} value={eventGoals}/>
+                    <Dropdown   fluid multiple search selection 
+                                placeholder="Related Goals" options={goalsArray}
+                                onChange={handleSelectBox}/>
                 </Form.Field>
                 <Grid columns={3} divided>
                     <Grid.Row>
@@ -257,8 +271,7 @@ export default function NewEventModal(props) {
             content="Add Event"
             labelPosition='right'
             icon='checkmark'
-            onClick={() => { setOpen(false)
-                submitEvents()}}
+            onClick={() => submitEvents()}
         />
         </Modal.Actions>
     </Modal>

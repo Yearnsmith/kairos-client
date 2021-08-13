@@ -231,10 +231,10 @@ export default function EditEventModal({eventId}) {
             content="Delete Event"
             labelPosition='right'
             icon='delete'
-            onClick={() => {deleteEvent(eventId)
-                            getEventsPls(selectedDate)
-                            setOpen(false)
-                            }}
+            onClick={() => {deleteEvent(eventId).then(()=>
+                {getEventsPls(selectedDate)
+                setOpen(false)})
+            }}
         />
         <Button
             content="Edit Event"
@@ -248,3 +248,7 @@ export default function EditEventModal({eventId}) {
     </Modal>
   )
 }
+nClick={() => {deleteEvent(eventId).then(()=>
+                                {getEventsPls(selectedDate)
+                                setOpen(false)})
+                            }}
