@@ -5,27 +5,24 @@ import {UseGlobalState} from '../utils/stateContext'
 import {getEventsById, updateEvent, deleteEvent} from '../services/eventServices'
 import { getEventsByDate } from '../services/eventServices'
 import { getGoals } from '../services/goalServices'
-
-
-const repeatOptions = [
-    { key: 1, text: 'Daily', value: 1 },
-    { key: 2, text: 'Weekly', value: 2 },
-    { key: 3, text: 'Monthly', value: 3 },
-  ]
-
-const defaultChecklist = {items: [], newItem: false, tempItem: ""}
+import {repeatOptions, defaultChecklist, defaultDate} from '../utils/eventUtils'
 
 export default function EditEventModal({eventId, relatedGoal}) {
 
+    // Get set and dispatch functions to access reducer and global state
     const { store, dispatch } = UseGlobalState()
+
+    // Get selectedDate and termGoals from global state
     const { selectedDate, termGoals } = store
 
+    // loads all events on the same day as the input date and stores them to the state
     const getEventsPls = (value) => getEventsByDate(`${value}`)
     .then((response)=> dispatch({
         type: 'storeEvents',
         data: response})
     )
 
+    // defines blank values for events (minus related goals)
     const defaultEvents = {
         eventTitle: "",
         eventGoals: [relatedGoal],
@@ -35,12 +32,7 @@ export default function EditEventModal({eventId, relatedGoal}) {
         repeatEvent: ""
     }
 
-    const defaultDate = {
-        eventDate: "",
-        startTime: "",
-        endTime: ""
-        }
-
+    // Gets goals from the server and dispatches them to the state
     useEffect(() => {
         getGoals()
             .then( goals =>{
@@ -49,6 +41,7 @@ export default function EditEventModal({eventId, relatedGoal}) {
                     data: goals
                 })
               })
+    // Requests event data for selected event from the server and saves it to the defaultEvent, defaultDate & defaultChecklist objects
         getEventsById(eventId)
             .then(event => {
                 defaultEvents.eventTitle = event.title
@@ -64,6 +57,7 @@ export default function EditEventModal({eventId, relatedGoal}) {
     },[])
     
 
+    // Using local state for modal open state, checklist items, event date & time and all other event items
     const [open, setOpen] = useState(false)
     const [checklistItems, setAddChecklistItems] = useState(defaultChecklist)
     const [eventDateTime, setEventDateTime] = useState(defaultDate)
@@ -77,16 +71,19 @@ export default function EditEventModal({eventId, relatedGoal}) {
             )
     }
     
+    // maps term goals to suit the semantic-ui-react dropdown
     const goalsArray = termGoals.map((goal, index) => ({key: index, text: goal.title, value: goal.id}))
     
-
+    // Event dropdown helper
     function handleSelectBox(e, data){
         setEventItems({
             ...eventItems,
             eventGoals: [...data.value]
           })
       }
+    
 
+    // Adds new checklist item
     function handleNewChecklistItem() {
         let mappedChecklist = checklistItems.items.map(item => item.title)
         if (!mappedChecklist.includes(checklistItems.tempItem) && checklistItems.tempItem !== '') {
@@ -99,11 +96,13 @@ export default function EditEventModal({eventId, relatedGoal}) {
        
     }
 
+    // Removes a checklist item
     function handleRemoveChecklistItem(item) {
         setAddChecklistItems(oldValues => 
             {return {...oldValues, items: checklistItems.items.filter(li => li.title !== item)}})
     }
     
+    // Submits the completed items to the database
     function submitEvents() {
         let data = {
             title: eventItems.eventTitle,
@@ -115,6 +114,7 @@ export default function EditEventModal({eventId, relatedGoal}) {
             url: eventItems.eventURL,
             goalsId: eventItems.eventGoals
         }
+        // Only lets the user submit the event data if all required fields are filled
         if (data.title && data.description && data.eventStart && data.eventEnd) {
             updateEvent(data, eventId).then((response)=> {
                 if (response.error){
@@ -129,7 +129,9 @@ export default function EditEventModal({eventId, relatedGoal}) {
         }
     }
 
+    // EditEventModal layout below
   return (
+    // Sets modal behavior
     <Modal  onClose={() => {setOpen(false)
                             toggleTriggerColor()
                             }}
@@ -148,11 +150,13 @@ export default function EditEventModal({eventId, relatedGoal}) {
                             onChange={(e) => setEventItems(oldValues => {return {...oldValues, eventTitle: e.target.value}})}/>
                 </Form.Field>
                 <Form.Field>
-                
+                {/* Related goals drop down / selector */}
+                <label>Related Goals</label>
                 <Dropdown   label='Related Goals' fluid multiple search selection 
                                 options={goalsArray}
                                 onChange={handleSelectBox} value={eventGoals}/>
                 </Form.Field>
+                {/* Grid contains start date, start time and end time selections */}
                 <Grid columns={3} divided>
                     <Grid.Row>
                         <Grid.Column>
@@ -160,7 +164,8 @@ export default function EditEventModal({eventId, relatedGoal}) {
                                 <label>Date</label>
                                 <Input  type="date" id="eventDate" name="eventDate" 
                                         defaultValue={eventDateTime.eventDate} 
-                                        onChange={(e)=> setEventDateTime(oldValues => {return {...oldValues, eventDate:e.target.value}})}/>
+                                        onChange={(e)=> setEventDateTime(oldValues => 
+                                        {return {...oldValues, eventDate:e.target.value}})}/>
                             </Form.Field>
                         </Grid.Column>
                         <Grid.Column>
@@ -168,7 +173,8 @@ export default function EditEventModal({eventId, relatedGoal}) {
                                 <label>From</label>
                                 <Input  type="time" id="eventStartTime"
                                         name="eventStartTime" defaultValue={eventDateTime.startTime}
-                                        onChange={(e)=> setEventDateTime(oldValues => {return {...oldValues, startTime:e.target.value}})} />  
+                                        onChange={(e)=> setEventDateTime(oldValues => 
+                                        {return {...oldValues, startTime:e.target.value}})} />  
                             </Form.Field>
                         </Grid.Column>
                         <Grid.Column>
@@ -176,7 +182,8 @@ export default function EditEventModal({eventId, relatedGoal}) {
                                 <label>Until</label>
                                 <Input  type="time" id="eventEndTime"
                                         name="eventEndTime" defaultValue={eventDateTime.endTime}
-                                        onChange={(e)=> setEventDateTime(oldValues => {return {...oldValues, endTime:e.target.value}})}
+                                        onChange={(e)=> setEventDateTime(oldValues => 
+                                        {return {...oldValues, endTime:e.target.value}})}
                                         />
                             </Form.Field>
                         </Grid.Column>
@@ -189,16 +196,27 @@ export default function EditEventModal({eventId, relatedGoal}) {
                                 onChange={(e) => setEventItems(oldValues => 
                                 {return {...oldValues, eventDescription: e.target.value}})}/>
                 </Form.Field>
+                {/* Start of checklist */}
                 {!checklistItems.newItem && <Button compact onClick={() => setAddChecklistItems(oldValues => 
                                                                         {return {...oldValues, newItem: true}})}>
                     <Icon name="plus square outline"/> Add Checklist Item
                 </Button> }
                 
-                {checklistItems.newItem && <> <div style={{'margin-top': '5px', 'margin-bottom': '5px'}}> <Input onChange={(e)=> setAddChecklistItems(oldValues => {return {...oldValues, tempItem: e.target.value}})} size="mini" placeholder="New Checklist Item"/>
-                </div>
+                {checklistItems.newItem && <>   
+                    <div style={{'margin-top': '5px', 'margin-bottom': '5px'}}> 
+                        <Input onChange={(e)=> setAddChecklistItems(oldValues =>
+                        {return {...oldValues, tempItem: e.target.value}})} 
+                        size="mini" placeholder="New Checklist Item"/>
+                    </div>
+
                 <Button onClick={()=> handleNewChecklistItem()} size="mini">Add</Button>
                 </> }
-                {checklistItems.items && checklistItems.items.map((item) => <p> <Checkbox checked={item.checked} label={item.title}/><Icon onClick={()=> handleRemoveChecklistItem(item.title)} style={{'margin-left': '5px'}} name="close" /></p>)}
+                {checklistItems.items && checklistItems.items.map((item) => 
+                    <p> <Checkbox checked={item.checked} label={item.title}/>
+                    <Icon onClick={()=> handleRemoveChecklistItem(item.title)} 
+                    style={{'margin-left': '5px'}} name="close" /></p>)}
+                {/* End of checklist */}
+                
                 <Form.Field>
                     <Input style={{'margin-top': '15px'}} icon='map marker alternate' 
                     iconPosition='left' placeholder='Add Location' defaultValue={eventItems.eventLocation} onChange={(e) => setEventItems(oldValues => {return {...oldValues, eventLocation: e.target.value}})}/>
@@ -216,6 +234,7 @@ export default function EditEventModal({eventId, relatedGoal}) {
             </Form>
         </Modal.Content>
         <Modal.Actions>
+        {/* Sends request to server/database to delete event that's being edited */}
         <Button
             content="Delete Event"
             labelPosition='right'
@@ -225,6 +244,7 @@ export default function EditEventModal({eventId, relatedGoal}) {
                 setOpen(false)})
             }}
         />
+        {/* Pushes changes via the submitEvents() function */}
         <Button
             content="Edit Event"
             labelPosition='right'

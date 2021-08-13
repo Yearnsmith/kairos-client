@@ -9,6 +9,7 @@ import EditEventModal from './EditEventModal'
 import {getGoalColor} from '../utils/goalUtils'
 
 
+// ExpandableEvents -. Displays events and event details in Semantic-UI accordion
 
 export default function ExpandableEvents () {
     
@@ -35,14 +36,17 @@ export default function ExpandableEvents () {
     }
     
     
-    
+    // Only displays the events accordion if the selected day returned events from the server/database
     if (typeof(storedEvent) !== 'undefined' && `${storedEvent}` !== '') {
 
         return (
             <Container style={{display: 'flex', justifyContent: 'center', 'margin-top':'17px', marginBottom:'20px'}}>
+            {/* Active Index sets which event is expanded */}
             <Accordion styled defaultActiveIndex={activeIndex}>
+                {/* Maps each event from selected day into accordion items */}
                 {storedEvent.map( (event,index) => 
                         <>
+                        {/* Contains what the accordion shows when collapsed */}
                         <Accordion.Title 
                             index={index}
                             active={activeIndex === index}
@@ -53,14 +57,18 @@ export default function ExpandableEvents () {
                                 <Icon name='dropdown' />
                                 </div>
                                 <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                                {moment(event.eventStart).format('h:mm a')} - 
-                                {' '}{moment(event.eventEnd).format('h:mm a')}
-                                <EditEventModal eventId={event.id}/>
+                                    {moment(event.eventStart).format('h:mm a')} - 
+                                    {' '}{moment(event.eventEnd).format('h:mm a')}
+                                    <EditEventModal eventId={event.id}/>
                                 </div>
                                 <div>
-                                {(event.goalsId[0]) ? event.goalsId.map(goal => <Label size='tiny' color={getGoalColor(goal.lTGoalsId[0].type).color} style={{marginTop: '3px'}}>{goal.title}</Label>) : ""}
+                                    {(event.goalsId[0]) ? event.goalsId.map(goal => 
+                                    <Label size='tiny' color={getGoalColor(goal.lTGoalsId[0].type).color} 
+                                        style={{marginTop: '3px'}}>{goal.title}</Label>) : ""}
                                 </div>
                         </Accordion.Title>
+
+                        {/* Defines what is displayed when accordion is expanded */}
                         <Accordion.Content active={activeIndex === index} style={{paddingTop:'0px'}}>
                             {event.description && <p>{event.description}</p>}
                             {event.checklist && event.checklist.map((item, index) => 
@@ -70,8 +78,10 @@ export default function ExpandableEvents () {
                                             }       
                             }/></p>)}
                             {(event.location || event.url) && <Divider/> }
-                            {event.location && <p>{'\u00A0'}<Icon name="map marker alternate" />{'\u00A0'}{event.location}</p>}
-                            {event.url && <p>{'\u00A0'}<Icon name="linkify" />{'\u00A0'}<a href={`https://${getURL(event.url)}`} target="_blank" rel="noreferrer" >{event.url}</a></p>}
+                            {event.location && 
+                                <p>{'\u00A0'}<Icon name="map marker alternate" />{'\u00A0'}{event.location}</p>}
+                            {event.url && 
+                                <p>{'\u00A0'}<Icon name="linkify" />{'\u00A0'}<a href={`https://${getURL(event.url)}`} target="_blank" rel="noreferrer" >{event.url}</a></p>}
                         </Accordion.Content>
                         </>
                     
@@ -81,6 +91,7 @@ export default function ExpandableEvents () {
                 
         )
     } else {
+        // Displays a placehoder notifying the user that no events exist on the selected day
         return (
             <Container style={{display: 'flex', flexDirection:'column', justifyContent: 'center', paddingTop:'18px'}}>
             <div style={{display: 'flex', justifyContent: 'center', marginBottom:'17px'}}>
