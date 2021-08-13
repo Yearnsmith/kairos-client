@@ -62,9 +62,6 @@ export default function Nav() {
 
     },[prevScrollPos, visible, handleScroll]);
 
-    console.log(visible, prevScrollPos)
-
-
     return (
         <Sidebar
         as={Menu}

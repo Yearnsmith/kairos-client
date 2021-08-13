@@ -1,5 +1,5 @@
-// import './App.css';
-import React, { useReducer, useEffect, useRef } from 'react';
+// Import components
+import React, { useReducer, useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import Nav from './Nav';
 import LoginForm from './LoginForm';
@@ -16,7 +16,10 @@ import { StateContext } from '../utils/stateContext'
 import { getGoals } from '../services/goalServices';
 import { getLTGoals } from '../services/lifetimeGoalServices';
 
+//App begins here.
 function App() {
+  // using a ref to fulful useEffect dependencies
+  // https://overreacted.io/a-complete-guide-to-useeffect/
   const hasFetchedData = useRef(false)
   
   // set initial, empty, state for first render.
@@ -40,11 +43,12 @@ function App() {
   
   // instantiate reducer
   const [store, dispatch] = useReducer(reducer, initialState);
-  const {loggedInUser} = store;
+  const {loggedInUser, filter} = store;
   
   
   //instantiate error messages
-  // const [errors, setErrors] = useState({});
+  // reserved for future use
+  const [errors, setErrors] = useState({});
 
 
     useEffect( () => {
@@ -66,22 +70,30 @@ function App() {
                 });
                 dispatch({
                   type: "setFilter",
-                  data: store.filter
+                  data: filter
                 })
                 hasFetchedData.current = true
               })
             })
-            .catch( err => console.error(err))
+            .catch( err => {
+              console.error(err)
+              setErrors(err.message)
+            })
         }
       }
-    },[loggedInUser, store.filter])
+    },[loggedInUser, filter])
 
   return (
       
     <div className="App">
+    
+    {/* Context Provider for routes. Takes reducer store and dispatch as props to pass down to children */}
     <StateContext.Provider value={{store,dispatch}}>
+    {/* Set BrowserRouter */}
       <Router>
+
         <Switch>
+          {/* If there is no user logged in, user will only be able to access sign_in page, or sign_up page */}
           {!loggedInUser ? 
             <main>
               <Route path={"/"}>
