@@ -9,13 +9,12 @@ import { getGoalColor, sortGoals } from '../utils/goalUtils'
 export default function Goals() {
     const { store, dispatch } = UseGlobalState();
     const { filteredGoals } = store
-    console.log(store.filteredGoals)
 
     const [sortMethod, setSortMethod] = useState('dateCreated')
     const [sortedGoals, setSortedGoals] = useState([])
   
     function handleSort(action){
-      console.log('handlesort:', action)
+      
       setSortMethod(action)
       setSortedGoals( sortGoals(filteredGoals, action) )
     }
@@ -79,7 +78,7 @@ export default function Goals() {
                     <Header >Try Creating One</Header>
                     </div>
                     <div style={{display: 'flex', justifyContent: 'center'}}>
-                    <Icon size="big" name="long arrow down" />
+                    <Icon size="big" name="arrow down" />
                     </div>
                     </Container>
                     }

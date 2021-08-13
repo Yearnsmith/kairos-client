@@ -2,9 +2,13 @@ import pluralize from "pluralize";
 import moment from 'moment'
 import goalColors from './lTGoalColors.json'
 
+// take gaol data from goal form and compile it into an API friendly format.
 export function compileNewGoal(data){
   const {title, description, lifetimeGoal, timeframeDigit, timeframePeriod} = data
-
+  
+  // uses pluralize library to mhandle 'month' in dropdown and convert it to 'months'
+  // if the number is greater than 1. The library can also prepends the number to front of the string
+  // TODO: take swtich from API that converts timeframePeriod into endDate, and add it here.  
   const timeframe = `${pluralize(timeframePeriod, Number(timeframeDigit), true)}`
   
   const newGoal = {
@@ -17,15 +21,21 @@ export function compileNewGoal(data){
   return newGoal
 }
 
+// take goal data from goal form and update an existing goal. 
 export function compileExistingGoal(goalData, formData){
 
+  // As above for the time period.
   formData.timeframe = `${pluralize(formData.timeframePeriod, Number(formData.timeframeDigit), true)}`
+  // remove thes from the data being sent through to API to avoid errors.
   delete formData.timeframeDigit
   delete formData.timeframePeriod
   delete goalData.lTGoalsId
+  // put the id back into the array 
+  // (an array is used on API for futureproofing. We were toying with addind goals to multiple lifetime goals )
   goalData.lTGoalsId = [formData.lifetimeGoal]
   delete formData.lifetimeGoal
 
+// assign these objects together. We could also use spread operators to make it modern JS I suppose.
   return Object.assign(goalData, formData)
 
 }

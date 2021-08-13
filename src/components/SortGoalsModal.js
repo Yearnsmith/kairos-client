@@ -85,9 +85,7 @@ function FilterModal({sortMethod, handleSort}) {
           icon='checkmark'
           onClick={() => {
             setUndoSort(formData);
-            console.log('set undoSort to:\n>', formData)
             handleSort(formData);
-            console.log('set filter state to:\n>', formData)
             setOpen(false)
           }}
         />

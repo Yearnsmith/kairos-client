@@ -26,7 +26,6 @@ function FilterModal() {
   const {filteredLongTermGoals, showCompleted, showActive} = formData
 
   const [undoFilter, setUndoFilter] = useState(filter)
-console.log(filter)
 
   // on page render:
   // - set formData to match filter
@@ -39,7 +38,7 @@ console.log(filter)
   
   // create function for updating filter
   function updateFilter(filterOptions){
-    console.log(filterOptions.filteredLongTermGoals)
+    
     dispatch({
       type: "setFilter",
       data: {
@@ -66,7 +65,7 @@ console.log(filter)
     );
   }
     function handleCheckBoxes(e){
-      console.log(e.target.checked)
+      
       setFormData({
         ...formData,
         [e.target.name]: e.target.checked
@@ -110,7 +109,7 @@ console.log(filter)
         icon='delete'
         onClick={() => {
           setFormData(undoFilter);
-          console.log('formData reset to:\n>', undoFilter )
+          
           setOpen(false)
         }}
         negative
@@ -122,9 +121,9 @@ console.log(filter)
           icon='checkmark'
           onClick={() => {
             setUndoFilter(formData);
-            console.log('set undoFilter to:\n>', formData)
+            
             updateFilter(formData);
-            console.log('set filter state to:\n>', formData)
+            
             setOpen(false)
           }}
           positive

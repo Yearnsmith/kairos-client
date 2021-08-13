@@ -11,9 +11,11 @@ export default function Goal({history}) {
     
     // get global state
     const { store, dispatch } = UseGlobalState();
+    const {termGoals} = store
 
     const [goal, setGoal] = useState(null)
     
+
     const {id} = useParams();
     
     const [goalColors, setGoalColors]=useState({color: 'black', secondary: 'black', text: 'grey'})
@@ -22,30 +24,38 @@ export default function Goal({history}) {
         const textColor = goalColors.text
     
     const [goalUpdated, setGoalUpdated] = useState(false)
-            
-            useEffect(()=>{
-                getGoalById(id)
+        
+    useEffect(()=>{
+        if( Object.keys(termGoals) > 0 ){
+            let thisGoal = termGoals.find(g =>  g.id === id)
+            setGoal(thisGoal)
+            setGoalColors(
+                getGoalColor(goal.lTGoalsId[0].type)
+            ) 
+        }else{
+            getGoalById(id)
                 .then( goal => {
                     setGoal(goal)
-
+    
                     setGoalColors(
                         getGoalColor(goal.lTGoalsId[0].type)
                     )
                 })
                 .catch( error => console.error(error) );
-        }, [id, goalColors, goalUpdated]);
+
+        }
+    }, [id, goalColors, goalUpdated]);
 
         function handleAchieve(){
+
             const newEventsId = []
             goal.eventsId.forEach( e => {
                 newEventsId.push(e.id)
             })
-            console.log('newEventsId', newEventsId)
             const newlTGoalsId = []
             goal.lTGoalsId.forEach(ltg => {
                 newlTGoalsId.push(ltg.id)
             })
-            console.log('newlTGoalsId', newlTGoalsId)
             
             const updatedGoal = {
                 ...goal,
@@ -76,7 +86,6 @@ export default function Goal({history}) {
                 })
         }
 
-        console.log(goal)
         return (
             <main style={{padding:'1rem 1rem', display: 'flex', flexDirection:'column', alignItems:'center'}}>
                 {goal ?
@@ -133,7 +142,7 @@ export default function Goal({history}) {
                                 icon='trophy'
                                 onClick={handleAchieve}
                             />
-                            <EditGoalModal goalTitle={goal.title} setGoalUpdated={setGoalUpdated} />
+                            <EditGoalModal goal={goal} setGoalUpdated={setGoalUpdated} />
                             <Button
                                 content='delete'
                                 icon='trash'
@@ -142,7 +151,14 @@ export default function Goal({history}) {
                         </Button.Group>
                 </>
                 :
-                    <Container>Sorry, can't find that message</Container>
+                <Container style={{display: 'flex', flexDirection:'column', justifyContent: 'center', paddingTop:'18px'}}>
+                <div style={{display: 'flex', justifyContent: 'center', marginBottom: '8px'}}>
+                <Header>Loading Goal...</Header>
+                </div>
+                <div style={{display: 'flex', justifyContent: 'center'}}>
+                <Icon size="huge" loading name="circle notched" />
+                </div>
+                </Container>
                 }
                 </main>
         );
