@@ -13,18 +13,23 @@ const repeatOptions = [
     { key: 3, text: 'Monthly', value: 3 },
   ]
 
-const defaultEvents = {
-    eventTitle: "",
-    eventGoals: [],
-    eventDescription: "",
-    eventLocation: "",
-    eventURL: "",
-    repeatEvent: ""
-}
 
+    //get the location. See if we are in goals view or an events view
+    const {pathname} = useLocation();
+    const thisView = pathname.split("/")[1]
+    const findThisGoal = view => thisView.length > 2 ? pathname.split("/")[2] : null
+    const relatedGoal = findThisGoal(thisView)
+    console.log(relatedGoal)
 
-
-export default function NewEventModal() {
+    //set the default values for the form
+    const defaultEvents = {
+        eventTitle: "",
+        eventGoals: relatedGoal ? [relatedGoal] : [],
+        eventDescription: "",
+        eventLocation: "",
+        eventURL: "",
+        repeatEvent: ""
+    }
 
     const { store, dispatch } = UseGlobalState()
     const { selectedDate, termGoals } = store
@@ -65,7 +70,7 @@ export default function NewEventModal() {
             )
     }
     
-    const goalsArray = termGoals.map((goal, index) => ({key: index, text: goal.title, value: goal.id}))
+    const goalsArray = termGoals.map((goal, index) => ({key: goal.title, text: goal.title, value: goal.id}))
 
     function getGoalIds (eventGoals, goalsArray){
         let idArray = []
@@ -76,6 +81,8 @@ export default function NewEventModal() {
         }
         return idArray
     }
+
+
 
     function handleNewChecklistItem() {
         let mappedChecklist = checklistItems.items.map(item => item.title)
@@ -94,23 +101,11 @@ export default function NewEventModal() {
             {return {...oldValues, items: checklistItems.items.filter(li => li.title !== item)}})
     }
 
-
-    
-
-    function handleSelectBox(e){
-        if(e.target.className === 'delete icon'){
-          setEventItems({
+    function handleSelectBox(e, data){
+        setEventItems({
             ...eventItems,
-            eventGoals: eventItems.eventGoals.filter( item => {
-              return item !== e.target.parentNode.innerText
-            })
-          });
-        }else(
-          setEventItems({
-            ...eventItems,
-            eventGoals: [...eventItems.eventGoals,(e.target.textContent)]
+            eventGoals: [...data.value]
           })
-        );
       }
     
     function submitEvents() {
@@ -122,7 +117,7 @@ export default function NewEventModal() {
             checklist: checklistItems.items,
             location: eventItems.eventLocation,
             url: eventItems.eventURL,
-            goalsId: getGoalIds(eventItems.eventGoals, goalsArray)
+            goalsId: eventItems.eventGoals
         }
         if (data.title && data.eventStart && data.eventEnd) {
             createEvent(data).then((response)=> {

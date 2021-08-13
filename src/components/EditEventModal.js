@@ -15,7 +15,7 @@ const repeatOptions = [
 
 const defaultChecklist = {items: [], newItem: false, tempItem: ""}
 
-export default function EditEventModal({eventId}) {
+export default function EditEventModal({eventId, relatedGoal}) {
 
     const { store, dispatch } = UseGlobalState()
     const { selectedDate, termGoals } = store
@@ -28,7 +28,7 @@ export default function EditEventModal({eventId}) {
 
     const defaultEvents = {
         eventTitle: "",
-        eventGoals: [],
+        eventGoals: [relatedGoal],
         eventDescription: "",
         eventLocation: "",
         eventURL: "",
@@ -80,16 +80,6 @@ export default function EditEventModal({eventId}) {
     const goalsArray = termGoals.map((goal, index) => ({key: index, text: goal.title, value: goal.id}))
     
 
-    function getGoalIds (eventGoals, goalsArray){
-        let idArray = []
-        for (const goal of goalsArray) {
-            if(eventGoals.includes(goal.text)) {
-                idArray.push(goal.value)
-            }
-        }
-        return idArray
-    }
-
     function handleSelectBox(e, data){
         setEventItems({
             ...eventItems,
@@ -138,7 +128,6 @@ export default function EditEventModal({eventId}) {
             alert("Please fill out all required fields")
         }
     }
-
 
   return (
     <Modal  onClose={() => {setOpen(false)
@@ -232,18 +221,18 @@ export default function EditEventModal({eventId}) {
             labelPosition='right'
             icon='delete'
             onClick={() => {deleteEvent(eventId).then(()=>
-                                {getEventsPls(selectedDate)
-                                setOpen(false)})
-                            }}
+                {getEventsPls(selectedDate)
+                setOpen(false)})
+            }}
         />
         <Button
             content="Edit Event"
             labelPosition='right'
             icon='checkmark'
             onClick={() => {setOpen(false)
-                            submitEvents()
-            }}
-        />
+                submitEvents()
+}}
+/>
         </Modal.Actions>
     </Modal>
   )
