@@ -139,7 +139,7 @@ const repeatOptions = [
 
 
 
-  return (
+return (
     <Modal  onClose={() => {setOpen(false)
                             toggleTriggerColor()
                             setAddChecklistItems(defaultChecklist)
