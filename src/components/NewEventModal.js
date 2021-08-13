@@ -22,17 +22,17 @@ export default function NewEventModal(props) {
     const thisView = pathname.split("/")[1]
     const findThisGoal = view => thisView.length > 2 ? pathname.split("/")[2] : null
     const relatedGoal = findThisGoal(thisView)
+    console.log(relatedGoal)
 
     //set the default values for the form
     const defaultEvents = {
         eventTitle: "",
-        eventGoals: [relatedGoal],
+        eventGoals: relatedGoal ? [relatedGoal] : [],
         eventDescription: "",
         eventLocation: "",
         eventURL: "",
         repeatEvent: ""
     }
-    console.log(relatedGoal)
 
     const { store, dispatch } = UseGlobalState()
     const { selectedDate, termGoals } = store
@@ -85,13 +85,8 @@ export default function NewEventModal(props) {
             }
         }
         return idArray
+    }
 
-    function handleSelectBox(e, data){
-        setEventItems({
-            ...eventItems,
-            eventGoals: [...data.value]
-          })
-      }
 
 
     function handleNewChecklistItem() {
@@ -111,21 +106,13 @@ export default function NewEventModal(props) {
             {return {...oldValues, items: checklistItems.items.filter(li => li.title !== item)}})
     }
 
-    function handleSelectBox(e){
-        if(e.target.className === 'delete icon'){
-          setEventItems({
+    function handleSelectBox(e, data){
+        setEventItems({
             ...eventItems,
-            eventGoals: eventItems.eventGoals.filter( item => {
-              return item !== e.target.parentNode.innerText
-            })
-          });
-        }else(
-          setEventItems({
-            ...eventItems,
-            eventGoals: [...eventItems.eventGoals,(e.target.textContent)]
+            eventGoals: [...data.value]
           })
-        )
-        }
+      }
+
 
     
     function submitEvents() {
@@ -137,7 +124,6 @@ export default function NewEventModal(props) {
             checklist: checklistItems.items,
             location: eventItems.eventLocation,
             url: eventItems.eventURL,
-            // goalsId: getGoalIds(eventItems.eventGoals, goalsArray)
             goalsId: eventItems.eventGoals
         }
         console.log(data)
@@ -161,6 +147,7 @@ export default function NewEventModal(props) {
         } else {
             alert("Please fill out all required fields")
         }
+    }
 
     function selectTrigger(view){
         if(view === 'goals'){
@@ -201,9 +188,9 @@ export default function NewEventModal(props) {
                 </Form.Field>
                 <Form.Field>
                     <label>Related Goals</label>
-                    <Dropdown   fluid multiple search selection 
-                                placeholder="Related Goals" options={goalsArray}
-                                onChange={handleSelectBox}/>
+                    <Dropdown   label='Related Goals' fluid multiple search selection 
+                                options={goalsArray}
+                                onChange={handleSelectBox} value={eventGoals}/>
                 </Form.Field>
                 <Grid columns={3} divided>
                     <Grid.Row>
