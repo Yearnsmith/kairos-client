@@ -26,6 +26,7 @@ export default function Goals() {
       )
   }, [filteredGoals, sortMethod])
 
+
     return (
         //replace div with semantic main element. We could move the element to wrap
         // the Router in App.js, and wrap JSX in a fragment. But this is nice for testing.
@@ -70,13 +71,20 @@ export default function Goals() {
                 : 
                     <Container style={{display: 'flex', flexDirection:'column', justifyContent: 'center', paddingTop:'18px'}}>
                     <div style={{display: 'flex', justifyContent: 'center', marginBottom:'17px'}}>
-                    <Header>No Goals To Display</Header>
+                    <Header>Life Time Goals Created!</Header>
                     </div>
                     <div style={{display: 'flex', justifyContent: 'center', marginBottom: '17px'}}>
-                    <Icon size="huge" name="folder open outline" />
+                    <Icon size="huge" name="check circle outline" />
                     </div>
                     <div style={{display: 'flex', justifyContent: 'center', marginBottom: '8px'}}>
-                    <Header >Try Creating One</Header>
+                    <Header style={{textAlign: 'center'}}>Now you can start planning the achievement of those goals. 
+                    <br></br>Create your first 'Term Goal' by clicking the 
+                    {'\u00A0'}<Icon.Group size="large">
+                    <Icon name='plus' />
+                    <Icon name={'check circle'} corner='top right' />
+                    </Icon.Group>{'\u00A0'}
+                    button below.
+                    </Header>
                     </div>
                     <div style={{display: 'flex', justifyContent: 'center'}}>
                     <Icon size="big" name="long arrow down" />
